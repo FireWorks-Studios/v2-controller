@@ -1,0 +1,22 @@
+:root{
+    --button-width: 16.6666vw;
+}
+
+.button{
+    border-radius: 10px; 
+    background: #4d96fe;
+    color: white;
+    border: solid 4px rgb(63, 86, 255);
+    width: var(--button-width);
+    height: var(--button-width);
+    text-align: center;
+    font-family: 'Bungee', cursive;
+    font-size: 1.5rem;
+    box-shadow: 0 -15px rgb(63, 86, 255) inset;
+}
+
+.button.pressed{
+    box-shadow: 0 -5px rgb(63, 86, 255) inset;
+    height: calc(var(--button-width) - 10px);
+    transform: translateY(10px);
+}

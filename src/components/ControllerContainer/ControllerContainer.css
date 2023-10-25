@@ -10,7 +10,7 @@
     user-select: none; /* Standard syntax */
 }
 
-.App{
+.controller-container{
     width: 100vw;
     aspect-ratio: 2;
     background-size: var(--button-width) var(--button-width);
