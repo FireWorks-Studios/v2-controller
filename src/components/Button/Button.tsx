@@ -7,6 +7,7 @@ interface Props{
     container: string; //left, right, or center
     x: number; //local xpos in container
     y: number; //local ypos in container
+    unitWidth: number;
 }
 
 export const Button: React.FC<Props> = ({
@@ -15,10 +16,20 @@ export const Button: React.FC<Props> = ({
   container = "center",
   x = 0,
   y = 0,
+  unitWidth = 100,
   ...props
 }:Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
+
+  // useEffect(()=>{
+  //   document.documentElement.style.setProperty('--button-width', unitWidth+"px");
+  // },[unitWidth])
+
+  useEffect(()=>{
+    buttonRef.current?.style.setProperty('--x', x.toString())
+    buttonRef.current?.style.setProperty('--y', y.toString())
+  },[x, y])
 
   useEffect(()=>{
     //detect if any location of event.touches is overlapping in the button

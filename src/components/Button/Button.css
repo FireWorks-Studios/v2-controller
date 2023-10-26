@@ -1,12 +1,13 @@
-:root{
-    --button-width: 16.6666vw;
-}
-
 .button{
+    --x: 0;
+    --y: 0;
     border-radius: 10px; 
     background: #4d96fe;
     color: white;
     border: solid 4px rgb(63, 86, 255);
+    position: absolute;
+    top: calc(var(--button-width)*var(--y));
+    left: calc(var(--button-width)*var(--x));
     width: var(--button-width);
     height: var(--button-width);
     text-align: center;

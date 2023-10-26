@@ -1,3 +1,6 @@
+:root{
+    --button-width: 150px;
+}
 .noscroll{
     margin: 0; 
     overflow: hidden;
@@ -8,15 +11,4 @@
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
-}
-
-.App{
-    width: 100vw;
-    aspect-ratio: 2;
-    background-size: var(--button-width) var(--button-width);
-    background-image:
-      linear-gradient(to right, grey 1px, transparent 1px),
-      linear-gradient(to bottom, grey 1px, transparent 1px);
-    border-bottom: solid grey 1px;
-    border-right: solid grey 1px;
 }

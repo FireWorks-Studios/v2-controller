@@ -13,7 +13,6 @@ const meta = {
     tags: ['autodocs'],
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {
-        
     }
 } satisfies Meta<typeof ControllerContainer>;
 
@@ -22,6 +21,83 @@ type Story = StoryObj<typeof meta>;
 
 export const CenterControllerContainer: Story = {
     args:{
-        
+        position: "center",
+        unitWidth: 50,
+        controlConfig: [
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 1,
+                y: 0 
+            },
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 0,
+                y: 1 
+            },
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 0,
+                y: 1 
+            },
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 2,
+                y: 1 
+            },
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 5,
+                y: 1 
+            },
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 4,
+                y: 2 
+            }
+        ]
+    }
+}
+
+export const LeftControllerContainer: Story = {
+    args:{
+        position: "left",
+        unitWidth: 50,
+        controlConfig: [
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 0,
+                y: 0 
+            }
+        ]
+    }
+}
+
+export const RightControllerContainer: Story = {
+    args:{
+        position: "right",
+        unitWidth: 50,
+        controlConfig: [
+            {
+                type: "button",
+                mapping: "UpArrow",
+                container: "center",
+                x: 0,
+                y: 0 
+            }
+        ]
     }
 }

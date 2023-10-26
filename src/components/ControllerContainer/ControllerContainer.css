@@ -1,22 +1,22 @@
-.noscroll{
-    margin: 0; 
-    overflow: hidden;
-    touch-action: none;
-}
-
-.prevent-select {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
-}
-
 .controller-container{
-    width: 100vw;
-    aspect-ratio: 2;
     background-size: var(--button-width) var(--button-width);
     background-image:
       linear-gradient(to right, grey 1px, transparent 1px),
       linear-gradient(to bottom, grey 1px, transparent 1px);
     border-bottom: solid grey 1px;
     border-right: solid grey 1px;
+    position: relative;
+}
+
+.controller-container.center{
+    width: calc(var(--button-width)*6);
+    height: calc(var(--button-width)*3);
+}
+.controller-container.left{
+    width: calc(var(--button-width)*3);
+    height: calc(var(--button-width)*7);
+}
+.controller-container.right{
+    width: calc(var(--button-width)*3);
+    height: calc(var(--button-width)*7);
 }

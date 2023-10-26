@@ -32,5 +32,6 @@ export const UpKey: Story = {
     container: "center",
     x: 0,
     y: 0,
+    unitWidth: 50
   },
 };
