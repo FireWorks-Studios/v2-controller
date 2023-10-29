@@ -13,13 +13,14 @@ interface component{
 interface Props{
   position: string,
   unitWidth: number,
-  controlConfig: component[]
+  controlConfig: component[],
+  editing: boolean
 }
 
-export const ControllerContainer: React.FC<Props> = ({position, unitWidth, controlConfig}:Props) => {
+export const ControllerContainer: React.FC<Props> = ({position, unitWidth, controlConfig, editing}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
-
+  const [editingControllers, setEditingControllers] = useState(false)
   // const containerWidth = containerRef.current?.offsetWidth;
   // if(position == "center"){
   //   if(containerWidth){
@@ -33,17 +34,30 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, contr
 
 
   useEffect(()=>{
+    setEditingControllers(editing)
+  },[editing])
+
+  useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
   },[unitWidth])
 
   return (
-    <div className={"controller-container "+ position} ref={containerRef}
+    <div className={"controller-container "+ position + (editing? ' editing':'')} ref={containerRef}
     onTouchStart={(e) => setTouchEvents(e)}
     onTouchMove={(e)=> setTouchEvents(e)}
     onTouchEnd={(e)=> setTouchEvents(e)}>  
       {controlConfig.map((component, index)=>(
         (component.type == 'button')?
-        <Button key={index} touchEvents={touchEvents} mapping={component.mapping} container={component.container} x={component.x} y={component.y} unitWidth={unitWidth}/>
+        <Button 
+          key={index} 
+          touchEvents={touchEvents} 
+          mapping={component.mapping} 
+          container={component.container} 
+          x={component.x} 
+          y={component.y} 
+          unitWidth={unitWidth}
+          editing={editingControllers}
+        />
         :''
       ))}
       {/* <Button touchEvents={touchEvents} mapping='ArrowUp' container='center' x={0} y={0} unitWidth={unitWidth}/> */}

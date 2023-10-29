@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import './Button.css'
+import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
 
 interface Props{
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
@@ -8,6 +9,7 @@ interface Props{
     x: number; //local xpos in container
     y: number; //local ypos in container
     unitWidth: number;
+    editing: boolean;
 }
 
 export const Button: React.FC<Props> = ({
@@ -17,9 +19,11 @@ export const Button: React.FC<Props> = ({
   x = 0,
   y = 0,
   unitWidth = 100,
+  editing = false,
   ...props
 }:Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const dragRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
 
   // useEffect(()=>{
@@ -27,12 +31,11 @@ export const Button: React.FC<Props> = ({
   // },[unitWidth])
 
   useEffect(()=>{
-    buttonRef.current?.style.setProperty('--x', x.toString())
-    buttonRef.current?.style.setProperty('--y', y.toString())
-  },[x, y])
-
-  useEffect(()=>{
     //detect if any location of event.touches is overlapping in the button
+    if(editing){
+      setPressed(false)
+      return
+    }
     if(touchEvents){
       //console.log(touchEvents.touches)
       if(touchEvents.touches.length === 0){
@@ -75,9 +78,28 @@ export const Button: React.FC<Props> = ({
       //request to container for the corresponding key to be fired
     }
   },[touchEvents])
+
+  const handleStop: DraggableEventHandler = (e, data) =>{
+    x = data.x/unitWidth;
+    y = data.y/unitWidth;
+    buttonRef.current?.style.setProperty('--x', x.toString())
+    buttonRef.current?.style.setProperty('--y', y.toString())
+    console.log(x + " " + y)
+  }
+
   return (
-    <button className={pressed? 'button pressed':'button'} ref={buttonRef}
-    />
+    <Draggable
+      handle=".handle"
+      grid={[unitWidth, unitWidth]}
+      defaultPosition={{x: unitWidth*x, y: unitWidth*y}}
+      bounds={"parent"}
+      scale={1}
+      allowAnyClick={true}
+      disabled={!editing}
+      onStop={handleStop}
+    >
+      <button className={(pressed? 'button pressed':'button') + " handle " + (editing? 'editing':'')} ref={buttonRef}/>
+    </Draggable>
   )
 }
 

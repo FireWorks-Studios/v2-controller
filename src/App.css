@@ -4,7 +4,7 @@
 .noscroll{
     margin: 0; 
     overflow: hidden;
-    touch-action: none;
+    /* touch-action: none; */
 }
 
 .prevent-select {

@@ -42,8 +42,8 @@ export const CenterControllerContainer: Story = {
                 type: "button",
                 mapping: "UpArrow",
                 container: "center",
-                x: 0,
-                y: 1 
+                x: 1,
+                y: 2 
             },
             {
                 type: "button",
@@ -66,7 +66,8 @@ export const CenterControllerContainer: Story = {
                 x: 4,
                 y: 2 
             }
-        ]
+        ],
+        editing: false
     }
 }
 
@@ -82,7 +83,8 @@ export const LeftControllerContainer: Story = {
                 x: 0,
                 y: 0 
             }
-        ]
+        ],
+        editing: false
     }
 }
 
@@ -98,6 +100,7 @@ export const RightControllerContainer: Story = {
                 x: 0,
                 y: 0 
             }
-        ]
+        ],
+        editing: false
     }
 }
