@@ -1,25 +1,24 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, MouseEventHandler } from 'react'
 import './Button.css'
 import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
+import { component } from '../ControllerContainer/ControllerContainer';
 
 interface Props{
+    index: number;
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
-    mapping: string; //key mapping
-    container: string; //left, right, or center
-    x: number; //local xpos in container
-    y: number; //local ypos in container
+    component: component;
     unitWidth: number;
     editing: boolean;
+    updateCurrentConfig: Function;
 }
 
 export const Button: React.FC<Props> = ({
+  index,
   touchEvents,
-  mapping,
-  container = "center",
-  x = 0,
-  y = 0,
+  component,
   unitWidth = 100,
   editing = false,
+  updateCurrentConfig,
   ...props
 }:Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -80,25 +79,36 @@ export const Button: React.FC<Props> = ({
   },[touchEvents])
 
   const handleStop: DraggableEventHandler = (e, data) =>{
-    x = data.x/unitWidth;
-    y = data.y/unitWidth;
-    buttonRef.current?.style.setProperty('--x', x.toString())
-    buttonRef.current?.style.setProperty('--y', y.toString())
+    const x = Math.round(data.x/unitWidth)
+    const y = Math.round(data.y/unitWidth)
     console.log(x + " " + y)
+    const tempConfig = component
+    tempConfig.x = x
+    tempConfig.y = y
+    updateCurrentConfig(index, tempConfig)
+  }
+
+  //Mouse event handler not supported on mobile should use pointer or touch events
+  const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
+    if(editing){
+      console.log("Editing!")
+    }else{
+      return
+    }
   }
 
   return (
     <Draggable
       handle=".handle"
       grid={[unitWidth, unitWidth]}
-      defaultPosition={{x: unitWidth*x, y: unitWidth*y}}
+      defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
       bounds={"parent"}
       scale={1}
       allowAnyClick={true}
       disabled={!editing}
       onStop={handleStop}
     >
-      <button className={(pressed? 'button pressed':'button') + " handle " + (editing? 'editing':'')} ref={buttonRef}/>
+      <button className={(pressed? 'button pressed':'button') + " handle " + (editing? 'editing':'')} ref={buttonRef} onClick={handleClick}/>
     </Draggable>
   )
 }

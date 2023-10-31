@@ -5,7 +5,7 @@ function App() {
 
   return (
     <div className="App noscroll prevent-select">  
-      <ControllerContainer position={"center"} unitWidth={100} controlConfig={
+      <ControllerContainer position={"center"} unitWidth={100} defaultConfig={
         [
           {
               type: "button",
@@ -22,7 +22,9 @@ function App() {
               y: 0 
           }
         ]
-      }></ControllerContainer>
+      }
+      editing={false}
+      ></ControllerContainer>
     </div>
   );
 }

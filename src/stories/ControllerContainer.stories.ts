@@ -23,7 +23,7 @@ export const CenterControllerContainer: Story = {
     args:{
         position: "center",
         unitWidth: 50,
-        controlConfig: [
+        defaultConfig: [
             {
                 type: "button",
                 mapping: "UpArrow",
@@ -75,7 +75,7 @@ export const LeftControllerContainer: Story = {
     args:{
         position: "left",
         unitWidth: 50,
-        controlConfig: [
+        defaultConfig: [
             {
                 type: "button",
                 mapping: "UpArrow",
@@ -92,7 +92,7 @@ export const RightControllerContainer: Story = {
     args:{
         position: "right",
         unitWidth: 50,
-        controlConfig: [
+        defaultConfig: [
             {
                 type: "button",
                 mapping: "UpArrow",
