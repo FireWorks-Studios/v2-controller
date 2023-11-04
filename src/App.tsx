@@ -5,7 +5,7 @@ function App() {
 
   return (
     <div className="App noscroll prevent-select">  
-      <ControllerContainer position={"center"} unitWidth={100} defaultConfig={
+      <ControllerContainer position={"center"} unitWidth={60} defaultConfig={
         [
           {
               type: "button",
@@ -19,11 +19,39 @@ function App() {
               mapping: "UpArrow",
               container: "center",
               x: 0,
-              y: 0 
+              y: 1 
+          },
+          {
+              type: "button",
+              mapping: "UpArrow",
+              container: "center",
+              x: 1,
+              y: 2 
+          },
+          {
+              type: "button",
+              mapping: "UpArrow",
+              container: "center",
+              x: 2,
+              y: 1 
+          },
+          {
+              type: "button",
+              mapping: "UpArrow",
+              container: "center",
+              x: 5,
+              y: 1 
+          },
+          {
+              type: "button",
+              mapping: "UpArrow",
+              container: "center",
+              x: 4,
+              y: 2 
           }
         ]
       }
-      editing={false}
+      editing={true}
       ></ControllerContainer>
     </div>
   );

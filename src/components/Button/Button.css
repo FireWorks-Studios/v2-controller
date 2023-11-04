@@ -1,19 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 .button{
     border-radius: 10px; 
     background: #4d96fe;
     color: white;
     border: solid 4px rgb(63, 86, 255);
     width: var(--button-width);
-    height: var(--button-width);
-    text-align: center;
+    height: calc(var(--button-width) * 4/5);
     font-family: 'Bungee', cursive;
-    font-size: 1.5rem;
-    box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
+    font-size: calc(var(--button-width)/2.5);
+    box-shadow: 0 calc(var(--button-width)/5) rgb(63, 86, 255);
     position: absolute;
+    line-height: normal;
+    display: flex;
+    justify-content: center;
 }
 
 .button.pressed{
     box-shadow: 0 0 rgb(63, 86, 255) inset;
-    height: calc(var(--button-width) * 4/5);
     margin-top: calc(var(--button-width)/5);
+}
+
+.button.editing{
+    width: var(--button-width);
+    height: var(--button-width);
+    box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
+}
+
+.button-text{
+    line-height: calc(var(--button-width) * 3/5);
+    text-align: center;
+}
+
+.button.editing>.button-text{
+    display: none;
+}
+
+.arrow{
+    transform: rotate(0deg); 
+    display: inline-block;
+}
+
+.arrow.up{
+    transform: rotate(0deg); 
+}
+
+.arrow.left{
+    transform: rotate(-90deg); 
+}
+
+.arrow.right{
+    transform: rotate(90deg); 
+}
+
+.arrow.down{
+    transform: rotate(180deg); 
+}
+
+.handle{
+    width: var(--button-width);
+    height: calc(var(--button-width)/2);
+    position: absolute; 
+    top: calc(calc(var(--button-width)/2) - 4px); 
+    background-color: #4d96fe;
+    border-radius: 0 0 8px 8px;
+}
+
+.move{
+    background-color: #70abff;
+    border-radius: 4px;
+    position: absolute; 
+    top: 0; 
 }

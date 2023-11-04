@@ -42,6 +42,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
   },[unitWidth])
 
+  useEffect(()=>{
+    console.log("Config updated")
+    console.log(currentConfig)
+  }, [currentConfig])
+
   function updateCurrentConfig(index: number, component: component){
     const newConfig = currentConfig.map((c, i)=>{
       if(i === index){
@@ -51,11 +56,10 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       }
     })
     setCurrentConfig(newConfig)
-    //console.log(currentConfig[index])
     //console.log(getCurrentConfig())
   }
 
-  function getCurrentConfig(){
+  function getCurrentConfigJSON(){
     return JSON.stringify(currentConfig)
   }
 

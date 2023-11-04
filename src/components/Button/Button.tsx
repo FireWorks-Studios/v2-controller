@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef, MouseEventHandler } from 'react'
 import './Button.css'
 import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
 import { component } from '../ControllerContainer/ControllerContainer';
+import Dropdown from './Dropdown';
+import {TbArrowsMove} from 'react-icons/tb'
 
 interface Props{
     index: number;
@@ -24,6 +26,7 @@ export const Button: React.FC<Props> = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dragRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
+  const [mapping, setMapping] = useState('')
 
   // useEffect(()=>{
   //   document.documentElement.style.setProperty('--button-width', unitWidth+"px");
@@ -78,24 +81,25 @@ export const Button: React.FC<Props> = ({
     }
   },[touchEvents])
 
+  const handleDrag: DraggableEventHandler = (e, data) =>{
+    
+  }
+
   const handleStop: DraggableEventHandler = (e, data) =>{
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
-    console.log(x + " " + y)
-    const tempConfig = component
+    var tempConfig = {...component}
     tempConfig.x = x
     tempConfig.y = y
+    if(component.x === tempConfig.x && component.y === tempConfig.y){
+      console.log("component did not move") //show remap dropdown
+
+    }else{
+      console.log("component moved on drag") 
+    }
     updateCurrentConfig(index, tempConfig)
   }
 
-  //Mouse event handler not supported on mobile should use pointer or touch events
-  const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
-    if(editing){
-      console.log("Editing!")
-    }else{
-      return
-    }
-  }
 
   return (
     <Draggable
@@ -106,9 +110,17 @@ export const Button: React.FC<Props> = ({
       scale={1}
       allowAnyClick={true}
       disabled={!editing}
+      onDrag={handleDrag}
       onStop={handleStop}
     >
-      <button className={(pressed? 'button pressed':'button') + " handle " + (editing? 'editing':'')} ref={buttonRef} onClick={handleClick}/>
+      <button className={(pressed? 'button pressed':'button') + " " + (editing? 'editing':'')} ref={buttonRef}>
+        {/* <div className='button-text'><span className='arrow up'>▲</span></div> */}
+        <div className='button-text'>A</div>
+        <Dropdown editing={editing}/>
+        <div className='handle'>
+          <TbArrowsMove className='move'/>
+        </div>
+      </button>
     </Draggable>
   )
 }
