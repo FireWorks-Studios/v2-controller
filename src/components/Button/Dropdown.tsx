@@ -7,10 +7,10 @@ interface Option {
 }
 
 const dropdownOptions: Option[] = [
-  { value: '<span className="arrow up">▲</span>', label: '▲' },
-  { value: '<span className="arrow down">▲</span>', label: '▼' },
-  { value: '<span className="arrow left">▲</span>', label: '◀' },
-  { value: '<span className="arrow right">▲</span>', label: '▶' },
+  { value: '<span class="arrow up">▲</span>', label: '▲' },
+  { value: '<span class="arrow down">▲</span>', label: '▼' },
+  { value: '<span class="arrow left">▲</span>', label: '◀' },
+  { value: '<span class="arrow right">▲</span>', label: '▶' },
   { value: '_', label: 'Space' },
   { value: 'w', label: 'w' },
   { value: 'a', label: 'a' },
@@ -52,16 +52,21 @@ const dropdownOptions: Option[] = [
 
 interface Props{
     editing: boolean;
+    updateMapping: Function;
+    value: string;
 }
 
 const Dropdown: React.FC<Props> = ({
     editing,
+    updateMapping,
+    value,
     ...props
 }:Props) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
    useEffect(()=>{
-    console.log(selectedValue)
+    console.log("dropdown selected value " + selectedValue)
+    updateMapping(selectedValue)
    },[selectedValue])
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -69,7 +74,7 @@ const Dropdown: React.FC<Props> = ({
   };
 
   return (
-    <select name="remap" className={"selectList " + (editing? 'editing':'')} value={selectedValue} onChange={handleChange}>
+    <select name="remap" className={"selectList " + (editing? 'editing':'')} value={value} onChange={handleChange}>
       {dropdownOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

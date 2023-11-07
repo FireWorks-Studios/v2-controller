@@ -24,13 +24,13 @@ export const Button: React.FC<Props> = ({
   ...props
 }:Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const dragRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
-  const [mapping, setMapping] = useState('')
 
   // useEffect(()=>{
   //   document.documentElement.style.setProperty('--button-width', unitWidth+"px");
   // },[unitWidth])
+
+
 
   useEffect(()=>{
     //detect if any location of event.touches is overlapping in the button
@@ -81,10 +81,6 @@ export const Button: React.FC<Props> = ({
     }
   },[touchEvents])
 
-  const handleDrag: DraggableEventHandler = (e, data) =>{
-    
-  }
-
   const handleStop: DraggableEventHandler = (e, data) =>{
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
@@ -100,6 +96,15 @@ export const Button: React.FC<Props> = ({
     updateCurrentConfig(index, tempConfig)
   }
 
+  const updateMapping = (mapping: string) => {
+    if(mapping === ''){
+      return
+    }
+    var tempConfig = {...component}
+    tempConfig.mapping = mapping
+    console.log(tempConfig)
+    updateCurrentConfig(index, tempConfig)
+  }
 
   return (
     <Draggable
@@ -110,14 +115,14 @@ export const Button: React.FC<Props> = ({
       scale={1}
       allowAnyClick={true}
       disabled={!editing}
-      onDrag={handleDrag}
       onStop={handleStop}
     >
       <button className={(pressed? 'button pressed':'button') + " " + (editing? 'editing':'')} ref={buttonRef}>
         {/* <div className='button-text'><span className='arrow up'>▲</span></div> */}
-        <div className='button-text'>A</div>
-        <Dropdown editing={editing}/>
-        <div className='handle'>
+        <div className={'button-text'} dangerouslySetInnerHTML={{ __html: component.mapping }}>
+          </div>
+        <Dropdown editing={editing} updateMapping={updateMapping} value={component.mapping}/>
+        <div className={'handle ' + (editing? 'editing':'')}>
           <TbArrowsMove className='move'/>
         </div>
       </button>

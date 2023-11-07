@@ -26,42 +26,42 @@ export const CenterControllerContainer: Story = {
         defaultConfig: [
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: '<span class="arrow up">▲</span>',
                 container: "center",
                 x: 1,
                 y: 0 
             },
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: '<span class="arrow left">▲</span>',
                 container: "center",
                 x: 0,
                 y: 1 
             },
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: '<span class="arrow down">▲</span>',
                 container: "center",
                 x: 1,
                 y: 2 
             },
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: '<span class="arrow right">▲</span>',
                 container: "center",
                 x: 2,
                 y: 1 
             },
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: "A",
                 container: "center",
                 x: 5,
                 y: 1 
             },
             {
                 type: "button",
-                mapping: "UpArrow",
+                mapping: "B",
                 container: "center",
                 x: 4,
                 y: 2 

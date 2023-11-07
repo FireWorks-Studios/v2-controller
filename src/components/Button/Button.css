@@ -64,6 +64,11 @@
     top: calc(calc(var(--button-width)/2) - 4px); 
     background-color: #4d96fe;
     border-radius: 0 0 8px 8px;
+    display: none;
+}
+
+.handle.editing{
+    display: block;
 }
 
 .move{

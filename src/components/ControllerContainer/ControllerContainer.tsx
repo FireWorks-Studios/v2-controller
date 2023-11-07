@@ -44,6 +44,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
 
   useEffect(()=>{
     console.log("Config updated")
+    console.trace('Initial function called');
     console.log(currentConfig)
   }, [currentConfig])
 
@@ -67,7 +68,8 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     <div className={"controller-container "+ position + (editing? ' editing':'')} ref={containerRef}
     onTouchStart={(e) => setTouchEvents(e)}
     onTouchMove={(e)=> setTouchEvents(e)}
-    onTouchEnd={(e)=> setTouchEvents(e)}>  
+    onTouchEnd={(e)=> setTouchEvents(e)}
+    >  
       {currentConfig.map((component, index)=>(
         (component.type == 'button')?
         <Button 
