@@ -8,6 +8,7 @@ import {TbArrowsMove} from 'react-icons/tb'
 interface Props{
     index: number;
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
+    pointerEvents: React.PointerEvent<HTMLDivElement> | null;
     component: component;
     unitWidth: number;
     editing: boolean;
@@ -17,6 +18,7 @@ interface Props{
 export const Button: React.FC<Props> = ({
   index,
   touchEvents,
+  pointerEvents,
   component,
   unitWidth = 100,
   editing = false,
@@ -72,14 +74,41 @@ export const Button: React.FC<Props> = ({
       }
 
     }else{
-      console.log('touch events null')
-      setPressed(false)
+      if(pointerEvents){
+        if(pointerEvents.pointerType == "mouse"){
+          const mouseX = pointerEvents.clientX;
+          const mouseY = pointerEvents.clientY;
+          
+          // Rest of your logic with each touch
+          const buttonRect = buttonRef.current?.getBoundingClientRect();
+          //console.log(touchX, touchY, buttonRect)
+          if (
+            buttonRect &&
+            mouseX >= buttonRect.left &&
+            mouseX <= buttonRect.right &&
+            mouseY >= buttonRect.top &&
+            mouseY <= buttonRect.bottom &&
+            pointerEvents.pressure != 0
+          ) {
+            // Touch is within the bounding client rect of the button
+            // Perform your logic here
+            setPressed(true)
+          }else{
+            setPressed(false)
+          }
+        }
+      }else{
+        setPressed(false)
+        return
+      }
     }
 
     if(pressed){
       //request to container for the corresponding key to be fired
     }
-  },[touchEvents])
+  },[touchEvents, pointerEvents])
+
+
 
   const handleStop: DraggableEventHandler = (e, data) =>{
     const x = Math.round(data.x/unitWidth)
@@ -117,7 +146,7 @@ export const Button: React.FC<Props> = ({
       disabled={!editing}
       onStop={handleStop}
     >
-      <button className={(pressed? 'button pressed':'button') + " " + (editing? 'editing':'')} ref={buttonRef}>
+      <button className={"button round short " + (pressed? 'pressed':'') + " " + (editing? 'editing':'')} ref={buttonRef}>
         {/* <div className='button-text'><span className='arrow up'>▲</span></div> */}
         <div className={'button-text'} dangerouslySetInnerHTML={{ __html: component.mapping }}>
           </div>

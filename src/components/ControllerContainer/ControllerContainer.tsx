@@ -22,6 +22,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [editingControllers, setEditingControllers] = useState(false)
   const [currentConfig, setCurrentConfig] = useState(defaultConfig)
+  const [pointerEvents, setPointerEvents] = useState<React.PointerEvent<HTMLDivElement> | null>(null)
   // const containerWidth = containerRef.current?.offsetWidth;
   // if(position == "center"){
   //   if(containerWidth){
@@ -69,6 +70,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     onTouchStart={(e) => setTouchEvents(e)}
     onTouchMove={(e)=> setTouchEvents(e)}
     onTouchEnd={(e)=> setTouchEvents(e)}
+    onPointerDown={(e) => setPointerEvents(e)}
+    onPointerUp={(e) => setPointerEvents(e)}
+    onPointerMove={(e) => setPointerEvents(e)}
     >  
       {currentConfig.map((component, index)=>(
         (component.type == 'button')?
@@ -76,6 +80,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
           key={index} 
           index={index}
           touchEvents={touchEvents} 
+          pointerEvents={pointerEvents}
           component={component}
           unitWidth={unitWidth}
           editing={editingControllers}
