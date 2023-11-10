@@ -4,6 +4,10 @@ import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 
 import { component } from '../ControllerContainer/ControllerContainer';
 import Dropdown from './Dropdown';
 import {TbArrowsMove} from 'react-icons/tb'
+import {FaFlag, FaPause} from 'react-icons/fa6'
+import { TbOctagonFilled } from 'react-icons/tb';
+import {FaPause as fapause} from 'react-icons/fa6';
+
 
 interface Props{
     index: number;
@@ -135,6 +139,34 @@ export const Button: React.FC<Props> = ({
     updateCurrentConfig(index, tempConfig)
   }
 
+  const parseMapping = (mapping: string) =>{
+    if(mapping == "ArrowUp"){
+      return <span className="arrow up">▲</span>
+    }
+    if(mapping == "ArrowDown"){
+      return <span className="arrow down">▲</span>
+    }
+    if(mapping == "ArrowLeft"){
+      return <span className="arrow left">▲</span>
+    }
+    if(mapping == "ArrowRight"){
+      return <span className="arrow right">▲</span>
+    }
+    if(mapping == "Space"){
+      return '_'
+    }
+    if(mapping == "Green Flag"){
+      return <FaFlag/>
+    }
+    if(mapping == "Pause"){
+      return <FaPause/>
+    }
+    if(mapping == "Stop"){
+      return <TbOctagonFilled/>
+    }
+    return mapping
+  }
+
   return (
     <Draggable
       handle=".handle"
@@ -146,10 +178,9 @@ export const Button: React.FC<Props> = ({
       disabled={!editing}
       onStop={handleStop}
     >
-      <button className={"button round short " + (pressed? 'pressed':'') + " " + (editing? 'editing':'')} ref={buttonRef}>
-        {/* <div className='button-text'><span className='arrow up'>▲</span></div> */}
-        <div className={'button-text'} dangerouslySetInnerHTML={{ __html: component.mapping }}>
-          </div>
+      <button className={"button " + component.styling.join(' ') + " " + (pressed? 'pressed':'') + " " + (editing? 'editing':'')} ref={buttonRef}>
+        {/* <div className={'button-text'}><span><FaPause /></span></div> */}
+        <div className={'button-text'}>{parseMapping(component.mapping)}</div>
         <Dropdown editing={editing} updateMapping={updateMapping} value={component.mapping}/>
         <div className={'handle ' + (editing? 'editing':'')}>
           <TbArrowsMove className='move'/>

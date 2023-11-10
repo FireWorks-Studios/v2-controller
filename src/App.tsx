@@ -14,34 +14,63 @@ function App() {
         [
           {
             type: "button",
-            mapping: '<span class="arrow up">▲</span>',
+            styling: [],
+            mapping: 'ArrowUp',
             container: "center",
             x: 1,
             y: 0 
         },
         {
+          type: "button",
+          styling: ["round", "short"],
+          mapping: 'Green Flag',
+          container: "center",
+          x: 2,
+          y: 0 
+      },
+      {
+          type: "button",
+          styling: ["round", "short"],
+          mapping: 'Pause',
+          container: "center",
+          x: 3,
+          y: 0 
+      },
+      {
+        type: "button",
+        styling: ["round", "short"],
+        mapping: 'Stop',
+        container: "center",
+        x: 4,
+        y: 0 
+    },
+        {
             type: "button",
-            mapping: '<span class="arrow left">▲</span>',
+            styling: [],
+            mapping: 'ArrowLeft',
             container: "center",
             x: 0,
             y: 1 
         },
         {
             type: "button",
-            mapping: '<span class="arrow down">▲</span>',
+            styling: [],
+            mapping: 'ArrowDown',
             container: "center",
             x: 1,
             y: 2 
         },
         {
             type: "button",
-            mapping: '<span class="arrow right">▲</span>',
+            styling: [],
+            mapping: 'ArrowRight',
             container: "center",
             x: 2,
             y: 1 
         },
         {
             type: "button",
+            styling: [],
             mapping: 'a',
             container: "center",
             x: 5,
@@ -49,6 +78,7 @@ function App() {
         },
         {
           type: "button",
+          styling: [],
           mapping: 'b',
           container: "center",
           x: 4,

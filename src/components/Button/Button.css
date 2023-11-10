@@ -5,8 +5,10 @@
     background: #4d96fe;
     color: white;
     border: solid 4px rgb(63, 86, 255);
-    width: var(--button-width);
-    height: calc(var(--button-width) * 4/5);
+    width: calc(var(--button-width) - 4px);
+    margin-left: 2px;
+    height: calc(calc(var(--button-width) * 4/5) - 4px);
+    margin-top: 2px;
     font-family: 'Bungee', cursive;
     font-size: calc(var(--button-width)/2.5);
     box-shadow: 0 calc(var(--button-width)/5) rgb(63, 86, 255);
@@ -21,22 +23,25 @@
 }
 
 .button.short{
-    height: calc(var(--button-width) * 9/10);
+    height: calc(calc(var(--button-width) * 9/10) - 8px);
     box-shadow: 0 calc(var(--button-width) * 1/10) rgb(63, 86, 255);
+    margin-top: 6px;
 }
 
 .button.pressed{
     box-shadow: 0 0 rgb(63, 86, 255) inset;
-    margin-top: calc(var(--button-width)/5);
+    margin-top: calc(calc(var(--button-width)/5) + 2px);
 }
 
 button.pressed.short{
-    margin-top: calc(var(--button-width) * 1/10);
+    margin-top: calc(calc(var(--button-width) * 1/10) + 6px);
 }
 
 .button.editing{
-    width: var(--button-width);
-    height: var(--button-width);
+    width: calc(var(--button-width) - 4px);
+    margin-left: 2px;
+    height: calc(var(--button-width) - 4px);
+    margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
 }
 
@@ -75,10 +80,10 @@ button.pressed.short{
 }
 
 .handle{
-    width: var(--button-width);
-    height: calc(var(--button-width)/2);
+    width: calc(var(--button-width) - 4px);
+    height: calc(calc(var(--button-width)/2) - 2px);
     position: absolute; 
-    top: calc(calc(var(--button-width)/2) - 4px); 
+    top: calc(calc(var(--button-width)/2) - 6px); 
     background-color: #4d96fe;
     border-radius: 0 0 8px 8px;
     display: none;

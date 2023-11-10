@@ -1,7 +1,7 @@
 .selectList{
     display: none;
-    width: var(--button-width);
-    height: calc(var(--button-width)/2);
+    width: calc(var(--button-width) - 4px);
+    height: calc(calc(var(--button-width)/2) - 2px);
     position: absolute; 
     top: -4px; 
     left: -4px; 

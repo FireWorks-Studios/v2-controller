@@ -7,11 +7,14 @@ interface Option {
 }
 
 const dropdownOptions: Option[] = [
-  { value: '<span class="arrow up">▲</span>', label: '▲' },
-  { value: '<span class="arrow down">▲</span>', label: '▼' },
-  { value: '<span class="arrow left">▲</span>', label: '◀' },
-  { value: '<span class="arrow right">▲</span>', label: '▶' },
-  { value: '_', label: 'Space' },
+  { value: 'ArrowUp', label: '▲' },
+  { value: 'ArrowDown', label: '▼' },
+  { value: 'ArrowLeft', label: '◀' },
+  { value: 'ArrowRight', label: '▶' },
+  { value: 'Space', label: 'Space' },
+  { value: 'Green Flag', label: 'Green Flag' },
+  { value: 'Pause', label: 'Pause' },
+  { value: 'Stop', label: 'Stop' },
   { value: 'w', label: 'w' },
   { value: 'a', label: 'a' },
   { value: 's', label: 's' },

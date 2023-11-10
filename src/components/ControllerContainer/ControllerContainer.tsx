@@ -4,6 +4,7 @@ import {Button} from '../Button/Button';
 
 export interface component{
   type: string, //button, joystick, scroller, wheel
+  styling: string[],
   mapping: string,
   container: string,
   x: number,
