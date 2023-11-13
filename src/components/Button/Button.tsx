@@ -1,25 +1,28 @@
-import React, { useEffect, useState, useRef, MouseEventHandler } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import './Button.css'
-import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
-import { component } from '../ControllerContainer/ControllerContainer';
-import Dropdown from './Dropdown';
+import Draggable, { DraggableEventHandler } from 'react-draggable';
+import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
+import Dropdown, { DropdownOption } from './Dropdown';
 import {TbArrowsMove} from 'react-icons/tb'
-import {FaFlag, FaPause, FaGear} from 'react-icons/fa6'
-import { TbOctagonFilled } from 'react-icons/tb';
-import {BiSolidJoystickAlt} from 'react-icons/bi';
-import {BsJoystick} from 'react-icons/bs';
-
+import classNames from 'classnames';
+import { ParsedDropdownValue } from './ParsedDropdownValue';
+import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
+import { UserInteraction } from '../../utils/interaction';
 
 interface Props{
     index: number;
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
     pointerEvents: React.PointerEvent<HTMLDivElement> | null;
-    component: component;
+    component: ComponentRepresentation;
     unitWidth: number;
     editing: boolean;
-    updateCurrentConfig: Function;
-    checkValidDropPos: Function;
-    findClosestEmptySpot: Function;
+    updateCurrentConfig(index: number, component: ComponentRepresentation): void;
+    checkValidDropPos(
+      params: Omit<Parameters<typeof checkValidDropPos>[0], 'componentRepresentations'>
+    ): ReturnType<typeof checkValidDropPos>
+    findClosestEmptySpot(
+      params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
+    ): ReturnType<typeof findClosestEmptySpot>
 }
 
 export const Button: React.FC<Props> = ({
@@ -32,152 +35,60 @@ export const Button: React.FC<Props> = ({
   updateCurrentConfig,
   checkValidDropPos,
   findClosestEmptySpot,
-  ...props
-}:Props) => {
+}: Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
 
-  // useEffect(()=>{
-  //   document.documentElement.style.setProperty('--button-width', unitWidth+"px");
-  // },[unitWidth])
-
-
-
   useEffect(()=>{
-    //detect if any location of event.touches is overlapping in the button
-    if(editing){
+    // never happens, just for ts type checking
+    if (!buttonRef.current) return
+    if (editing) {
       setPressed(false)
       return
     }
-    if(touchEvents){
-      //console.log(touchEvents.touches)
-      if(touchEvents.touches.length === 0){
-        setPressed(false)
-      }else{
-        const touches = Array.from(touchEvents.touches); // Convert TouchList to an array
-        var flag = false
-        touches.forEach((touch) => {
-          const touchIdentifier = touch.identifier;
-          const touchX = touch.clientX;
-          const touchY = touch.clientY;
-          
-          // Rest of your logic with each touch
-          const buttonRect = buttonRef.current?.getBoundingClientRect();
-          //console.log(touchX, touchY, buttonRect)
-          if (
-            buttonRect &&
-            touchX >= buttonRect.left &&
-            touchX <= buttonRect.right &&
-            touchY >= buttonRect.top &&
-            touchY <= buttonRect.bottom
-          ) {
-            // Touch is within the bounding client rect of the button
-            // Perform your logic here
-            setPressed(true)
-            flag = true
-          }
-        })
-        if(!flag){
-          setPressed(false)
-        }
-      }
-
-    }else{
-      if(pointerEvents){
-        if(pointerEvents.pointerType == "mouse"){
-          const mouseX = pointerEvents.clientX;
-          const mouseY = pointerEvents.clientY;
-          
-          // Rest of your logic with each touch
-          const buttonRect = buttonRef.current?.getBoundingClientRect();
-          //console.log(touchX, touchY, buttonRect)
-          if (
-            buttonRect &&
-            mouseX >= buttonRect.left &&
-            mouseX <= buttonRect.right &&
-            mouseY >= buttonRect.top &&
-            mouseY <= buttonRect.bottom &&
-            pointerEvents.pressure != 0
-          ) {
-            // Touch is within the bounding client rect of the button
-            // Perform your logic here
-            setPressed(true)
-          }else{
-            setPressed(false)
-          }
-        }
-      }else{
-        setPressed(false)
-        return
-      }
+    if (touchEvents) {
+      const pressed = 
+        UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect())
+      setPressed(pressed)
+    } else if (pointerEvents) {
+      const pressed = 
+        UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect())
+      setPressed(pressed)
     }
+  },[touchEvents, pointerEvents, editing])
 
-    if(pressed){
-      //request to container for the corresponding key to be fired
-    }
-  },[touchEvents, pointerEvents])
-
-
-
-  const handleStop: DraggableEventHandler = (e, data) =>{
+  const handleStop: DraggableEventHandler = useCallback((_, data) =>{
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
     // check if the x and y are valid positions
-    if(checkValidDropPos(x, y, index)){
-      var tempConfig = {...component}
-      tempConfig.x = x
-      tempConfig.y = y
-      updateCurrentConfig(index, tempConfig)
-    }else{
-      let closestEmptySpot = findClosestEmptySpot(x, y, index, 6, 3)
-      var tempConfig = {...component}
-      tempConfig.x = closestEmptySpot.x
-      tempConfig.y = closestEmptySpot.y
-      updateCurrentConfig(index, tempConfig)
+    if (checkValidDropPos({ x, y, index })) {
+      updateCurrentConfig(index, {
+        ...component,
+        x,
+        y
+      })
+    } else {
+      let closestEmptySpot = findClosestEmptySpot({ x, y, index, containerWidth: 6, containerHeight: 3 })
+      updateCurrentConfig(index, {
+        ...component,
+        x: closestEmptySpot.x,
+        y: closestEmptySpot.y
+      })
     }
-  }
+  }, [checkValidDropPos, component, findClosestEmptySpot, index, unitWidth, updateCurrentConfig])
 
-  const updateMapping = (mapping: string) => {
-    if(mapping === ''){
-      return
-    }
-    var tempConfig = {...component}
-    tempConfig.mapping = mapping
-    console.log(tempConfig)
-    updateCurrentConfig(index, tempConfig)
-  }
+  const updateMapping = useCallback((mapping: DropdownOption['value']) => {
+    // TODO: why do we need this line?
+    // if (mapping === ''){
+    //   return
+    // }
+    updateCurrentConfig(index, {
+      ...component,
+      mapping
+    })
+  }, [component, index, updateCurrentConfig])
 
-  const parseMapping = (mapping: string) =>{
-    if(mapping == "ArrowUp"){
-      return <span className="arrow up">▲</span>
-    }
-    if(mapping == "ArrowDown"){
-      return <span className="arrow down">▲</span>
-    }
-    if(mapping == "ArrowLeft"){
-      return <span className="arrow left">▲</span>
-    }
-    if(mapping == "ArrowRight"){
-      return <span className="arrow right">▲</span>
-    }
-    if(mapping == "Space"){
-      return '_'
-    }
-    if(mapping == "Green Flag"){
-      return <FaFlag/>
-    }
-    if(mapping == "Pause"){
-      return <FaPause/>
-    }
-    if(mapping == "Stop"){
-      return <TbOctagonFilled/>
-    }
-    if(mapping == "Remap"){
-      return <FaGear/>
-    }
-    return mapping
-  }
-
+  
   return (
     <Draggable
       handle=".handle"
@@ -190,11 +101,35 @@ export const Button: React.FC<Props> = ({
       disabled={!editing}
       onStop={handleStop}
     >
-      <button className={"button " + component.styling.join(' ') + " " + (pressed? 'pressed':'') + " " + (editing? 'editing':'')} ref={buttonRef}>
+      <button className={
+        classNames(
+          'button',
+          component.styling.join(' '),
+          {
+            pressed,
+            editing
+          }
+        )
+      } ref={buttonRef}>
         {/* <div className={'button-text'}><span><FaPause /></span></div> */}
-        <div className={'button-text'}>{parseMapping(component.mapping)}</div>
-        <Dropdown editing={editing} updateMapping={updateMapping} value={component.mapping}/>
-        <div className={'handle ' + (editing? 'editing':'')}>
+        <div className={'button-text'}>
+          <ParsedDropdownValue 
+            value={component.mapping}
+          />
+        </div>
+        <Dropdown 
+          editing={editing} 
+          updateMapping={updateMapping} 
+          value={component.mapping}
+        />
+        <div className={
+          classNames(
+            'handle',
+            {
+              editing
+            }
+          )
+        }>
           <TbArrowsMove className='move'/>
         </div>
       </button>

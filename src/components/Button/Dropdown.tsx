@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Dropdown.css'
 
-interface Option {
-  value: string;
-  label: string;
-}
-
-const dropdownOptions: Option[] = [
+const dropdownOptions = [
   {value: 'Delete', label: 'Delete'},
   { value: 'Space', label: 'Space' },
   { value: 'Green Flag', label: 'Green Flag' },
@@ -53,29 +48,23 @@ const dropdownOptions: Option[] = [
   { value: '7', label: '7' },
   { value: '8', label: '8' },
   { value: '9', label: '9' },
-];
+] as const;
 
-interface Props{
-    editing: boolean;
-    updateMapping: Function;
-    value: string;
+export type DropdownOption = typeof dropdownOptions[number]
+
+interface Props {
+  editing: boolean;
+  updateMapping(mapping: DropdownOption['value']): void
+  value: string;
 }
 
 const Dropdown: React.FC<Props> = ({
     editing,
     updateMapping,
     value,
-    ...props
-}:Props) => {
-  const [selectedValue, setSelectedValue] = useState<string>('');
-
-   useEffect(()=>{
-    console.log("dropdown selected value " + selectedValue)
-    updateMapping(selectedValue)
-   },[selectedValue])
-
+}: Props) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedValue(event.target.value);
+    updateMapping(event.target.value as DropdownOption['value'])
   };
 
   return (
