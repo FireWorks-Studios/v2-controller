@@ -7,14 +7,16 @@ interface Option {
 }
 
 const dropdownOptions: Option[] = [
-  { value: 'ArrowUp', label: '▲' },
-  { value: 'ArrowDown', label: '▼' },
-  { value: 'ArrowLeft', label: '◀' },
-  { value: 'ArrowRight', label: '▶' },
+  {value: 'Delete', label: 'Delete'},
   { value: 'Space', label: 'Space' },
   { value: 'Green Flag', label: 'Green Flag' },
   { value: 'Pause', label: 'Pause' },
   { value: 'Stop', label: 'Stop' },
+  { value: 'Remap', label: 'Remap' },
+  { value: 'ArrowUp', label: '▲' },
+  { value: 'ArrowDown', label: '▼' },
+  { value: 'ArrowLeft', label: '◀' },
+  { value: 'ArrowRight', label: '▶' },
   { value: 'w', label: 'w' },
   { value: 'a', label: 'a' },
   { value: 's', label: 's' },

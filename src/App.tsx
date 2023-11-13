@@ -1,14 +1,16 @@
 import { ControllerContainer } from './components/ControllerContainer/ControllerContainer';
 import "./App.css";
 import React, { useState } from 'react';
+import { ControllerToolkit } from './components/ControllerToolkit/ControllerToolkit';
 
 function App() {
   const [editing, setEditing] = useState(false)
   return (
     <div className="App noscroll prevent-select">  
-    <button onClick={() => setEditing(!editing)}>
-      {editing}
+        <button onClick={() => setEditing(!editing)}>
+      edit
     </button>
+    <ControllerToolkit/>
       <ControllerContainer position={"center"} unitWidth={60} 
       defaultConfig={
         [
@@ -18,7 +20,9 @@ function App() {
             mapping: 'ArrowUp',
             container: "center",
             x: 1,
-            y: 0 
+            y: 0,
+            w: 1,
+            h: 1 
         },
         {
           type: "button",
@@ -26,7 +30,9 @@ function App() {
           mapping: 'Green Flag',
           container: "center",
           x: 2,
-          y: 0 
+          y: 0,
+          w: 1,
+          h: 1  
       },
       {
           type: "button",
@@ -34,7 +40,9 @@ function App() {
           mapping: 'Pause',
           container: "center",
           x: 3,
-          y: 0 
+          y: 0,
+          w: 1,
+          h: 1  
       },
       {
         type: "button",
@@ -42,7 +50,9 @@ function App() {
         mapping: 'Stop',
         container: "center",
         x: 4,
-        y: 0 
+        y: 0,
+        w: 1,
+        h: 1  
     },
         {
             type: "button",
@@ -50,7 +60,9 @@ function App() {
             mapping: 'ArrowLeft',
             container: "center",
             x: 0,
-            y: 1 
+            y: 1,
+            w: 1,
+            h: 1  
         },
         {
             type: "button",
@@ -58,7 +70,9 @@ function App() {
             mapping: 'ArrowDown',
             container: "center",
             x: 1,
-            y: 2 
+            y: 2,
+            w: 1,
+            h: 1  
         },
         {
             type: "button",
@@ -66,7 +80,9 @@ function App() {
             mapping: 'ArrowRight',
             container: "center",
             x: 2,
-            y: 1 
+            y: 1,
+            w: 1,
+            h: 1  
         },
         {
             type: "button",
@@ -74,7 +90,9 @@ function App() {
             mapping: 'a',
             container: "center",
             x: 5,
-            y: 1 
+            y: 1,
+            w: 1,
+            h: 1  
         },
         {
           type: "button",
@@ -82,12 +100,14 @@ function App() {
           mapping: 'b',
           container: "center",
           x: 4,
-          y: 2 
+          y: 2,
+          w: 1,
+          h: 1  
         },
         ]
       }
       editing={editing}
-      ></ControllerContainer>
+      />
     </div>
   );
 }

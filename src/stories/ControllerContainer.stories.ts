@@ -30,7 +30,9 @@ export const CenterControllerContainer: Story = {
               mapping: 'ArrowUp',
               container: "center",
               x: 1,
-              y: 0 
+              y: 0,
+              w: 1,
+              h: 1 
           },
           {
             type: "button",
@@ -38,7 +40,9 @@ export const CenterControllerContainer: Story = {
             mapping: 'Green Flag',
             container: "center",
             x: 2,
-            y: 0 
+            y: 0,
+            w: 1,
+            h: 1  
         },
         {
             type: "button",
@@ -46,7 +50,9 @@ export const CenterControllerContainer: Story = {
             mapping: 'Pause',
             container: "center",
             x: 3,
-            y: 0 
+            y: 0 ,
+            w: 1,
+            h: 1  
         },
         {
           type: "button",
@@ -54,7 +60,9 @@ export const CenterControllerContainer: Story = {
           mapping: 'Stop',
           container: "center",
           x: 4,
-          y: 0 
+          y: 0,
+          w: 1,
+          h: 1   
       },
           {
               type: "button",
@@ -62,7 +70,9 @@ export const CenterControllerContainer: Story = {
               mapping: 'ArrowLeft',
               container: "center",
               x: 0,
-              y: 1 
+              y: 1,
+              w: 1,
+              h: 1   
           },
           {
               type: "button",
@@ -70,7 +80,9 @@ export const CenterControllerContainer: Story = {
               mapping: 'ArrowDown',
               container: "center",
               x: 1,
-              y: 2 
+              y: 2,
+              w: 1,
+              h: 1   
           },
           {
               type: "button",
@@ -78,7 +90,9 @@ export const CenterControllerContainer: Story = {
               mapping: 'ArrowRight',
               container: "center",
               x: 2,
-              y: 1 
+              y: 1,
+              w: 1,
+              h: 1   
           },
           {
               type: "button",
@@ -86,7 +100,9 @@ export const CenterControllerContainer: Story = {
               mapping: 'a',
               container: "center",
               x: 5,
-              y: 1 
+              y: 1,
+              w: 1,
+              h: 1   
           },
           {
             type: "button",
@@ -94,45 +110,11 @@ export const CenterControllerContainer: Story = {
             mapping: 'b',
             container: "center",
             x: 4,
-            y: 2 
+            y: 2,
+            w: 1,
+            h: 1   
           },
           ],
-        editing: false
-    }
-}
-
-export const LeftControllerContainer: Story = {
-    args:{
-        position: "left",
-        unitWidth: 50,
-        defaultConfig: [
-            {
-                type: "button",
-                styling: [],
-                mapping: "UpArrow",
-                container: "center",
-                x: 0,
-                y: 0 
-            }
-        ],
-        editing: false
-    }
-}
-
-export const RightControllerContainer: Story = {
-    args:{
-        position: "right",
-        unitWidth: 50,
-        defaultConfig: [
-            {
-                type: "button",
-                styling: [],
-                mapping: "UpArrow",
-                container: "center",
-                x: 0,
-                y: 0 
-            }
-        ],
         editing: false
     }
 }

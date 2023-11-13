@@ -3,21 +3,17 @@
     background-size: var(--button-width) var(--button-width);
     background-position: top -2.5px left -2.5px;
     background-image:
-      linear-gradient(to right, white 5px, transparent 5px),
-      linear-gradient(to bottom, white 5px, transparent 5px);
-    border-bottom: solid white 5px;
-    border-right: solid white 5px;
+      linear-gradient(to right, var(--controller-container-grid-line-color) 5px, transparent 5px),
+      linear-gradient(to bottom, var(--controller-container-grid-line-color) 5px, transparent 5px);
     margin-top: 15px;
 }
 
 .controller-container.editing{
-    background-color: rgb(189, 210, 239);
+    background-color: var(--controller-container-grid-background-color);
     background-size: var(--button-width) var(--button-width);
     background-image:
-      linear-gradient(to right, white 5px, transparent 5px),
-      linear-gradient(to bottom, white 5px, transparent 5px);
-    border-bottom: solid white 5px;
-    border-right: solid white 5px;
+      linear-gradient(to right, var(--controller-container-grid-line-color) 5px, transparent 5px),
+      linear-gradient(to bottom, var(--controller-container-grid-line-color) 5px, transparent 5px);
 }
 
 .controller-container.center{

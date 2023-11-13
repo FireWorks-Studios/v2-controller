@@ -4,9 +4,10 @@ import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 
 import { component } from '../ControllerContainer/ControllerContainer';
 import Dropdown from './Dropdown';
 import {TbArrowsMove} from 'react-icons/tb'
-import {FaFlag, FaPause} from 'react-icons/fa6'
+import {FaFlag, FaPause, FaGear} from 'react-icons/fa6'
 import { TbOctagonFilled } from 'react-icons/tb';
-import {FaPause as fapause} from 'react-icons/fa6';
+import {BiSolidJoystickAlt} from 'react-icons/bi';
+import {BsJoystick} from 'react-icons/bs';
 
 
 interface Props{
@@ -17,6 +18,8 @@ interface Props{
     unitWidth: number;
     editing: boolean;
     updateCurrentConfig: Function;
+    checkValidDropPos: Function;
+    findClosestEmptySpot: Function;
 }
 
 export const Button: React.FC<Props> = ({
@@ -27,6 +30,8 @@ export const Button: React.FC<Props> = ({
   unitWidth = 100,
   editing = false,
   updateCurrentConfig,
+  checkValidDropPos,
+  findClosestEmptySpot,
   ...props
 }:Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -117,16 +122,19 @@ export const Button: React.FC<Props> = ({
   const handleStop: DraggableEventHandler = (e, data) =>{
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
-    var tempConfig = {...component}
-    tempConfig.x = x
-    tempConfig.y = y
-    if(component.x === tempConfig.x && component.y === tempConfig.y){
-      console.log("component did not move") //show remap dropdown
-
+    // check if the x and y are valid positions
+    if(checkValidDropPos(x, y, index)){
+      var tempConfig = {...component}
+      tempConfig.x = x
+      tempConfig.y = y
+      updateCurrentConfig(index, tempConfig)
     }else{
-      console.log("component moved on drag") 
+      let closestEmptySpot = findClosestEmptySpot(x, y, index, 6, 3)
+      var tempConfig = {...component}
+      tempConfig.x = closestEmptySpot.x
+      tempConfig.y = closestEmptySpot.y
+      updateCurrentConfig(index, tempConfig)
     }
-    updateCurrentConfig(index, tempConfig)
   }
 
   const updateMapping = (mapping: string) => {
@@ -164,16 +172,20 @@ export const Button: React.FC<Props> = ({
     if(mapping == "Stop"){
       return <TbOctagonFilled/>
     }
+    if(mapping == "Remap"){
+      return <FaGear/>
+    }
     return mapping
   }
 
   return (
     <Draggable
       handle=".handle"
-      grid={[unitWidth, unitWidth]}
+      // grid={[unitWidth, unitWidth]}
       defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
       bounds={"parent"}
       scale={1}
+      position={{x: unitWidth*component.x, y: unitWidth*component.y}}
       allowAnyClick={true}
       disabled={!editing}
       onStop={handleStop}

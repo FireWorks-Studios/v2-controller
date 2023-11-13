@@ -1,12 +1,14 @@
 :root{
     --button-width: 150px;
+    --controller-container-grid-background-color: #184D33;
+    --controller-container-grid-line-color: #00BF63;
+    --controller-container-grid-background-color: #b8d9ff;
+    --controller-container-grid-line-color: #ffffff;
 }
 
 .App{
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
 }
 
 .noscroll{

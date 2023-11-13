@@ -7,8 +7,10 @@
     border: solid 4px rgb(63, 86, 255);
     width: calc(var(--button-width) - 4px);
     margin-left: 2px;
+    margin-right: 2px;
     height: calc(calc(var(--button-width) * 4/5) - 4px);
     margin-top: 2px;
+    margin-bottom: 2px;
     font-family: 'Bungee', cursive;
     font-size: calc(var(--button-width)/2.5);
     box-shadow: 0 calc(var(--button-width)/5) rgb(63, 86, 255);
@@ -43,6 +45,13 @@ button.pressed.short{
     height: calc(var(--button-width) - 4px);
     margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
+    transition: transform 0.1s ease;
+}
+
+.button.editing.react-draggable-dragging{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 100;
+    transition: transform 0s;
 }
 
 .button-text{

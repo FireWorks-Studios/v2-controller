@@ -1,0 +1,16 @@
+.controller-toolkit{
+    aspect-ratio: 480/360;
+    pointer-events: auto;
+    margin-top: 4px;
+    border-radius: 0.5rem;
+    background-color: #ebf1fc;
+    border: solid #dde9fd 1px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #2e2e2e;
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-size: 18px;
+    white-space: pre-line;
+
+    width: calc(calc(var(--button-width)*6));
+}
