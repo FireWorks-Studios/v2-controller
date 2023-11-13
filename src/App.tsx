@@ -11,8 +11,10 @@ function App() {
       edit
     </button>
     <ControllerToolkit/>
-      <ControllerContainer position={"center"} unitWidth={60} 
-      defaultConfig={
+      <ControllerContainer 
+        position={"center"} 
+        unitWidth={60} 
+        defaultComponentRepresentations={
         [
           {
             type: "button",

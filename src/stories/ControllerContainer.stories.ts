@@ -23,7 +23,7 @@ export const CenterControllerContainer: Story = {
     args:{
         position: "center",
         unitWidth: 50,
-        defaultConfig:         [
+        defaultComponentRepresentations:         [
             {
               type: "button",
               styling: [],
