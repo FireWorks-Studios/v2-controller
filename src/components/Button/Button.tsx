@@ -58,6 +58,8 @@ export const Button: React.FC<Props> = ({
   },[touchEvents, pointerEvents, editing])
 
   const handleStop: DraggableEventHandler = useCallback((_, data) =>{
+    const actualX = data.x
+    const actualY = data.y
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
     // check if the x and y are valid positions
@@ -68,7 +70,7 @@ export const Button: React.FC<Props> = ({
         y
       })
     } else {
-      let closestEmptySpot = findClosestEmptySpot({ x, y, index, containerWidth: 6, containerHeight: 3 })
+      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth: 6, containerHeight: 3 })
       updateCurrentConfig(index, {
         ...component,
         x: closestEmptySpot.x,

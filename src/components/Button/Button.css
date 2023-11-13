@@ -45,6 +45,7 @@ button.pressed.short{
     height: calc(var(--button-width) - 4px);
     margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
+    border: solid 4px #4d96fe;
     transition: transform 0.1s ease;
 }
 

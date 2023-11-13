@@ -10,7 +10,7 @@
     border: none; 
     color: white; 
     text-align: center; 
-    font-size: calc(var(--button-width)/3);
+    font-size: calc(var(--button-width)/3.5);
     font-family: 'Bungee', cursive;
   }
   

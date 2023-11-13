@@ -1,11 +1,13 @@
+import { DraggableData } from "react-draggable";
 import { ComponentRepresentation } from "../components/ControllerContainer/ControllerContainer";
 
 export function findClosestEmptySpot(
 {
-  x, y, index, containerWidth, containerHeight, componentRepresentations
+  actualX, actualY, unitWidth, index, containerWidth, containerHeight, componentRepresentations
 } : {
-  x: number, 
-  y: number, 
+  actualX: number, 
+  actualY: number, 
+  unitWidth: number,
   index: number, 
   containerWidth: number, 
   containerHeight: number,
@@ -13,6 +15,9 @@ export function findClosestEmptySpot(
 } 
 ): { x: number, y: number } {
   let minDistance = Number.MAX_VALUE;
+  let x = Math.round(actualX/unitWidth);
+  let y = Math.round(actualY/unitWidth);
+  console.log(x, y, actualX/unitWidth, actualY/unitWidth)
   let closestX = x;
   let closestY = y;
 
@@ -47,8 +52,9 @@ export function findClosestEmptySpot(
 
       // If the spot is vacant, calculate the distance between the centers of the dropped component and the current spot
       if (isVacant) {
+        console.log(actualX/unitWidth)
         const distance = Math.sqrt(
-          Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2)
+          Math.pow((actualX/unitWidth) - (xPos), 2) + Math.pow((actualY/unitWidth) - (yPos), 2)
         );
 
         // Update the closest vacant spot if the current spot is closer

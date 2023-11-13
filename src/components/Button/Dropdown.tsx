@@ -1,5 +1,6 @@
 import React from 'react';
 import './Dropdown.css'
+import classnames from 'classnames';
 
 const dropdownOptions = [
   {value: 'Delete', label: 'Delete'},
@@ -68,7 +69,13 @@ const Dropdown: React.FC<Props> = ({
   };
 
   return (
-    <select name="remap" className={"selectList " + (editing? 'editing':'')} value={value} onChange={handleChange}>
+    <select name="remap" 
+    className={
+      classnames('selectList', {
+        editing: editing
+    })} 
+    value={value} 
+    onChange={handleChange}>
       {dropdownOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
