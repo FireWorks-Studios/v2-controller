@@ -22,8 +22,8 @@ export function findClosestEmptySpot(
   let closestY = y;
 
   // Iterate through all the possible empty spots within the container
-  for (let xPos = 0; xPos <= containerWidth; xPos++) {
-    for (let yPos = 0; yPos <= containerHeight; yPos++) {
+  for (let xPos = 0; xPos < containerWidth; xPos++) {
+    for (let yPos = 0; yPos < containerHeight; yPos++) {
       let isVacant = true;
 
       // Check if the current spot overlaps with any of the existing components
@@ -111,4 +111,24 @@ export function checkValidDropPos({
 
   // No overlap detected, return true
   return true;
+}
+
+export function checkOutOfBounds({
+  x, y, containerWidth, containerHeight, 
+}: {
+  x: number, y: number, containerWidth: number, containerHeight: number
+}): string{
+  if(x < containerWidth && x >= 0 && y < containerHeight && y >=0){
+    return 'inBounds'
+  }else{
+    if(y < 0 && x < containerWidth && x >= 0){
+      return 'topOutOfBounds'
+    }else if(y < containerHeight && y >=0 && x<0){
+      return 'leftOutOfBounds'
+    }else if(y < containerHeight && y >=0 && x>=containerWidth){
+      return 'rightOutOfBounds'
+    }else{
+      return 'invalidOutOfBounds'
+    }
+  }
 }

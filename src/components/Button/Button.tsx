@@ -6,8 +6,9 @@ import Dropdown, { DropdownOption } from './Dropdown';
 import {TbArrowsMove} from 'react-icons/tb'
 import classNames from 'classnames';
 import { ParsedDropdownValue } from './ParsedDropdownValue';
-import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
+import { checkValidDropPos, findClosestEmptySpot, checkOutOfBounds } from '../../utils/position';
 import { UserInteraction } from '../../utils/interaction';
+import { getControllerContainerDimensions } from '../ControllerContainer/ControllerContainer';
 
 interface Props{
     index: number;
@@ -63,14 +64,35 @@ export const Button: React.FC<Props> = ({
     const x = Math.round(data.x/unitWidth)
     const y = Math.round(data.y/unitWidth)
     // check if the x and y are valid positions
+    const containerDimensions = getControllerContainerDimensions(component.container)
+    const containerWidth = containerDimensions.w
+    const containerHeight = containerDimensions.h
     if (checkValidDropPos({ x, y, index })) {
-      updateCurrentConfig(index, {
-        ...component,
-        x,
-        y
-      })
+      console.log(checkOutOfBounds({x, y, containerWidth, containerHeight}))
+      switch(checkOutOfBounds({x, y, containerWidth, containerHeight})){
+        case 'inBounds':
+          updateCurrentConfig(index, {
+            ...component,
+            x,
+            y
+          })
+          return
+        case 'topOutOfBounds':
+          console.log('delete this component if in portrait')
+          return
+        case 'leftOutOfBounds':
+          console.log('delete this component if in landscape and is in right container')
+          return
+          case 'rightOutOfBounds':
+            console.log('delete this component if in landscape and is in left container')
+            return
+        case 'invalidOutOfBounds':
+          console.log('do nothing. let button return to original position')
+          return 
+      }
+
     } else {
-      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth: 6, containerHeight: 3 })
+      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight})
       updateCurrentConfig(index, {
         ...component,
         x: closestEmptySpot.x,
@@ -96,7 +118,7 @@ export const Button: React.FC<Props> = ({
       handle=".handle"
       // grid={[unitWidth, unitWidth]}
       defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
-      bounds={"parent"}
+      // bounds={"parent"}
       scale={1}
       position={{x: unitWidth*component.x, y: unitWidth*component.y}}
       allowAnyClick={true}
