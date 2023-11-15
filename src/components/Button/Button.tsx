@@ -6,9 +6,12 @@ import Dropdown, { DropdownOption } from './Dropdown';
 import {TbArrowsMove} from 'react-icons/tb'
 import classNames from 'classnames';
 import { ParsedDropdownValue } from './ParsedDropdownValue';
-import { checkValidDropPos, findClosestEmptySpot, checkOutOfBounds } from '../../utils/position';
+import { checkValidDropPos, findClosestEmptySpot, checkOutOfBounds, getControllerContainerDimensions} from '../../utils/position';
 import { UserInteraction } from '../../utils/interaction';
-import { getControllerContainerDimensions } from '../ControllerContainer/ControllerContainer';
+import { IoClose } from "react-icons/io5";
+
+
+
 
 interface Props{
     index: number;
@@ -17,7 +20,9 @@ interface Props{
     component: ComponentRepresentation;
     unitWidth: number;
     editing: boolean;
+    noTransition: boolean;
     updateCurrentConfig(index: number, component: ComponentRepresentation): void;
+    deleteComponentRepresentation(index: number): void;
     checkValidDropPos(
       params: Omit<Parameters<typeof checkValidDropPos>[0], 'componentRepresentations'>
     ): ReturnType<typeof checkValidDropPos>
@@ -33,7 +38,9 @@ export const Button: React.FC<Props> = ({
   component,
   unitWidth = 100,
   editing = false,
+  noTransition = false,
   updateCurrentConfig,
+  deleteComponentRepresentation,
   checkValidDropPos,
   findClosestEmptySpot,
 }: Props) => {
@@ -58,6 +65,12 @@ export const Button: React.FC<Props> = ({
     }
   },[touchEvents, pointerEvents, editing])
 
+  useEffect(()=>{
+    if(component.mapping == 'Delete'){
+      deleteComponentRepresentation(index)
+    }
+  }, [component.mapping])
+
   const handleStop: DraggableEventHandler = useCallback((_, data) =>{
     const actualX = data.x
     const actualY = data.y
@@ -79,6 +92,10 @@ export const Button: React.FC<Props> = ({
           return
         case 'topOutOfBounds':
           console.log('delete this component if in portrait')
+          if(component.container == 'center'){
+            // console.log('delete this!')
+            deleteComponentRepresentation(index);
+          }
           return
         case 'leftOutOfBounds':
           console.log('delete this component if in landscape and is in right container')
@@ -118,7 +135,7 @@ export const Button: React.FC<Props> = ({
       handle=".handle"
       // grid={[unitWidth, unitWidth]}
       defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
-      // bounds={"parent"}
+      bounds={"parent"}
       scale={1}
       position={{x: unitWidth*component.x, y: unitWidth*component.y}}
       allowAnyClick={true}
@@ -131,11 +148,11 @@ export const Button: React.FC<Props> = ({
           component.styling.join(' '),
           {
             pressed,
-            editing
+            editing,
+            noTransition
           }
         )
       } ref={buttonRef}>
-        {/* <div className={'button-text'}><span><FaPause /></span></div> */}
         <div className={'button-text'}>
           <ParsedDropdownValue 
             value={component.mapping}
@@ -148,13 +165,14 @@ export const Button: React.FC<Props> = ({
         />
         <div className={
           classNames(
-            'handle',
+            'button-bottom',
             {
               editing
             }
           )
         }>
-          <TbArrowsMove className='move'/>
+          <IoClose className='delete' onClick={() => deleteComponentRepresentation(index)}/>
+          <TbArrowsMove className='handle'/>
         </div>
       </button>
     </Draggable>

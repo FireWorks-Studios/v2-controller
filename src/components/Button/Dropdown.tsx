@@ -3,6 +3,7 @@ import './Dropdown.css'
 import classnames from 'classnames';
 
 const dropdownOptions = [
+  { value: 'Delete', label: 'Delete' },
   { value: 'Space', label: 'Space' },
   { value: 'Green Flag', label: 'Green Flag' },
   { value: 'Pause', label: 'Pause' },

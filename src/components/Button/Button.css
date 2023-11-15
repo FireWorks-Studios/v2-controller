@@ -46,7 +46,11 @@ button.pressed.short{
     margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
     border: solid 4px #4d96fe;
-    transition: transform 0.1s ease;
+    transition: transform 0.05s ease;
+}
+
+.button.noTransition{
+    transition: none !important;
 }
 
 .button.editing.react-draggable-dragging{
@@ -89,7 +93,7 @@ button.pressed.short{
     transform: rotate(180deg); 
 }
 
-.handle{
+.button-bottom{
     width: calc(var(--button-width) - 4px);
     height: calc(calc(var(--button-width)/2) - 2px);
     position: absolute; 
@@ -99,13 +103,23 @@ button.pressed.short{
     display: none;
 }
 
-.handle.editing{
+.button-bottom.editing{
     display: block;
 }
 
-.move{
+.delete{
+    color: #bcd8ff;
+    border-radius: 4px;
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    margin-right: 4px;
+}
+
+.handle{
     background-color: #70abff;
     border-radius: 4px;
     position: absolute; 
-    top: 0; 
+    right: 4px;
+    bottom: 4px; 
 }

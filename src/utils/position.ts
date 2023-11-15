@@ -132,3 +132,16 @@ export function checkOutOfBounds({
     }
   }
 }
+
+export function getControllerContainerDimensions(type: ComponentRepresentation['container']): { w: number, h: number } {
+  switch (type) {
+    case 'center':
+      return { w: 6, h: 3 };
+    case 'left':
+      return { w: 3, h: 7 };
+    case 'right':
+      return { w: 3, h: 7 };
+    default:
+      throw new Error(`Invalid type: ${type}`);
+  }
+}

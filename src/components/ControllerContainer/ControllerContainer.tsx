@@ -6,19 +6,6 @@ import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
 import classNames from 'classnames';
 import { DropdownOption } from '../Button/Dropdown';
 
-export function getControllerContainerDimensions(type: ComponentRepresentation['container']): { w: number, h: number } {
-  switch (type) {
-    case 'center':
-      return { w: 6, h: 3 };
-    case 'left':
-      return { w: 3, h: 7 };
-    case 'right':
-      return { w: 3, h: 7 };
-    default:
-      throw new Error(`Invalid type: ${type}`);
-  }
-}
-
 export interface ComponentRepresentation {
   type: 'button' | 'joystick' | 'scroller' | 'wheel',
   styling: string[],
@@ -42,6 +29,8 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [componentRepresentations, setComponentRepresentations] = useState(defaultComponentRepresentations)
   const [pointerEvents, setPointerEvents] = useState<React.PointerEvent<HTMLDivElement> | null>(null)
+  const [noTransition, setNoTransition] = useState(false);
+
 
   useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
@@ -57,6 +46,19 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     })
     setComponentRepresentations(() => newConfig)
   }, [componentRepresentations])
+
+  const deleteComponentRepresentation = useCallback((index: number) => {
+    setNoTransition(true);
+    setComponentRepresentations(prevComponentRepresentations => {
+      const updatedComponentRepresentations = [...prevComponentRepresentations];
+      updatedComponentRepresentations.splice(index, 1);
+      return updatedComponentRepresentations;
+    });
+    setTimeout(() => {
+      setNoTransition(false);
+    }, 100); // Adjust the delay as needed
+  }, [componentRepresentations]);
+
   const handleTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     setTouchEvents(e);
   }, [])
@@ -113,7 +115,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
           component={component}
           unitWidth={unitWidth}
           editing={editing}
+          noTransition={noTransition}
           updateCurrentConfig={updateCurrentConfig}
+          deleteComponentRepresentation={deleteComponentRepresentation}
           checkValidDropPos={handleCheckValidDropPos}
           findClosestEmptySpot={handleFindClosestEmptySpot}
         />
