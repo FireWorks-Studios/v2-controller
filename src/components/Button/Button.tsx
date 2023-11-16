@@ -65,11 +65,11 @@ export const Button: React.FC<Props> = ({
     }
   },[touchEvents, pointerEvents, editing])
 
-  useEffect(()=>{
-    if(component.mapping == 'Delete'){
-      deleteComponentRepresentation(index)
-    }
-  }, [component.mapping])
+  // useEffect(()=>{
+  //   if(component.mapping == 'Delete'){
+  //     deleteComponentRepresentation(index)
+  //   }
+  // }, [component.mapping])
 
   const handleStop: DraggableEventHandler = useCallback((_, data) =>{
     const actualX = data.x

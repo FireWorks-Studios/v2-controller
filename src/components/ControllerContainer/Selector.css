@@ -1,0 +1,31 @@
+.selector{
+    width: calc(var(--button-width) - 4px);
+    height: calc(var(--button-width) - 4px);
+    border-radius: 8px; 
+    margin: 2px;
+    background-color: #ffab19b0;
+    background: repeating-linear-gradient(
+    -55deg,
+    #ffab19,
+    #ffab19 10px,
+    #ffbd4b 10px,
+    #ffbd4b 20px
+    );
+    opacity: 0.8;
+    border: solid 4px #ffab19;
+    display: none;
+    position: absolute;
+    z-index: 5;
+    background-size: 200% 200%;
+  animation: barberpole 10s linear infinite;
+}
+
+@keyframes barberpole {
+    100% {
+      background-position: 100% 100%;
+    }
+  }
+
+.selector.selecting{
+    display: block;
+}

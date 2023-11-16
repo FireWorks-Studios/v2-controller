@@ -1,7 +1,6 @@
 import { ControllerContainer } from './components/ControllerContainer/ControllerContainer';
 import "./App.css";
 import React, { useState } from 'react';
-import { ControllerToolkit } from './components/ControllerToolkit/ControllerToolkit';
 
 function App() {
   const [editing, setEditing] = useState(false)
@@ -10,7 +9,6 @@ function App() {
         <button onClick={() => setEditing(!editing)}>
       edit
     </button>
-    <ControllerToolkit/>
       <ControllerContainer 
         position={"center"} 
         unitWidth={60} 

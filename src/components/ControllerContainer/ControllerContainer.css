@@ -5,7 +5,8 @@
     background-image:
       linear-gradient(to right, var(--controller-container-grid-line-color) 5px, transparent 5px),
       linear-gradient(to bottom, var(--controller-container-grid-line-color) 5px, transparent 5px);
-    margin-top: 15px;
+      margin-top: 200px;
+    touch-action: none;
 }
 
 .controller-container.editing{

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 .button{
-    border-radius: 20%; 
+    border-radius: 10px; 
     background: #4d96fe;
     color: white;
     border: solid 4px rgb(63, 86, 255);
