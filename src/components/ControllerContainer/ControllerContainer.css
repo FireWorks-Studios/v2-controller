@@ -9,6 +9,10 @@
     touch-action: none;
 }
 
+.controller-container.isSelectorDragging{
+    cursor: crosshair;
+}
+
 .controller-container.editing{
     background-color: var(--controller-container-grid-background-color);
     background-size: var(--button-width) var(--button-width);

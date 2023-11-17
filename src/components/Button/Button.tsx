@@ -21,6 +21,8 @@ interface Props{
     unitWidth: number;
     editing: boolean;
     noTransition: boolean;
+    selected: boolean;
+    selectorDeltaPosition: {deltaX: number, deltaY: number};
     updateCurrentConfig(index: number, component: ComponentRepresentation): void;
     deleteComponentRepresentation(index: number): void;
     checkValidDropPos(
@@ -39,6 +41,8 @@ export const Button: React.FC<Props> = ({
   unitWidth = 100,
   editing = false,
   noTransition = false,
+  selected = false,
+  selectorDeltaPosition = {deltaX: 0, deltaY: 0},
   updateCurrentConfig,
   deleteComponentRepresentation,
   checkValidDropPos,
@@ -129,6 +133,22 @@ export const Button: React.FC<Props> = ({
     })
   }, [component, index, updateCurrentConfig])
 
+  const componentPosition = useCallback((): {x: number, y:number} =>{
+    if(selected){
+      noTransition = true;
+      if(selectorDeltaPosition.deltaX !==0 || selectorDeltaPosition.deltaY !==0){
+        buttonRef.current?.classList.add("react-draggable-dragging");
+      }
+      return {
+        x: unitWidth*component.x + selectorDeltaPosition.deltaX, 
+        y: unitWidth*component.y + selectorDeltaPosition.deltaY
+      }
+    }
+    return{
+      x: unitWidth*component.x,
+      y: unitWidth*component.y
+    }
+  }, [component, selected, selectorDeltaPosition, unitWidth, buttonRef]) 
   
   return (
     <Draggable
@@ -137,7 +157,7 @@ export const Button: React.FC<Props> = ({
       defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
       bounds={"parent"}
       scale={1}
-      position={{x: unitWidth*component.x, y: unitWidth*component.y}}
+      position={componentPosition()}
       allowAnyClick={true}
       disabled={!editing}
       onStop={handleStop}

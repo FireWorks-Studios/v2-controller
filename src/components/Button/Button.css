@@ -46,7 +46,8 @@ button.pressed.short{
     margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
     border: solid 4px #4d96fe;
-    transition: transform 0.05s ease;
+    transition: transform 0.1s ease;
+    z-index: 0;
 }
 
 .button.noTransition{
@@ -122,4 +123,9 @@ button.pressed.short{
     position: absolute; 
     right: 4px;
     bottom: 4px; 
+    cursor: grab;
+}
+
+.react-draggable-dragging >* .handle{
+    cursor: grabbing;
 }

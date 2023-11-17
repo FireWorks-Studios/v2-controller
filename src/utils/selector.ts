@@ -1,3 +1,4 @@
+import { ComponentRepresentation } from "../components/ControllerContainer/ControllerContainer";
 export class SelectionInteraction{
     static startSelect = ((e: React.PointerEvent<HTMLDivElement>, containerRef: React.RefObject<HTMLDivElement>) => {
         e.preventDefault();
@@ -24,8 +25,8 @@ export class SelectionInteraction{
         const localY = clientY - divRect.top;
         const deltaX = localX - selectorStartPosition.x;
         const deltaY = localY - selectorStartPosition.y;
-        var x = 0;
-        var y = 0;
+        var x = selectorStartPosition.x;
+        var y = selectorStartPosition.y;
         var w = 1;
         var h = 1;
     if(deltaX > 0 && deltaY > 0){
@@ -49,6 +50,32 @@ export class SelectionInteraction{
         w = -deltaX
         h = deltaY
     }
+    //check which components are within this selected area
     return {x, y, w, h}
     }) 
+}
+
+export function GetSelectedComponents({
+    x, y, w, h, componentRepresentations
+}: {
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    componentRepresentations: ComponentRepresentation[]
+}): ComponentRepresentation[] {
+    const ComponentsSelected: ComponentRepresentation[] = [];
+
+    for (const component of componentRepresentations) {
+        // console.log(component)
+        const { x: componentX, y: componentY, w: componentW, h: componentH } = component;
+        // console.log(componentX, componentY, componentW, componentH)
+        // console.log(x, y, w, h)
+        // Check if the component is entirely within the specified area
+        if (componentX >= x && componentY >= y && componentX + componentW <= x + w && componentY + componentH <= y + h) {
+            ComponentsSelected.push(component);
+        }
+    }
+
+    return ComponentsSelected;
 }
