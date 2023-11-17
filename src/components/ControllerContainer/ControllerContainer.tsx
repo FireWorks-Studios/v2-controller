@@ -6,6 +6,7 @@ import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
 import classNames from 'classnames';
 import { DropdownOption } from '../Button/Dropdown';
 import { Selector } from './Selector';
+import { SelectionInteraction } from '../../utils/selector';
 
 export interface ComponentRepresentation {
   type: 'button' | 'joystick' | 'scroller' | 'wheel',
@@ -33,9 +34,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [noTransition, setNoTransition] = useState(false);
 
   const [isSelectorDragging, setIsSelectorDragging] = useState(false);
+  const [isSelectorSelecting, setIsSelectorSelecting] = useState(false);
   const [selectorStartPosition, setSelectorStartPosition] = useState({ x: 0, y: 0 });
   const [selectorSize, setSelectorSize] = useState({ w: 1, h: 1 });
   const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
+  const [selectorSelectedComponents, setSelectorSelectedComponents] = useState<ComponentRepresentation[]>([])
 
   useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
@@ -64,26 +67,60 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     }, 100); // Adjust the delay as needed
   }, [componentRepresentations]);
 
+  const deleteSelectedComponents = useCallback((componentsToDelete: ComponentRepresentation[]) =>{
+    setNoTransition(true);
+    setComponentRepresentations(prevComponents =>
+      prevComponents.filter(component =>
+        !componentsToDelete.some(item => item === component)
+      )
+    );
+    setTimeout(() => {
+      setNoTransition(false);
+    }, 100); // Adjust the delay as needed
+  }, [])
+
   const handleTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     setTouchEvents(e);
   }, [])
   
+
+  useEffect(() =>{
+    if(!editing){
+      setIsSelectorSelecting(false)
+    }
+  }, [editing])
+
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
-    e.preventDefault();
-    if(!containerRef.current){
+    const isEventCapturedByChild = e.currentTarget !== e.target;
+    console.log(e.currentTarget, e.target)
+    //check if the child target is button or drag handler
+    if(!editing){
+      setIsSelectorSelecting(false)
       return
     }
-    const divRect = containerRef.current?.getBoundingClientRect();
-    const { clientX, clientY } = e;
-    const localX = clientX - divRect.left;
-    const localY = clientY - divRect.top;
-    //console.log(localX, localY)
-    setSelectorSize({w: 1, h: 1})
-    setIsSelectorDragging(true);
-    setSelectorStartPosition({ x: localX, y: localY });
-    setSelectorPosition({ x: localX, y: localY });
-  }, [])
+
+    if (isEventCapturedByChild) {
+      // Child element captured the event
+      console.log('Event captured by child element');
+      setIsSelectorSelecting(false)
+    } else {
+      // Event not captured by any child element
+      console.log('Event not captured by any child element');
+      setIsSelectorSelecting(true)
+      const startParam = SelectionInteraction.startSelect(e, containerRef);
+      if(!startParam){
+        console.log('error in start param')
+        return
+      }
+      setSelectorSize({w: 1, h: 1})
+      setIsSelectorDragging(true);
+      setSelectorStartPosition({ x: startParam.x, y: startParam.y });
+      setSelectorPosition({ x: startParam.x, y: startParam.y });
+    }
+
+    
+  }, [editing])
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
@@ -93,27 +130,14 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     if(!containerRef.current){
       return
     }
-    const divRect = containerRef.current?.getBoundingClientRect();
-    const { clientX, clientY } = e;
-    const localX = clientX - divRect.left;
-    const localY = clientY - divRect.top;
-    const deltaX = localX - selectorStartPosition.x;
-    const deltaY = localY - selectorStartPosition.y;
-
-    if(deltaX > 0 && deltaY > 0){
-      setSelectorPosition(selectorStartPosition)
-      setSelectorSize({ w: deltaX, h: deltaY }); 
-    }else if(deltaX > 0 && deltaY < 0){
-      setSelectorPosition({x: selectorStartPosition.x, y: selectorStartPosition.y + deltaY})
-      setSelectorSize({ w: deltaX, h: -deltaY }); 
-    }else if(deltaX < 0 && deltaY < 0){
-      setSelectorPosition({x: selectorStartPosition.x + deltaX, y: selectorStartPosition.y + deltaY})
-      setSelectorSize({ w: -deltaX, h: -deltaY }); 
-    }else if(deltaX < 0 && deltaY > 0){
-      setSelectorPosition({x: selectorStartPosition.x + deltaX, y: selectorStartPosition.y})
-      setSelectorSize({ w: -deltaX, h: deltaY }); 
+    let dragSelect = SelectionInteraction.dragSelect(e, containerRef, selectorStartPosition)
+    if(!dragSelect){
+      return
     }
-  }, [selectorStartPosition])
+    setSelectorPosition({x: dragSelect.x, y: dragSelect.y})
+    setSelectorSize({w: dragSelect.w, h: dragSelect.h})
+    //checkSelect
+  }, [selectorStartPosition, selectorPosition, isSelectorDragging])
 
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
@@ -179,7 +203,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         : null
       ))}
       <Selector 
-      selecting={true}
+      selecting={isSelectorSelecting}
       x={Math.floor(selectorPosition.x/unitWidth)}
       y={Math.floor(selectorPosition.y/unitWidth)}
       w={Math.ceil(selectorSize.w/unitWidth + 0.5)}

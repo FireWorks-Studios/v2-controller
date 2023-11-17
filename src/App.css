@@ -6,6 +6,10 @@
     --controller-container-grid-line-color: #ffffff;
 }
 
+*{
+    box-sizing: border-box;
+}
+
 .App{
     width: 100vw;
     height: 100vh;

@@ -1,9 +1,8 @@
 .selector{
-    width: calc(var(--button-width) - 4px);
-    height: calc(var(--button-width) - 4px);
+    width: var(--button-width);
+    height: var(--button-width);
     border-radius: 8px; 
     margin: 2px;
-    background-color: #ffab19b0;
     background: repeating-linear-gradient(
     -55deg,
     #ffab19,
@@ -11,11 +10,37 @@
     #ffbd4b 10px,
     #ffbd4b 20px
     );
-    opacity: 0.8;
     border: solid 4px #ffab19;
     display: none;
     position: absolute;
     z-index: 5;
+    background-size: 200% 200%;
+  animation: barberpole 10s linear infinite;
+}
+
+.selector.move{
+  background: repeating-linear-gradient(
+    -55deg,
+    #1956ffa1,
+    #1956ffa1 10px,
+    #638dffa1 10px,
+    #638dffa1 20px
+    );
+  border: solid 4px #1956ff;
+
+  background-size: 200% 200%;
+  animation: barberpole 10s linear infinite;
+}
+
+.selector.add{
+  background: repeating-linear-gradient(
+    -55deg,
+    #ffab19a1,
+    #ffab19a1 10px,
+    #ffbd4ba1 10px,
+    #ffbd4ba1 20px
+    );
+    border: solid 4px #ffab19;
     background-size: 200% 200%;
   animation: barberpole 10s linear infinite;
 }
@@ -28,4 +53,46 @@
 
 .selector.selecting{
     display: block;
+}
+
+.selector-center-button{
+  position: absolute;
+  border-radius: 100px;
+  /* border: solid white 4px; */
+  width: calc(var(--button-width) - 20px);
+  height: calc(var(--button-width) - 20px);
+  margin-top: 4px;
+  margin-left: 4px;
+  background-color: #1956ff;
+  font-family: 'Bungee', cursive;
+  font-size: calc(var(--button-width)/2.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selector-center-button.add{
+  background-color: #ffab19;
+}
+
+
+.selector-center-button.move{
+  background-color: #1956ff;
+}
+
+.center-icon-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-icon{
+  font-size: calc(var(--button-width)/2.5);
+  color: white;
+  background-color: #1956ff;
+  border-top-right-radius: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }

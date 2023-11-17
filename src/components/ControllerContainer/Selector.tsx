@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import './Selector.css';
 import classNames from "classnames";
+import { SelectorCenterButton } from "./SelectorCenterButton";
+import { IoClose } from "react-icons/io5";
 
 interface Props{
     selecting: boolean;
@@ -12,6 +14,8 @@ interface Props{
     container: 'center' | 'left' | 'right'
 }
 
+type SelectionType = 'move' | 'add'
+
 export const Selector: React.FC<Props> = ({
     selecting, // is there a way to not have to repeat this twice?
     x = 0,
@@ -22,9 +26,11 @@ export const Selector: React.FC<Props> = ({
     container
 }: Props) => {
 
+    const [selectionType, SetSelectionType] = useState<SelectionType>("move")
+
     const styles = {
-        width: `${w*unitWidth - 12}px`,
-        height: `${h*unitWidth - 12}px`,
+        width: `${w*unitWidth - 4}px`,
+        height: `${h*unitWidth - 4}px`,
         transform: `translate(${x*unitWidth}px, ${y*unitWidth}px)`,
       };
 
@@ -32,12 +38,16 @@ export const Selector: React.FC<Props> = ({
         <div className={
             classNames(
                 'selector',
+                selectionType,
                 {
                     selecting
                 }
             )
         }
         style={styles}
-        ></div>
+        >
+            <SelectorCenterButton type={selectionType} x={x} y={y} w={w} h={h} unitWidth={unitWidth}/>
+            <IoClose className="delete-icon"></IoClose>
+        </div>
     )
 }
