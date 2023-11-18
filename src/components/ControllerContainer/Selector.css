@@ -13,7 +13,7 @@
     border: solid 4px #ffab19;
     display: none;
     position: absolute;
-    z-index: 5;
+    z-index: 105;
     background-size: 200% 200%;
     animation: barberpole 10s linear infinite;
     transition: transform 0.1s ease, box-shadow 0.1s ease;

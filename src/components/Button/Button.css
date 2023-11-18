@@ -50,6 +50,10 @@ button.pressed.short{
     z-index: 0;
 }
 
+.button.selected{
+    z-index: 100;
+}
+
 .button.noTransition{
     transition: none !important;
 }

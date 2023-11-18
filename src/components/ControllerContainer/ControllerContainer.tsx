@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { DropdownOption } from '../Button/Dropdown';
 import { Selector } from './Selector';
 import { GetSelectedComponents, SelectionInteraction } from '../../utils/selector';
+import { checkValidSelectionDropPos } from '../../utils/selector';
 
 export interface ComponentRepresentation {
   type: 'button' | 'joystick' | 'scroller' | 'wheel',
@@ -132,8 +133,12 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       } else if (selectorAncestor) {
         console.log('Selector captured the event');
       }else if(closeBtnAncestor){
-        console.log('delete the buttons selected')
+        console.log('delete pressed')
+        const result = window.confirm("Remove " + selectorSelectedComponents.length + " component"+ (selectorSelectedComponents.length>1? "s":"") +"?");
+      if (result) {
+        // Perform additional actions if the user clicked OK
         deleteSelectedComponents(selectorSelectedComponents);
+      }
         setIsSelectorSelecting(false)
       } else {
         console.log('No child captured the event');
@@ -149,6 +154,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         console.log('error in start param')
         return
       }
+      setSelectionType('add')
       setSelectorSize({w: 1, h: 1})
       setIsSelectorDragging(true);
       setSelectorDeltaPosition({deltaX: 0, deltaY: 0})
@@ -157,7 +163,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     }
 
     
-  }, [editing, selectorSelectedComponents])
+  }, [editing, selectorSelectedComponents, selectionType, selectorSize, isSelectorDragging, selectorDeltaPosition, selectorStartPosition, selectorPosition])
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
@@ -206,6 +212,55 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       }
     );
   }, [componentRepresentations])
+
+  const handleCheckValidSelectionDropPos = useCallback(() =>{
+    let result = checkValidSelectionDropPos({      
+      deltaX: selectorDeltaPosition.deltaX,
+      deltaY: selectorDeltaPosition.deltaY,
+      unitWidth: unitWidth,
+      componentRepresentations: componentRepresentations,
+      selectorSelectedComponents: selectorSelectedComponents
+    })
+    if(result){
+      setIsSelectorSelecting(false)
+      setNoTransition(true)
+      const localDX = Math.round(selectorDeltaPosition.deltaX / unitWidth);
+      const localDY = Math.round(selectorDeltaPosition.deltaY / unitWidth);
+    
+      // Calculate the displaced positions of selected components
+      const displacedComponents = selectorSelectedComponents.map((component) => ({
+        ...component,
+        x: component.x + localDX,
+        y: component.y + localDY,
+      }));
+      const nonSelectedComponents = componentRepresentations.filter(
+        (component) =>
+          !selectorSelectedComponents.find(
+            (selectedComponent) => selectedComponent === component
+          )
+      );
+      const newComponentRepresentations = displacedComponents.concat(nonSelectedComponents)
+      setComponentRepresentations(newComponentRepresentations)
+      setSelectorSelectedComponents([])
+      setTimeout(() => {
+        setNoTransition(false);
+      }, 100); 
+    }else{
+      setNoTransition(false)
+      setSelectorDeltaPosition({deltaX: 0, deltaY: 0})
+      setTimeout(() => {
+        setNoTransition(false);
+      }, 100); 
+    }
+  }, [
+    noTransition,
+    isSelectorSelecting,
+    selectorDeltaPosition,
+    unitWidth,
+    componentRepresentations,
+    selectorSelectedComponents
+  ])
+
   const handleFindClosestEmptySpot = useCallback((
     params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
   ) => {
@@ -268,6 +323,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       container={position}
       selectionType={selectionType}
       setSelectorDeltaPosition={setSelectorDeltaPosition}
+      checkValidSelectionDropPos={handleCheckValidSelectionDropPos}
       />
     </div>
   );

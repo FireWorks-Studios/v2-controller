@@ -135,15 +135,19 @@ export const Button: React.FC<Props> = ({
 
   const componentPosition = useCallback((): {x: number, y:number} =>{
     if(selected){
-      noTransition = true;
+      // noTransition = true;
       if(selectorDeltaPosition.deltaX !==0 || selectorDeltaPosition.deltaY !==0){
-        buttonRef.current?.classList.add("react-draggable-dragging");
+        buttonRef.current?.classList.add("selected");
+        buttonRef.current?.classList.add("noTransition");
+      }else{
+        buttonRef.current?.classList.remove("noTransition");
       }
       return {
         x: unitWidth*component.x + selectorDeltaPosition.deltaX, 
         y: unitWidth*component.y + selectorDeltaPosition.deltaY
       }
     }
+    buttonRef.current?.classList.remove("selected");
     return{
       x: unitWidth*component.x,
       y: unitWidth*component.y

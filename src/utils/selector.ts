@@ -79,3 +79,78 @@ export function GetSelectedComponents({
 
     return ComponentsSelected;
 }
+
+export function checkValidSelectionDropPos({
+    deltaX,
+    deltaY,
+    unitWidth,
+    componentRepresentations,
+    selectorSelectedComponents,
+  }: {
+    deltaX: number;
+    deltaY: number;
+    unitWidth: number;
+    componentRepresentations: ComponentRepresentation[];
+    selectorSelectedComponents: ComponentRepresentation[];
+  }): boolean {
+    // Convert deltaX and deltaY into local grid coords
+    const localDX = Math.round(deltaX / unitWidth);
+    const localDY = Math.round(deltaY / unitWidth);
+  
+    // Calculate the displaced positions of selected components
+    const displacedComponents = selectorSelectedComponents.map((component) => ({
+      ...component,
+      x: component.x + localDX,
+      y: component.y + localDY,
+    }));
+  
+    // Filter out the selected components from the componentRepresentations
+    const nonSelectedComponents = componentRepresentations.filter(
+      (component) =>
+        !selectorSelectedComponents.find(
+          (selectedComponent) => selectedComponent === component
+        )
+    );
+  
+    // Check for overlaps
+    for (const displacedComponent of displacedComponents) {
+      for (const nonSelectedComponent of nonSelectedComponents) {
+        if (
+          checkOverlap(
+            displacedComponent.x,
+            displacedComponent.y,
+            displacedComponent.w,
+            displacedComponent.h,
+            nonSelectedComponent.x,
+            nonSelectedComponent.y,
+            nonSelectedComponent.w,
+            nonSelectedComponent.h
+          )
+        ) {
+          return false;
+        }
+      }
+    }
+  
+    // No overlaps found
+    return true;
+  }
+  
+  // Helper function to check for overlap between two rectangles
+  function checkOverlap(
+    x1: number,
+    y1: number,
+    w1: number,
+    h1: number,
+    x2: number,
+    y2: number,
+    w2: number,
+    h2: number
+  ): boolean {
+    return (
+      x1 < x2 + w2 &&
+      x1 + w1 > x2 &&
+      y1 < y2 + h2 &&
+      y1 + h1 > y2
+    );
+  }

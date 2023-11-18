@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { SelectorCenterButton } from "./SelectorCenterButton";
 import { IoClose } from "react-icons/io5";
 import Draggable, { DraggableEventHandler } from "react-draggable";
+import { ComponentRepresentation } from "./ControllerContainer";
 
 interface Props{
     selecting: boolean;
@@ -19,6 +20,7 @@ interface Props{
         deltaX: number;
         deltaY: number;
     }>>
+    checkValidSelectionDropPos: () => void
 }
 
 
@@ -32,7 +34,8 @@ export const Selector: React.FC<Props> = ({
     unitWidth,
     container,
     selectionType = 'move',
-    setSelectorDeltaPosition
+    setSelectorDeltaPosition,
+    checkValidSelectionDropPos
 }: Props) => {
 
 
@@ -43,10 +46,9 @@ export const Selector: React.FC<Props> = ({
       };
 
     const handleDrag: DraggableEventHandler = useCallback((_, data) =>{
-        //send deltaX and deltaY to components selected
-        console.log(data)
         setSelectorDeltaPosition({deltaX: data.x - x*unitWidth, deltaY: data.y - y*unitWidth})
     }, [x, y, unitWidth])
+
 
     return(
         <Draggable
@@ -55,6 +57,7 @@ export const Selector: React.FC<Props> = ({
             position={{x: x*unitWidth, y: y*unitWidth}}
             scale={1}
             onDrag={handleDrag}
+            onStop={checkValidSelectionDropPos}
             >
             <div className={
                 classNames(
