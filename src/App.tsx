@@ -1,17 +1,32 @@
 import { ControllerContainer } from './components/ControllerContainer/ControllerContainer';
 import "./App.css";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function App() {
   const [editing, setEditing] = useState(false)
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+      setScreenHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
     <div className="App noscroll prevent-select">  
-        <button onClick={() => setEditing(!editing)}>
-      edit
-    </button>
+
       <ControllerContainer 
         position={"center"} 
-        unitWidth={60} 
+        unitWidth={Math.min(((screenWidth-8)/6), ((screenHeight-8)/3))} 
         defaultComponentRepresentations={
         [
           {
@@ -26,7 +41,7 @@ function App() {
         },
         {
           type: "button",
-          styling: ["round", "short"],
+          styling: ['round', 'short'],
           mapping: 'Green Flag',
           container: "center",
           x: 2,
@@ -36,7 +51,7 @@ function App() {
       },
       {
           type: "button",
-          styling: ["round", "short"],
+          styling: ['round', 'short'],
           mapping: 'Pause',
           container: "center",
           x: 3,
@@ -46,7 +61,7 @@ function App() {
       },
       {
         type: "button",
-        styling: ["round", "short"],
+        styling: ['round', 'short'],
         mapping: 'Stop',
         container: "center",
         x: 4,
@@ -108,6 +123,9 @@ function App() {
       }
       editing={editing}
       />
+      <button className='edit' onClick={() => setEditing(!editing)}>
+      edit
+    </button>
     </div>
   );
 }

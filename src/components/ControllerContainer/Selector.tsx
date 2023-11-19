@@ -54,6 +54,7 @@ export const Selector: React.FC<Props> = ({
         <Draggable
             handle=".selector-center-button.move"
             bounds={"parent"}
+            // grid={[unitWidth, unitWidth]}
             position={{x: x*unitWidth, y: y*unitWidth}}
             scale={1}
             onDrag={handleDrag}

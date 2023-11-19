@@ -123,10 +123,11 @@ export const Button: React.FC<Props> = ({
   }, [checkValidDropPos, component, findClosestEmptySpot, index, unitWidth, updateCurrentConfig])
 
   const updateMapping = useCallback((mapping: DropdownOption['value']) => {
-    // TODO: why do we need this line?
-    // if (mapping === ''){
-    //   return
-    // }
+    if(['Green Flag', 'Pause', 'Stop', 'Remap'].includes(mapping)){
+      component.styling.push("short", "round")
+    }else{
+      component.styling = []
+    }
     updateCurrentConfig(index, {
       ...component,
       mapping

@@ -37,7 +37,7 @@
 }
 
 .selector.move.react-draggable-dragging{
-  box-shadow: 0 0 50px 15px #1956ff;
+  /* box-shadow: 0 0 50px 15px #1956ff; */
   z-index: 100;
   transition: transform 0s, box-shadow 0.1s ease;
 }
@@ -90,6 +90,10 @@
 .selector-center-button.move{
   background-color: #1956ff;
   cursor: grab;
+}
+
+.selector.move.react-draggable-dragging > .selector-center-button.move{
+  cursor: grabbing;
 }
 
 .center-icon-container{

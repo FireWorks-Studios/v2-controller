@@ -134,8 +134,8 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         console.log('Selector captured the event');
       }else if(closeBtnAncestor){
         console.log('delete pressed')
-        const result = window.confirm("Remove " + selectorSelectedComponents.length + " component"+ (selectorSelectedComponents.length>1? "s":"") +"?");
-      if (result) {
+        // const result = window.confirm("Remove " + selectorSelectedComponents.length + " component"+ (selectorSelectedComponents.length>1? "s":"") +"?");
+      if (true) {
         // Perform additional actions if the user clicked OK
         deleteSelectedComponents(selectorSelectedComponents);
       }
@@ -222,7 +222,6 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       selectorSelectedComponents: selectorSelectedComponents
     })
     if(result){
-      setIsSelectorSelecting(false)
       setNoTransition(true)
       const localDX = Math.round(selectorDeltaPosition.deltaX / unitWidth);
       const localDY = Math.round(selectorDeltaPosition.deltaY / unitWidth);
@@ -239,8 +238,10 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
             (selectedComponent) => selectedComponent === component
           )
       );
+      
       const newComponentRepresentations = displacedComponents.concat(nonSelectedComponents)
       setComponentRepresentations(newComponentRepresentations)
+      setIsSelectorSelecting(false)
       setSelectorSelectedComponents([])
       setTimeout(() => {
         setNoTransition(false);

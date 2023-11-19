@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 .button{
-    border-radius: 10px; 
+    border-radius: 20%; 
     background: #4d96fe;
     color: white;
-    border: solid 4px rgb(63, 86, 255);
+    border: solid calc(var(--button-width)/15) rgb(63, 86, 255);
     width: calc(var(--button-width) - 4px);
     margin-left: 2px;
     margin-right: 2px;
@@ -65,12 +65,12 @@ button.pressed.short{
 }
 
 .button-text{
-    line-height: calc(var(--button-width) * 3/5);
+    line-height: calc(var(--button-width) * 0.6);
     text-align: center;
 }
 
 .button.short .button-text{
-    line-height: calc(var(--button-width) * 3.5/5);
+    line-height: calc(var(--button-width) * 0.75);
 }
 
 .button.editing>.button-text{
