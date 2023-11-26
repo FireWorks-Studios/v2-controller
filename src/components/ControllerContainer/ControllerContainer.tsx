@@ -8,6 +8,7 @@ import { DropdownOption } from '../Button/Dropdown';
 import { Selector } from './Selector';
 import { GetSelectedComponents, SelectionInteraction } from '../../utils/selector';
 import { checkValidSelectionDropPos } from '../../utils/selector';
+import DeleteSnackbar from '../Snackbar/DeleteSnackbar';
 
 export interface ComponentRepresentation {
   type: 'button' | 'joystick' | 'scroller' | 'wheel',
@@ -24,7 +25,7 @@ interface Props{
   position: 'center' | 'left' | 'right',
   unitWidth: number,
   defaultComponentRepresentations: ComponentRepresentation[],
-  editing: boolean
+  editing: boolean,
 }
 
 type SelectionType = 'move' | 'add'
@@ -44,6 +45,10 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
   const [selectorSelectedComponents, setSelectorSelectedComponents] = useState<ComponentRepresentation[]>([])
   const [selectionType, setSelectionType] = useState<SelectionType>('add')
+
+  const [previouslyDeleted, setPreviouslyDeleted] = useState<ComponentRepresentation[]>([])
+  const [deleteSnackbarIsOpen, setDeleteSnackbarIsOpen] = useState(false);
+  const [noOfDeletedComponents, setNoOfDeletedComponents] = useState(0);
 
   useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
@@ -65,7 +70,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   }, [componentRepresentations])
 
   const deleteComponentRepresentation = useCallback((index: number) => {
+    handleDeleteSnackbar(1);
     setNoTransition(true);
+    setPreviouslyDeleted([componentRepresentations[index]])
     setComponentRepresentations(prevComponentRepresentations => {
       const updatedComponentRepresentations = [...prevComponentRepresentations];
       updatedComponentRepresentations.splice(index, 1);
@@ -77,6 +84,8 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   }, [componentRepresentations]);
 
   const deleteSelectedComponents = useCallback((componentsToDelete: ComponentRepresentation[]) =>{
+    handleDeleteSnackbar(componentsToDelete.length)
+    setPreviouslyDeleted(componentsToDelete)
     console.log("Handling request to delete: " + [...componentsToDelete])
     setNoTransition(true);
     setComponentRepresentations(prevComponents =>
@@ -88,6 +97,18 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       setNoTransition(false);
     }, 100); // Adjust the delay as needed
   }, [componentRepresentations, selectorSelectedComponents])
+
+
+
+  const handleDeleteSnackbar = (num: number) => {
+    setDeleteSnackbarIsOpen(true);
+    setNoOfDeletedComponents(num);
+  };
+
+  const undoDelete = useCallback(()=>{
+    setComponentRepresentations([...componentRepresentations, ...previouslyDeleted])
+    setPreviouslyDeleted([])
+  }, [componentRepresentations, previouslyDeleted])
 
   const handleTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     setTouchEvents(e);
@@ -275,6 +296,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
 
   return (
     <div 
+      id='controllerContainer'
       className={
         classNames(
           "controller-container",
@@ -326,6 +348,12 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       setSelectorDeltaPosition={setSelectorDeltaPosition}
       checkValidSelectionDropPos={handleCheckValidSelectionDropPos}
       />
+
+      <DeleteSnackbar 
+      isOpen={deleteSnackbarIsOpen} 
+      noOfDeletedComponents={noOfDeletedComponents} 
+      setIsOpen={setDeleteSnackbarIsOpen}
+      undoDelete={undoDelete}/>
     </div>
   );
 }
