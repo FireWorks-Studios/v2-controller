@@ -5,6 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { ControllerContainer } from "../ControllerContainer/ControllerContainer";
+import './DeleteSnackbar.css';
 
   export default function DeleteSnackbar({
     isOpen,
@@ -32,7 +33,12 @@ import { ControllerContainer } from "../ControllerContainer/ControllerContainer"
   
     const action = (
       <React.Fragment>
-        <Button color="inherit" size="small" onClick={handleUndo}>
+        <Button 
+          color="inherit" 
+          size="small" 
+          onClick={handleUndo}
+          className="undo-button"
+        >
           UNDO
         </Button>
         <IconButton
@@ -58,9 +64,10 @@ import { ControllerContainer } from "../ControllerContainer/ControllerContainer"
         ContentProps={{
         sx:{
           borderRadius: "10px",
-          color: "white",
-          bgcolor: "#ffab19",
+          color: "#4d96fe",
+          bgcolor: "#ffffff",
           fontWeight: "bold",
+          fontFamily: "Poppins",
         }
        }}
       />

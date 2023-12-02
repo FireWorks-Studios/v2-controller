@@ -29,7 +29,7 @@ export class SelectionInteraction{
         var y = selectorStartPosition.y;
         var w = 1;
         var h = 1;
-    if(deltaX > 0 && deltaY > 0){
+    if(deltaX >= 0 && deltaY >= 0){
         x = selectorStartPosition.x
         y = selectorStartPosition.y
         w = deltaX
@@ -71,10 +71,23 @@ export function GetSelectedComponents({
         const { x: componentX, y: componentY, w: componentW, h: componentH } = component;
         // console.log(componentX, componentY, componentW, componentH)
         // console.log(x, y, w, h)
-        // Check if the component is entirely within the specified area
+
+        // Select if the component is entirely within the specified area
         if (componentX >= x && componentY >= y && componentX + componentW <= x + w && componentY + componentH <= y + h) {
             ComponentsSelected.push(component);
         }
+
+        // Select if partial overlap
+        // const isOverlapping = () => {
+        //   const horizontalOverlap = component.x < x + w && component.x + component.w > x;
+        //   const verticalOverlap = component.y < y+ h && component.y + component.h > y;
+      
+        //   return horizontalOverlap && verticalOverlap;
+        // }
+        // if(isOverlapping()){
+        //   ComponentsSelected.push(component);
+        // }
+
     }
 
     return ComponentsSelected;
@@ -153,4 +166,33 @@ export function checkValidSelectionDropPos({
       y1 < y2 + h2 &&
       y1 + h1 > y2
     );
+  }
+
+  export function resizeSelectorToFitSelectedComponents(
+    selectedComponents: ComponentRepresentation[]
+  ):{
+    x: number, 
+    y: number, 
+    w: number, 
+    h: number
+  }{
+    var top = selectedComponents[0].y;
+    var bottom = selectedComponents[0].y + selectedComponents[0].h;
+    var left = selectedComponents[0].x;
+    var right = selectedComponents[0].x + selectedComponents[0].w;
+    for(const selectedComponent of selectedComponents){
+      if(selectedComponent.y < top){
+        top = selectedComponent.y;
+      }
+      if(selectedComponent.y + selectedComponent.h > bottom){
+        bottom = selectedComponent.y + selectedComponent.h;
+      }
+      if(selectedComponent.x < left){
+        left = selectedComponent.x
+      }
+      if(selectedComponent.x + selectedComponent.w > right){
+        right = selectedComponent.x + selectedComponent.w;
+      }
+    }
+    return {x: left, y: top, w: right - left, h: bottom - top}
   }

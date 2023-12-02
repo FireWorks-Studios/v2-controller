@@ -1,14 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 .button{
-    border-radius: 20%; 
+    --w: 1;
+    --h: 1;
+    border-radius: calc(var(--button-width)/5); 
     background: #4d96fe;
     color: white;
     border: solid calc(var(--button-width)/15) rgb(63, 86, 255);
-    width: calc(var(--button-width) - 4px);
+    width: calc(calc(var(--button-width)*var(--w)) - 4px);
     margin-left: 2px;
     margin-right: 2px;
-    height: calc(calc(var(--button-width) * 4/5) - 4px);
+    height: calc(calc(calc(var(--button-width)*var(--h)) - calc(var(--button-width) * 1/5)) - 4px);
     margin-top: 2px;
     margin-bottom: 2px;
     font-family: 'Bungee', cursive;
@@ -17,15 +19,16 @@
     position: absolute;
     line-height: normal;
     display: flex;
+    align-items: center;
     justify-content: center;
 }
 
 .button.round{
-    border-radius: 45%;
+    border-radius: calc(var(--button-width)/1.5);
 }
 
 .button.short{
-    height: calc(calc(var(--button-width) * 9/10) - 8px);
+    height: calc(calc(calc(var(--button-width)*var(--h)) - calc(var(--button-width) * 1/10)) - 8px);
     box-shadow: 0 calc(var(--button-width) * 1/10) rgb(63, 86, 255);
     margin-top: 6px;
 }
@@ -40,14 +43,17 @@ button.pressed.short{
 }
 
 .button.editing{
-    width: calc(var(--button-width) - 4px);
+    width: calc(calc(var(--button-width)*var(--w)) - 4px);
     margin-left: 2px;
-    height: calc(var(--button-width) - 4px);
+    height: calc(calc(var(--button-width)*var(--h)) - 4px);
     margin-top: 2px;
     box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
     border: solid 4px #4d96fe;
     transition: transform 0.1s ease;
     z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .button.selected{
@@ -70,7 +76,8 @@ button.pressed.short{
 }
 
 .button.short .button-text{
-    line-height: calc(var(--button-width) * 0.75);
+    /* line-height: calc(var(--button-width) * 0.9); */
+    margin-top: calc(var(--button-width) * 0.1);
 }
 
 .button.editing>.button-text{
@@ -99,10 +106,10 @@ button.pressed.short{
 }
 
 .button-bottom{
-    width: calc(var(--button-width) - 4px);
-    height: calc(calc(var(--button-width)/2) - 2px);
+    width: calc(calc(var(--button-width)*var(--w)) - 4px);
+    height: calc(calc(calc(var(--button-width)*var(--h)) - calc(var(--button-width)/2)) - 2px);
     position: absolute; 
-    top: calc(calc(var(--button-width)/2) - 6px); 
+    bottom: -4px; 
     background-color: #4d96fe;
     border-radius: 0 0 8px 8px;
     display: none;

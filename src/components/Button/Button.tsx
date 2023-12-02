@@ -113,6 +113,9 @@ export const Button: React.FC<Props> = ({
       }
 
     } else {
+      if(component.w !== 1 || component.h !== 1){
+        return
+      }
       let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight})
       updateCurrentConfig(index, {
         ...component,
@@ -155,6 +158,11 @@ export const Button: React.FC<Props> = ({
     }
   }, [component, selected, selectorDeltaPosition, unitWidth, buttonRef]) 
   
+  const buttonStyles = {
+    '--w': component.w,
+    '--h': component.h,
+  } as React.CSSProperties;
+
   return (
     <Draggable
       handle=".handle"
@@ -177,7 +185,9 @@ export const Button: React.FC<Props> = ({
             noTransition
           }
         )
-      } ref={buttonRef}>
+      } 
+      style={buttonStyles}
+      ref={buttonRef}>
         <div className={'button-text'}>
           <ParsedDropdownValue 
             value={component.mapping}

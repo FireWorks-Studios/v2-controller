@@ -32,17 +32,17 @@ export function findClosestEmptySpot(
           const currentComponent = componentRepresentations[i];
 
           // Calculate the left, right, top, and bottom coordinates of the current component
-          const currentLeft = currentComponent.x - currentComponent.w / 2;
-          const currentRight = currentComponent.x + currentComponent.w / 2;
-          const currentTop = currentComponent.y - currentComponent.h / 2;
-          const currentBottom = currentComponent.y + currentComponent.h / 2;
+          const currentLeft = currentComponent.x;
+          const currentRight = currentComponent.x + currentComponent.w - 1;
+          const currentTop = currentComponent.y;
+          const currentBottom = currentComponent.y + currentComponent.h - 1;
 
           // Check for overlap
           if (
-            xPos > currentLeft &&
-            xPos < currentRight &&
-            yPos > currentTop &&
-            yPos < currentBottom
+            xPos >= currentLeft &&
+            xPos <= currentRight &&
+            yPos >= currentTop &&
+            yPos <= currentBottom
           ) {
             isVacant = false;
             break;
@@ -80,10 +80,10 @@ export function checkValidDropPos({
 
 // Calculate the left, right, top, and bottom coordinates of the dropped component
   console.log(componentRepresentations[index]);
-  const left = x - droppedComponent.w / 2;
-  const right = x + droppedComponent.w / 2;
-  const top = y - droppedComponent.h / 2;
-  const bottom = y + droppedComponent.h / 2;
+  const left = x;
+  const right = x + droppedComponent.w - 1;
+  const top = y;
+  const bottom = y + droppedComponent.h - 1;
 
   // Check if the dropped component overlaps with any other components
   for (let i = 0; i < componentRepresentations.length; i++) {
@@ -91,17 +91,17 @@ export function checkValidDropPos({
       const currentComponent = componentRepresentations[i];
 
       // Calculate the left, right, top, and bottom coordinates of the current component
-      const currentLeft = currentComponent.x - currentComponent.w / 2;
-      const currentRight = currentComponent.x + currentComponent.w / 2;
-      const currentTop = currentComponent.y - currentComponent.h / 2;
-      const currentBottom = currentComponent.y + currentComponent.h / 2;
+      const currentLeft = currentComponent.x;
+      const currentRight = currentComponent.x + currentComponent.w - 1;
+      const currentTop = currentComponent.y;
+      const currentBottom = currentComponent.y + currentComponent.h - 1;
 
       // Check for overlap
       if (
-        left < currentRight &&
-        right > currentLeft &&
-        top < currentBottom &&
-        bottom > currentTop
+        left <= currentRight &&
+        right >= currentLeft &&
+        top <= currentBottom &&
+        bottom >= currentTop
       ) {
         // Overlap detected, return false
         return false;

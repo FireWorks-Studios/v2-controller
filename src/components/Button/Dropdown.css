@@ -1,12 +1,12 @@
 .selectList{
     display: none;
-    width: calc(var(--button-width) - 4px);
+    width: calc(calc(var(--button-width)*var(--w)) - 4px);
     height: calc(calc(var(--button-width)/2) - 2px);
     position: absolute; 
     top: -4px; 
     left: -4px; 
     border-radius: 8px 8px 0 0; 
-    background-color: #4d96fe; 
+    background-color: #2b7cee; 
     border: none; 
     color: white; 
     text-align: center; 
