@@ -47,7 +47,8 @@ button.pressed.short{
     margin-left: 2px;
     height: calc(calc(var(--button-width)*var(--h)) - 4px);
     margin-top: 2px;
-    box-shadow: 0 calc(var(--button-width)/-5) rgb(63, 86, 255) inset;
+    box-shadow: none;
+    border-radius: 8px;
     border: solid 4px #4d96fe;
     transition: transform 0.1s ease;
     z-index: 0;
@@ -57,6 +58,10 @@ button.pressed.short{
 }
 
 .button.selected{
+    z-index: 100;
+}
+
+.button.singleSelected{
     z-index: 100;
 }
 
@@ -107,36 +112,99 @@ button.pressed.short{
 
 .button-bottom{
     width: calc(calc(var(--button-width)*var(--w)) - 4px);
-    height: calc(calc(calc(var(--button-width)*var(--h)) - calc(var(--button-width)/2)) - 2px);
+    height: calc(calc(var(--button-width)*var(--h)) - 4px);
     position: absolute; 
     bottom: -4px; 
     background-color: #4d96fe;
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
     display: none;
+    font-size: 25px;
 }
 
 .button-bottom.editing{
     display: block;
+    z-index: 0;
+}
+
+.button-bottom.singleSelected{
+    background: repeating-linear-gradient(
+    -45deg,
+    #1956ffa1,
+    #1956ffa1 10px,
+    #638dffa1 10px,
+    #638dffa1 20px
+    );
+  background-size: 200% 200%;
+  animation: barberpole 10s linear infinite;
+  border: solid 2px #1956ff;
+  /* outline: solid 2px #1956ff; */
+  cursor: grab;
 }
 
 .delete{
-    color: #bcd8ff;
-    border-radius: 4px;
-    position: absolute;
-    left: 4px;
-    bottom: 4px;
-    margin-right: 4px;
+    background-color: #ffffff;
+    color: #646464;
+    padding: 4px;
 }
 
-.handle{
-    background-color: #70abff;
-    border-radius: 4px;
-    position: absolute; 
-    right: 4px;
-    bottom: 4px; 
+.moreOptions{
+    background-color: #ffffff;
+    color: #646464;
+    padding: 4px;
+}
+
+.dragHandle{
+    background-color: #ffffff;
+    border: solid 2px #959595;
+    color: #646464;
+    border-radius: 100px;
+    padding: 2px;
+    /* position: absolute;
+    left: 0;
+    bottom: -15px; */
+    margin-top: calc(calc(var(--button-width)*var(--h)) + 4px);
     cursor: grab;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 200;
 }
 
-.react-draggable-dragging >* .handle{
+.menu{
+    font-size: 25px;
+    background-color: #ffffff;
+    border: solid 2px #959595;
+    color: #646464;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-bottom: calc(calc(var(--button-width)*var(--h)));
+    line-height: 0;
+    padding: 2px;
+    width: 60px;
+    max-width: calc(var(--button-width) - 4px);
+    display: none;
+    align-self: flex-end;
+}
+
+.editing>.menu{
+    display: block;
+}
+
+.react-draggable-dragging > .menu{
+    display: none;
+}
+
+.react-draggable-dragging > .button-bottom{
     cursor: grabbing;
 }
+
+.react-draggable-dragging >* .dragHandle{
+    visibility: hidden;
+}
+
+.react-draggable-dragging >* .dragHandle:active{
+    visibility: visible;
+    cursor: grabbing;
+    background-color: #1956ff;
+    border: #1956ff;
+    color: #ffffff;
+}
+

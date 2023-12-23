@@ -9,11 +9,21 @@ import { ParsedDropdownValue } from './ParsedDropdownValue';
 import { checkValidDropPos, findClosestEmptySpot, checkOutOfBounds, getControllerContainerDimensions} from '../../utils/position';
 import { UserInteraction } from '../../utils/interaction';
 import { IoClose } from "react-icons/io5";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdOutlineMoreVert } from "react-icons/md";
+import { VscSparkle } from "react-icons/vsc";
+import { HiSparkles } from "react-icons/hi2";
+import { PiSparkleBold } from "react-icons/pi";
+
+
+
+
 
 
 
 
 interface Props{
+    singleSelected: boolean;
     index: number;
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
     pointerEvents: React.PointerEvent<HTMLDivElement> | null;
@@ -34,6 +44,7 @@ interface Props{
 }
 
 export const Button: React.FC<Props> = ({
+  singleSelected,
   index,
   touchEvents,
   pointerEvents,
@@ -175,14 +186,15 @@ export const Button: React.FC<Props> = ({
       disabled={!editing}
       onStop={handleStop}
     >
-      <button className={
+      <button id={index.toString()} className={
         classNames(
           'button',
           component.styling.join(' '),
           {
             pressed,
             editing,
-            noTransition
+            noTransition,
+            singleSelected
           }
         )
       } 
@@ -193,22 +205,27 @@ export const Button: React.FC<Props> = ({
             value={component.mapping}
           />
         </div>
+        <div className={
+          classNames(
+            'button-bottom',
+            'handle',
+            {
+              editing,
+              singleSelected
+            }
+          )
+        }>
+          {singleSelected? <TbArrowsMove className='handle dragHandle'/>:''}
+        </div>
+        {singleSelected? <div className='menu'> 
+          <PiSparkleBold className='moreOptions'/>
+            <FaRegTrashAlt className='delete' onClick={() => deleteComponentRepresentation(index)}/> 
+        </div>:''}
         <Dropdown 
           editing={editing} 
           updateMapping={updateMapping} 
           value={component.mapping}
         />
-        <div className={
-          classNames(
-            'button-bottom',
-            {
-              editing
-            }
-          )
-        }>
-          <IoClose className='delete' onClick={() => deleteComponentRepresentation(index)}/>
-          <TbArrowsMove className='handle'/>
-        </div>
       </button>
     </Draggable>
   )

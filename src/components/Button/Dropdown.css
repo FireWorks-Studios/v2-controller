@@ -1,17 +1,25 @@
 .selectList{
     display: none;
-    width: calc(calc(var(--button-width)*var(--w)) - 4px);
-    height: calc(calc(var(--button-width)/2) - 2px);
+    width: calc(calc(var(--button-width)*var(--w)) - 12px);
+    height: calc(calc(var(--button-width)/2) - 0px);
     position: absolute; 
-    top: -4px; 
-    left: -4px; 
-    border-radius: 8px 8px 0 0; 
+    top: 0px; 
+    left: 0px; 
+    border-radius: 8px; 
     background-color: #2b7cee; 
     border: none; 
     color: white; 
     text-align: center; 
-    font-size: calc(var(--button-width)/3.5);
+    font-size: calc(var(--button-width)/4.5);
     font-family: 'Bungee', cursive;
+    /* font-weight: bold; */
+    box-sizing: border-box;
+    border: solid 1px #2969C6;
+    z-index: 5;
+  }
+
+  .selectList:focus{
+    outline: none;
   }
   
   .selectList.editing{

@@ -64,10 +64,10 @@ import './DeleteSnackbar.css';
         ContentProps={{
         sx:{
           borderRadius: "10px",
-          color: "#4d96fe",
+          color: "#959595",
           bgcolor: "#ffffff",
           fontWeight: "bold",
-          fontFamily: "Poppins",
+          border: "dashed 2px #959595",
         }
        }}
       />

@@ -50,6 +50,8 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [deleteSnackbarIsOpen, setDeleteSnackbarIsOpen] = useState(false);
   const [noOfDeletedComponents, setNoOfDeletedComponents] = useState(0);
 
+  const [singleSelectedComponentId, setSingleSelectedComponentId] = useState<number>()
+
   useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
   },[unitWidth])
@@ -67,6 +69,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       }
     })
     setComponentRepresentations(() => newConfig)
+    closeDeleteSnackbar()
   }, [componentRepresentations])
 
   useEffect(()=>{
@@ -76,6 +79,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const deleteComponentRepresentation = useCallback((index: number) => {
     handleDeleteSnackbar(1);
     setNoTransition(true);
+    setSingleSelectedComponentId(-1);
     setPreviouslyDeleted([componentRepresentations[index]])
     setComponentRepresentations(prevComponentRepresentations => {
       const updatedComponentRepresentations = [...prevComponentRepresentations];
@@ -107,6 +111,10 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const handleDeleteSnackbar = (num: number) => {
     setDeleteSnackbarIsOpen(true);
     setNoOfDeletedComponents(num);
+  };
+
+  const closeDeleteSnackbar = () =>{
+    setDeleteSnackbarIsOpen(false);
   };
 
   const undoDelete = useCallback(()=>{
@@ -162,10 +170,15 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         console.log('Button captured the event');
         setIsSelectorSelecting(false)
         setSelectorSelectedComponents([])
+        console.log(buttonAncestor.id)
+        setSingleSelectedComponentId(parseInt(buttonAncestor.id))
+        //set this button as selected
       } else if (selectorAncestor) {
         console.log('Selector captured the event');
+        setSingleSelectedComponentId(-1)
       }else if(closeBtnAncestor){
         console.log('delete pressed')
+        setSingleSelectedComponentId(-1)
         // const result = window.confirm("Remove " + selectorSelectedComponents.length + " component"+ (selectorSelectedComponents.length>1? "s":"") +"?");
       if (true) {
         // Perform additional actions if the user clicked OK
@@ -175,27 +188,30 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       } else {
         console.log('No child captured the event');
         setIsSelectorSelecting(false)
+        setSingleSelectedComponentId(-1)
       }
     }
     } else {
       // Event not captured by any child element
+      setSingleSelectedComponentId(-1)
       console.log('Event not captured by any child element');
-      setIsSelectorSelecting(true)
-      const startParam = SelectionInteraction.startSelect(e, containerRef);
-      if(!startParam){
-        console.log('error in start param')
-        return
-      }
-      setSelectionType('add')
-      setSelectorSize({w: 1, h: 1})
-      setIsSelectorDragging(true);
-      setSelectorDeltaPosition({deltaX: 0, deltaY: 0})
-      setSelectorStartPosition({ x: startParam.x, y: startParam.y });
-      setSelectorPosition({ x: startParam.x, y: startParam.y });
+      //code for getting the selector working, disabled for now...
+      // setIsSelectorSelecting(true)
+      // const startParam = SelectionInteraction.startSelect(e, containerRef);
+      // if(!startParam){
+      //   console.log('error in start param')
+      //   return
+      // }
+      // setSelectionType('add')
+      // setSelectorSize({w: 1, h: 1})
+      // setIsSelectorDragging(true);
+      // setSelectorDeltaPosition({deltaX: 0, deltaY: 0})
+      // setSelectorStartPosition({ x: startParam.x, y: startParam.y });
+      // setSelectorPosition({ x: startParam.x, y: startParam.y });
     }
 
     
-  }, [editing, selectorSelectedComponents, deleteSelectedComponents])
+  }, [editing, selectorSelectedComponents, deleteSelectedComponents, singleSelectedComponentId])
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
@@ -286,6 +302,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       
       const newComponentRepresentations = displacedComponents.concat(nonSelectedComponents)
       setComponentRepresentations(newComponentRepresentations)
+      closeDeleteSnackbar()
       setIsSelectorSelecting(false)
       setIsSelectorDragging(false)
       setSelectorSelectedComponents([])
@@ -341,6 +358,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       {componentRepresentations.map((component, index)=>(
         (component.type === 'button') ?
         <Button 
+          singleSelected={index === singleSelectedComponentId}
           key={index} 
           index={index}
           touchEvents={touchEvents} 
