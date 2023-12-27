@@ -16,16 +16,15 @@
     z-index: 105;
     background-size: 200% 200%;
     animation: barberpole 10s linear infinite;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .selector.move{
   background: repeating-linear-gradient(
     -45deg,
-    #1956ffa1,
-    #1956ffa1 10px,
-    #638dffa1 10px,
-    #638dffa1 20px
+    var(--colorDarker),
+    var(--colorDarker) 10px,
+    var(--colorLighter) 10px,
+    var(--colorLighter) 20px
     );
   border: solid 4px #1956ff;
   background-size: 200% 200%;

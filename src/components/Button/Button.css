@@ -3,10 +3,13 @@
 .button{
     --w: 1;
     --h: 1;
+    --color: #006aff;
+    --colorDarker: #3f56ff; 
+    --colorLighter: #638dff;
     border-radius: calc(var(--button-width)/5); 
-    background: #4d96fe;
+    background: var(--color);
     color: white;
-    border: solid calc(var(--button-width)/15) rgb(63, 86, 255);
+    border: solid calc(var(--button-width)/15) var(--colorDarker);
     width: calc(calc(var(--button-width)*var(--w)) - 4px);
     margin-left: 2px;
     margin-right: 2px;
@@ -15,12 +18,18 @@
     margin-bottom: 2px;
     font-family: 'Bungee', cursive;
     font-size: calc(var(--button-width)/2.5);
-    box-shadow: 0 calc(var(--button-width)/5) rgb(63, 86, 255);
+    box-shadow: 0 calc(var(--button-width)/5) var(--colorDarker),
+    0 calc(var(--button-width)/7) var(--colorDarker),
+    0 calc(var(--button-width)/10) var(--colorDarker);
     position: absolute;
     line-height: normal;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.icon{
+    margin-top: calc(var(--button-width)/6);
 }
 
 .button.round{
@@ -29,12 +38,12 @@
 
 .button.short{
     height: calc(calc(calc(var(--button-width)*var(--h)) - calc(var(--button-width) * 1/10)) - 8px);
-    box-shadow: 0 calc(var(--button-width) * 1/10) rgb(63, 86, 255);
+    box-shadow: 0 calc(var(--button-width) * 1/10) var(--colorDarker);
     margin-top: 6px;
 }
 
 .button.pressed{
-    box-shadow: 0 0 rgb(63, 86, 255) inset;
+    box-shadow: 0 0 var(--colorDarker) inset;
     margin-top: calc(calc(var(--button-width)/5) + 2px);
 }
 
@@ -75,14 +84,14 @@ button.pressed.short{
     transition: transform 0s;
 }
 
+.button.editing.dragResizing{
+    transition: transform 0s;
+}
+
 .button-text{
     line-height: calc(var(--button-width) * 0.6);
     text-align: center;
-}
-
-.button.short .button-text{
-    /* line-height: calc(var(--button-width) * 0.9); */
-    margin-top: calc(var(--button-width) * 0.1);
+    margin-top: 0;
 }
 
 .button.editing>.button-text{
@@ -115,7 +124,7 @@ button.pressed.short{
     height: calc(calc(var(--button-width)*var(--h)) - 4px);
     position: absolute; 
     bottom: -4px; 
-    background-color: #4d96fe;
+    background-color: var(--color);
     border-radius: 8px;
     display: none;
     font-size: 25px;
@@ -129,14 +138,14 @@ button.pressed.short{
 .button-bottom.singleSelected{
     background: repeating-linear-gradient(
     -45deg,
-    #1956ffa1,
-    #1956ffa1 10px,
-    #638dffa1 10px,
-    #638dffa1 20px
+    var(--colorDarker),
+    var(--colorDarker) 10px,
+    var(--colorLighter) 10px,
+    var(--colorLighter) 20px
     );
   background-size: 200% 200%;
   animation: barberpole 10s linear infinite;
-  border: solid 2px #1956ff;
+  border: solid 2px var(--colorDarker);
   /* outline: solid 2px #1956ff; */
   cursor: grab;
 }
@@ -155,7 +164,7 @@ button.pressed.short{
 
 .dragHandle{
     background-color: #ffffff;
-    border: solid 2px #959595;
+    border: solid 2px #ffffff;
     color: #646464;
     border-radius: 100px;
     padding: 2px;
@@ -171,15 +180,15 @@ button.pressed.short{
 .menu{
     font-size: 25px;
     background-color: #ffffff;
-    border: solid 2px #959595;
+    border: solid 2px #ffffff;
     color: #646464;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     margin-bottom: calc(calc(var(--button-width)*var(--h)));
     line-height: 0;
     padding: 2px;
-    width: 60px;
-    max-width: calc(var(--button-width) - 4px);
+    min-width: 60px;
+    visibility: hidden;
     display: none;
     align-self: flex-end;
 }
@@ -188,8 +197,12 @@ button.pressed.short{
     display: block;
 }
 
-.react-draggable-dragging > .menu{
-    display: none;
+.editing>.menu.singleSelected{
+    visibility: visible;
+}
+
+.react-draggable-dragging > .menu.singleSelected{
+    visibility: hidden;
 }
 
 .react-draggable-dragging > .button-bottom{
@@ -203,8 +216,57 @@ button.pressed.short{
 .react-draggable-dragging >* .dragHandle:active{
     visibility: visible;
     cursor: grabbing;
-    background-color: #1956ff;
-    border: #1956ff;
+    background-color: var(--colorDarker);
+    border: 2px solid var(--colorDarker);
     color: #ffffff;
 }
 
+.resizeHandle{
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
+    border: solid 2px var(--colorDarker);
+    position: absolute;
+    visibility: hidden;
+    margin: -15px;
+}
+
+.resizeHandle:hover{
+    width: 25px;
+    height: 25px;
+    margin: -20px;
+}
+
+.button.editing.singleSelected>.resizeHandle{
+    visibility: visible;
+}
+
+.button.editing.react-draggable-dragging>.resizeHandle{
+    visibility: hidden;
+}
+
+.top-left{
+    top: 0;
+    left: 0;
+    cursor: nwse-resize;
+}
+
+.top-right{
+    top: 0;
+    right: 0;
+    cursor: nesw-resize;
+}
+
+.bottom-left{
+    bottom: 0;
+    left: 0;
+    cursor: nesw-resize;
+}
+
+.bottom-right{
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+}

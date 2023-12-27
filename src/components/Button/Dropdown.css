@@ -6,7 +6,7 @@
     top: 0px; 
     left: 0px; 
     border-radius: 8px; 
-    background-color: #2b7cee; 
+    background-color: var(--colorDarker); 
     border: none; 
     color: white; 
     text-align: center; 
@@ -14,7 +14,7 @@
     font-family: 'Bungee', cursive;
     /* font-weight: bold; */
     box-sizing: border-box;
-    border: solid 1px #2969C6;
+    border: solid 1px var(--color);
     z-index: 5;
   }
 

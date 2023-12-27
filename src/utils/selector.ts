@@ -150,7 +150,7 @@ export function checkValidSelectionDropPos({
   }
   
   // Helper function to check for overlap between two rectangles
-  function checkOverlap(
+  export function checkOverlap(
     x1: number,
     y1: number,
     w1: number,

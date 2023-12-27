@@ -6,7 +6,7 @@ import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
 import classNames from 'classnames';
 import { DropdownOption } from '../Button/Dropdown';
 import { Selector } from './Selector';
-import { GetSelectedComponents, SelectionInteraction, resizeSelectorToFitSelectedComponents } from '../../utils/selector';
+import { GetSelectedComponents, SelectionInteraction, checkOverlap, resizeSelectorToFitSelectedComponents } from '../../utils/selector';
 import { checkValidSelectionDropPos } from '../../utils/selector';
 import DeleteSnackbar from '../Snackbar/DeleteSnackbar';
 
@@ -18,7 +18,8 @@ export interface ComponentRepresentation {
   x: number,
   y: number,
   w: number,
-  h: number
+  h: number,
+  color: string
 }
 
 interface Props{
@@ -51,6 +52,31 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [noOfDeletedComponents, setNoOfDeletedComponents] = useState(0);
 
   const [singleSelectedComponentId, setSingleSelectedComponentId] = useState<number>()
+  const [customizationMenuOpen, setCustomizationMenuOpen] = useState(false)
+
+  const [colorsUsed, setColorsUsed] = useState<string[]>(new Array(6))
+
+  const [dragResizeCorner, setDragResizeCorner] = useState<string>()
+
+  useEffect(()=>{
+    var tempColors = new Array(6);
+    const uniqueColors = new Set<string>(); // Keep track of unique colors encountered
+
+    for (const component of componentRepresentations) {
+      const { color } = component;
+
+      if (color && !uniqueColors.has(color)) {
+        uniqueColors.add(color);
+        tempColors[uniqueColors.size - 1] = color;
+
+        if (uniqueColors.size === 6) {
+          break; // Stop the loop once 6 unique colors are found
+        }
+      }
+    }
+    console.log(tempColors)
+    setColorsUsed(tempColors);
+  },[componentRepresentations])
 
   useEffect(()=>{
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
@@ -131,7 +157,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       setSelectorSelectedComponents([])
     }
   }, [isSelectorSelecting])
-  
+
 
   useEffect(() =>{
     if(selectorSelectedComponents.length === 0){
@@ -165,6 +191,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       const buttonAncestor = target.closest('.button');
       const selectorAncestor = target.closest('.selector-center-button');
       const closeBtnAncestor = target.closest('.delete-icon');
+      const menuAncestor = target.closest('.MuiPaper-root')||target.closest('#color-popover');
+      const menuRootAncestor = target.closest('.MuiPopover-root');
+
 
       if (buttonAncestor) {
         console.log('Button captured the event');
@@ -173,6 +202,26 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         console.log(buttonAncestor.id)
         setSingleSelectedComponentId(parseInt(buttonAncestor.id))
         //set this button as selected
+
+        //check if the touch is a drag to resize the button?
+        setDragResizeCorner(undefined)
+        const topLeftHandler = target.closest('.top-left')
+        const topRightHandler = target.closest('.top-right')
+        const bottomLeftHandler = target.closest('.bottom-left')
+        const bottomRightHandler = target.closest('.bottom-right')
+        if(topLeftHandler){
+          console.log('dragging top left!')
+          setDragResizeCorner('top-left')
+        }else if(topRightHandler){
+          console.log('dragging top right!')
+          setDragResizeCorner('top-right')
+        }else if(bottomLeftHandler){
+          console.log('dragging bottom left!')
+          setDragResizeCorner('bottom-left')
+        }else if(bottomRightHandler){
+          console.log('dragging bottom right!')
+          setDragResizeCorner('bottom-right')
+        }
       } else if (selectorAncestor) {
         console.log('Selector captured the event');
         setSingleSelectedComponentId(-1)
@@ -185,6 +234,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         deleteSelectedComponents(selectorSelectedComponents);
       }
         setIsSelectorSelecting(false)
+      }else if(menuAncestor){
+        console.log('menu captured the event - do nothing');
+      }else if(menuRootAncestor){
+        console.log('close customize submenu');
+        setCustomizationMenuOpen(false)
       } else {
         console.log('No child captured the event');
         setIsSelectorSelecting(false)
@@ -195,6 +249,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       // Event not captured by any child element
       setSingleSelectedComponentId(-1)
       console.log('Event not captured by any child element');
+      
       //code for getting the selector working, disabled for now...
       // setIsSelectorSelecting(true)
       // const startParam = SelectionInteraction.startSelect(e, containerRef);
@@ -211,17 +266,139 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     }
 
     
-  }, [editing, selectorSelectedComponents, deleteSelectedComponents, singleSelectedComponentId])
+  }, [editing, selectorSelectedComponents, deleteSelectedComponents, singleSelectedComponentId, dragResizeCorner])
 
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    setPointerEvents(e);
-    if (!isSelectorDragging) {
-      return;
+  const handleDragResize = useCallback((e: React.PointerEvent<HTMLDivElement>) =>{
+    e.preventDefault();
+    if(!singleSelectedComponentId){
+      return
     }
     if(!containerRef.current){
       return
     }
+    const selectedComponent = componentRepresentations[singleSelectedComponentId]
+    
+    var anchorPos
+    if(dragResizeCorner === 'top-left'){
+      anchorPos = {anchorX: selectedComponent.x + selectedComponent.w - 1, anchorY: selectedComponent.y + selectedComponent.h - 1}
+    }else if(dragResizeCorner === 'top-right'){
+      anchorPos = {anchorX: selectedComponent.x, anchorY: selectedComponent.y + selectedComponent.h - 1}
+    }else if(dragResizeCorner === 'bottom-right'){
+      anchorPos = {anchorX: selectedComponent.x, anchorY: selectedComponent.y}
+    }else{
+      anchorPos = {anchorX: selectedComponent.x + selectedComponent.w - 1, anchorY: selectedComponent.y}
+    }
+    console.log(anchorPos)
 
+    var targetPos
+    const divRect = containerRef.current?.getBoundingClientRect();
+    const { clientX, clientY } = e;
+    if (!(divRect && clientX >= divRect.left && clientX <= divRect.right && clientY >= divRect.top && clientY <= divRect.bottom)){
+      return
+    }
+    const localX = clientX - divRect.left;
+    const localY = clientY - divRect.top;
+    const localGridX = Math.floor(localX/unitWidth)
+    const localGridY = Math.floor(localY/unitWidth)
+    targetPos = {targetX: localGridX, targetY: localGridY}
+    console.log(targetPos)
+
+    const topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
+    const bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+    console.log(topLeftPos, bottomRightPos)
+
+    var validPos = []
+    for(var i = topLeftPos.x; i <= bottomRightPos.x; i++){
+      for(var j = topLeftPos.y; j <= bottomRightPos.y; j++){
+        //test for collisions for box defined by (i, j) to anchorPos
+        //define box
+        let testBox = {
+          x: Math.min(i, anchorPos.anchorX),
+          y: Math.min(j, anchorPos.anchorY),
+          w: Math.max(i, anchorPos.anchorX) - Math.min(i, anchorPos.anchorX) + 1,
+          h: Math.max(j, anchorPos.anchorY) - Math.min(j, anchorPos.anchorY) + 1
+        }
+        console.log(testBox)
+        //check collisions
+        const nonSelectedComponents = componentRepresentations.filter(
+          (component) =>
+            component !== selectedComponent
+        );
+        let isValid = true
+        for (const nonSelectedComponent of nonSelectedComponents){
+            if(checkOverlap(
+              testBox.x,
+              testBox.y,
+              testBox.w,
+              testBox.h,
+              nonSelectedComponent.x,
+              nonSelectedComponent.y,
+              nonSelectedComponent.w,
+              nonSelectedComponent.h
+            )){
+              isValid = false
+            }
+        }
+        //compare distance to target pos according to which corner is dragged
+        if(isValid){
+          validPos.push(testBox)
+        }
+      }
+    }
+    console.log(validPos)
+    let closestPos = validPos[0]
+    let closestDistance = Number.MAX_VALUE
+    for(const pos of validPos){
+      if(dragResizeCorner === 'top-left'){
+        if(distanceToTarget(pos.x*unitWidth, pos.y*unitWidth, localX, localY)<closestDistance){
+          closestDistance = distanceToTarget(pos.x*unitWidth, pos.y*unitWidth, localX, localY)
+          closestPos = pos
+        }
+      }else if(dragResizeCorner === 'top-right'){
+        if(distanceToTarget((pos.x+pos.w)*unitWidth, pos.y*unitWidth, localX, localY)<closestDistance){
+          closestDistance = distanceToTarget((pos.x+pos.w)*unitWidth, pos.y*unitWidth, localX, localY)
+          closestPos = pos
+        }
+      }else if(dragResizeCorner === 'bottom-left'){
+        if(distanceToTarget(pos.x*unitWidth, (pos.y+pos.h)*unitWidth, localX, localY)<closestDistance){
+          closestDistance = distanceToTarget(pos.x*unitWidth, (pos.y+pos.h)*unitWidth, localX, localY)
+          closestPos = pos
+        }
+      }else{
+        if(distanceToTarget((pos.x+pos.w)*unitWidth, (pos.y+pos.h)*unitWidth, localX, localY)<closestDistance){
+          closestDistance = distanceToTarget((pos.x+pos.w)*unitWidth, (pos.y+pos.h)*unitWidth, localX, localY)
+          closestPos = pos
+        }
+      }
+    }
+    console.log(closestPos)
+    updateCurrentConfig(singleSelectedComponentId, {
+      ...selectedComponent,
+      ...closestPos
+    })
+  },[dragResizeCorner, singleSelectedComponentId, componentRepresentations])
+
+  function distanceToTarget(x: number, y: number, targetX: number, targetY: number): number {
+    const deltaX = targetX - x;
+    const deltaY = targetY - y;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    return distance;
+  }
+
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    setPointerEvents(e);
+    if(!containerRef.current){
+      return
+    }
+
+    //handle drag to resize recursively
+    if(dragResizeCorner !== undefined){
+      handleDragResize(e)
+    }
+
+    if (!isSelectorDragging) {
+      return;
+    }
     let dragSelect = SelectionInteraction.dragSelect(e, containerRef, selectorStartPosition)
     if(!dragSelect){
       return
@@ -236,11 +413,12 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       h: selectorSize.h, 
       componentRepresentations: componentRepresentations
     }));
-  }, [selectorStartPosition, selectorPosition, isSelectorDragging, containerRef, componentRepresentations, selectorSize.h, selectorSize.w, unitWidth])
+  }, [dragResizeCorner, selectorStartPosition, selectorPosition, isSelectorDragging, containerRef, componentRepresentations, selectorSize.h, selectorSize.w, unitWidth])
 
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     setPointerEvents(e);
     setIsSelectorDragging(false);
+    setDragResizeCorner(undefined)
     // setSelectorSelectedComponents(GetSelectedComponents({
     //   x: selectorPosition.x, 
     //   y: selectorPosition.y, 
@@ -259,7 +437,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     // }
 
  
-  }, [selectorPosition, selectorSize, componentRepresentations])
+  }, [dragResizeCorner, selectorPosition, selectorSize, componentRepresentations])
 
 
   const handleCheckValidDropPos = useCallback((
@@ -354,10 +532,17 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
+      onPointerCancel={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+      // onPointerEnter={handlePointerUp}
     >  
       {componentRepresentations.map((component, index)=>(
         (component.type === 'button') ?
         <Button 
+        dragResizing={dragResizeCorner!==undefined && singleSelectedComponentId === index}
+        colorsUsed={colorsUsed}
+        customizationMenuOpen={customizationMenuOpen}
+        setCustomizationMenuOpen={setCustomizationMenuOpen}
           singleSelected={index === singleSelectedComponentId}
           key={index} 
           index={index}

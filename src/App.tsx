@@ -66,6 +66,7 @@ function App() {
               y: 0,
               w: 1,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -76,6 +77,7 @@ function App() {
               y: 0,
               w: 1,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -86,6 +88,7 @@ function App() {
               y: 0,
               w: 1,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -96,6 +99,7 @@ function App() {
               y: 0,
               w: 2,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -106,6 +110,7 @@ function App() {
               y: 1,
               w: 2,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -116,6 +121,7 @@ function App() {
               y: 2,
               w: 1,
               h: 1,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -126,6 +132,7 @@ function App() {
               y: 1,
               w: 2,
               h: 2,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -136,6 +143,7 @@ function App() {
               y: 1,
               w: 1,
               h: 2,
+              color: '#006aff'
             },
             {
               type: "button",
@@ -146,6 +154,7 @@ function App() {
               y: 2,
               w: 1,
               h: 1,
+              color: '#006aff'
             },
           ]}
           editing={editing}

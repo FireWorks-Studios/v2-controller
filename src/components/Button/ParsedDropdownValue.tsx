@@ -21,13 +21,13 @@ export const ParsedDropdownValue: React.FC<Props> = ({
     case "Space":
       return <>_</>
     case "Green Flag":
-      return <FaFlag/>
+      return <FaFlag className="icon"/>
     case "Pause":
-      return <FaPause/>
+      return <FaPause className="icon"/>
     case "Stop":
-      return <TbOctagonFilled/>
+      return <TbOctagonFilled className="icon"/>
     case "Remap":
-      return <FaGear/>
+      return <FaGear className="icon"/>
     default:
       return <>{value}</>
   }

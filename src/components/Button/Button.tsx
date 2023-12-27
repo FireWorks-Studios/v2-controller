@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useImperativeHandle } from 'react'
 import './Button.css'
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
@@ -14,15 +14,33 @@ import { MdOutlineMoreVert } from "react-icons/md";
 import { VscSparkle } from "react-icons/vsc";
 import { HiSparkles } from "react-icons/hi2";
 import { PiSparkleBold } from "react-icons/pi";
+import { LuRectangleHorizontal } from "react-icons/lu";
+import { FaRegCircle } from "react-icons/fa";
+import { TbBrush } from "react-icons/tb";
+import { LuBrush } from "react-icons/lu";
+import { FaSquare } from "react-icons/fa";
 
 
 
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Checkbox, ListItemIcon, ListItemText, Switch, Typography } from '@material-ui/core';
+import { FavoriteBorder, Favorite, Margin } from '@mui/icons-material';
 
 
+import { MuiColorInput } from 'mui-color-input'
+import { Color, Divider, IconButton, ListItem, ListItemSecondaryAction } from '@mui/material';
 
+import { BsToggleOff } from "react-icons/bs";
+import { BsToggleOn } from "react-icons/bs";
+
+import { lighten } from '../../utils/colorModifier';
 
 
 interface Props{
+  dragResizing: boolean;
+  colorsUsed:string[];
+  customizationMenuOpen: boolean;
     singleSelected: boolean;
     index: number;
     touchEvents: React.TouchEvent<HTMLDivElement> | null;
@@ -41,9 +59,13 @@ interface Props{
     findClosestEmptySpot(
       params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
     ): ReturnType<typeof findClosestEmptySpot>
+    setCustomizationMenuOpen(value: boolean): void;
 }
 
 export const Button: React.FC<Props> = ({
+  dragResizing,
+  colorsUsed,
+  customizationMenuOpen,
   singleSelected,
   index,
   touchEvents,
@@ -58,9 +80,16 @@ export const Button: React.FC<Props> = ({
   deleteComponentRepresentation,
   checkValidDropPos,
   findClosestEmptySpot,
+  setCustomizationMenuOpen,
 }: Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
+
+  useEffect(()=>{
+    if(!singleSelected){
+      setCustomizationMenuOpen(false)
+    }
+  },[singleSelected])
 
   useEffect(()=>{
     // never happens, just for ts type checking
@@ -137,16 +166,40 @@ export const Button: React.FC<Props> = ({
   }, [checkValidDropPos, component, findClosestEmptySpot, index, unitWidth, updateCurrentConfig])
 
   const updateMapping = useCallback((mapping: DropdownOption['value']) => {
-    if(['Green Flag', 'Pause', 'Stop', 'Remap'].includes(mapping)){
-      component.styling.push("short", "round")
-    }else{
-      component.styling = []
-    }
+    // if(['Green Flag', 'Pause', 'Stop', 'Remap'].includes(mapping)){
+    //   component.styling.push("short", "round")
+    // }else{
+    //   component.styling = []
+    // }
     updateCurrentConfig(index, {
       ...component,
       mapping
     })
   }, [component, index, updateCurrentConfig])
+
+  const updateStyling = useCallback((styling: string[])=>{
+    updateCurrentConfig(index, {
+      ...component,
+      styling
+    })
+  },[component, index, updateCurrentConfig])
+
+  const updateColor = useCallback((color: string)=>{
+    updateCurrentConfig(index, {
+      ...component,
+      color
+    })
+  },[component, index, updateCurrentConfig])
+
+  const toggleStyling = useCallback((attribute: string)=>{
+    var newStyling = component.styling
+    if(component.styling.includes(attribute)){
+      newStyling = newStyling.filter(e => e !== attribute)
+    }else{
+      newStyling.push(attribute)
+    }
+    updateStyling(newStyling)
+  }, [component, updateStyling])
 
   const componentPosition = useCallback((): {x: number, y:number} =>{
     if(selected){
@@ -172,6 +225,9 @@ export const Button: React.FC<Props> = ({
   const buttonStyles = {
     '--w': component.w,
     '--h': component.h,
+    '--color': lighten(component.color, 0.2),
+    '--colorDarker': lighten(component.color, -0.2),
+    '--colorLighter': lighten(component.color, 0.2)
   } as React.CSSProperties;
 
   return (
@@ -194,7 +250,8 @@ export const Button: React.FC<Props> = ({
             pressed,
             editing,
             noTransition,
-            singleSelected
+            singleSelected,
+            dragResizing
           }
         )
       } 
@@ -215,12 +272,72 @@ export const Button: React.FC<Props> = ({
             }
           )
         }>
-          {singleSelected? <TbArrowsMove className='handle dragHandle'/>:''}
+        {singleSelected? <TbArrowsMove className='handle dragHandle'/>:""}
         </div>
-        {singleSelected? <div className='menu'> 
-          <PiSparkleBold className='moreOptions'/>
-            <FaRegTrashAlt className='delete' onClick={() => deleteComponentRepresentation(index)}/> 
-        </div>:''}
+
+        <div className='top-left resizeHandle'/>
+        <div className='top-right resizeHandle'/>
+        <div className='bottom-left resizeHandle'/>
+        <div className='bottom-right resizeHandle'/>
+
+        <div id='menu' className={
+          classNames(
+            'menu',
+            {
+              singleSelected
+            }
+          )
+        }> 
+          <PiSparkleBold id={'customizationMenuBtn'+index} className='moreOptions' onClick={() => setCustomizationMenuOpen(!customizationMenuOpen)}/>
+          <FaRegTrashAlt className='delete' onClick={() => deleteComponentRepresentation(index)}/> 
+        </div>
+
+        <Menu
+          anchorEl={document.getElementById('customizationMenuBtn'+index)}
+          open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+index)!= null && singleSelected}
+        >
+        <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
+          <ListItemIcon><FaRegCircle /></ListItemIcon>
+          <ListItemText>Round</ListItemText>
+          <IconButton edge="end" size='large' sx={component.styling.includes('round')? {color: component.color}: {}}>
+          {component.styling.includes('round')? <BsToggleOn/>: <BsToggleOff/>}
+          </IconButton>
+        </MenuItem>
+        <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
+          <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
+          <ListItemText>Short</ListItemText>
+          <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color}: {}}>
+          {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
+          </IconButton>
+        </MenuItem>
+        <Divider/>
+        <MenuItem dense={true} disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
+          <ListItemIcon><LuBrush /></ListItemIcon>
+          <ListItemText>Color</ListItemText>
+          <MuiColorInput id='MuiColorInput' size='small' value={component.color} onChange={updateColor} format='hex' variant='outlined' sx={{marginLeft: '10px', width: '150px', display: 'flex', alignItems: 'flex-end', marginRight: '-5px'}} isAlphaHidden={true}/>
+        </MenuItem>
+        <MenuItem dense disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
+          <IconButton sx={{color: colorsUsed[0]}} disabled={colorsUsed[0] === undefined} onClick={()=>updateColor(colorsUsed[0])}>
+          <FaSquare/>
+          </IconButton>
+          <IconButton sx={{color: colorsUsed[1]}} disabled={colorsUsed[1] === undefined} onClick={()=>updateColor(colorsUsed[1])}>
+          <FaSquare/>
+          </IconButton>
+          <IconButton sx={{color: colorsUsed[2]}} disabled={colorsUsed[2] === undefined} onClick={()=>updateColor(colorsUsed[2])}>
+          <FaSquare/>
+          </IconButton>
+          <IconButton sx={{color: colorsUsed[3]}} disabled={colorsUsed[3] === undefined} onClick={()=>updateColor(colorsUsed[3])}>
+          <FaSquare/>
+          </IconButton>
+          <IconButton sx={{color: colorsUsed[4]}} disabled={colorsUsed[4] === undefined} onClick={()=>updateColor(colorsUsed[4])}>
+          <FaSquare/>
+          </IconButton>
+          <IconButton sx={{color: colorsUsed[5]}} disabled={colorsUsed[5] === undefined} onClick={()=>updateColor(colorsUsed[5])}>
+          <FaSquare/>
+          </IconButton>
+        </MenuItem>
+      </Menu>
+
         <Dropdown 
           editing={editing} 
           updateMapping={updateMapping} 
