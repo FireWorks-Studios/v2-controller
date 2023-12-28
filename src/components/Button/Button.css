@@ -150,6 +150,22 @@ button.pressed.short{
   cursor: grab;
 }
 
+.button-bottom.singleSelected.top-left{
+    cursor: nwse-resize;
+}
+
+.button-bottom.singleSelected.top-right{
+    cursor: nesw-resize;
+}
+
+.button-bottom.singleSelected.bottom-left{
+    cursor: nesw-resize;
+}
+
+.button-bottom.singleSelected.bottom-right{
+    cursor: nwse-resize;
+}
+
 .delete{
     background-color: #ffffff;
     color: #646464;
@@ -201,6 +217,10 @@ button.pressed.short{
     visibility: visible;
 }
 
+.editing>.menu.singleSelected.dragResizing{
+    visibility: hidden;
+}
+
 .react-draggable-dragging > .menu.singleSelected{
     visibility: hidden;
 }
@@ -221,6 +241,10 @@ button.pressed.short{
     color: #ffffff;
 }
 
+.dragResizing > .dragHandle{
+    visibility: hidden;
+}
+
 .resizeHandle{
     width: 20px;
     height: 20px;
@@ -239,6 +263,12 @@ button.pressed.short{
     margin: -20px;
 }
 
+.resizeHandle.big{
+    width: 25px;
+    height: 25px;
+    margin: -20px;
+}
+
 .button.editing.singleSelected>.resizeHandle{
     visibility: visible;
 }
@@ -247,26 +277,30 @@ button.pressed.short{
     visibility: hidden;
 }
 
-.top-left{
+.resizeHandle.top-left{
     top: 0;
     left: 0;
     cursor: nwse-resize;
 }
 
-.top-right{
+.resizeHandle.top-right{
     top: 0;
     right: 0;
     cursor: nesw-resize;
 }
 
-.bottom-left{
+.resizeHandle.bottom-left{
     bottom: 0;
     left: 0;
     cursor: nesw-resize;
 }
 
-.bottom-right{
+.resizeHandle.bottom-right{
     bottom: 0;
     right: 0;
     cursor: nwse-resize;
+}
+
+.button.editing.singleSelected>.resizeHandle.hidden{
+    visibility: hidden;
 }

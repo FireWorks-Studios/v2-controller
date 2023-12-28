@@ -51,7 +51,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [deleteSnackbarIsOpen, setDeleteSnackbarIsOpen] = useState(false);
   const [noOfDeletedComponents, setNoOfDeletedComponents] = useState(0);
 
-  const [singleSelectedComponentId, setSingleSelectedComponentId] = useState<number>()
+  const [singleSelectedComponentId, setSingleSelectedComponentId] = useState<number>(-1)
   const [customizationMenuOpen, setCustomizationMenuOpen] = useState(false)
 
   const [colorsUsed, setColorsUsed] = useState<string[]>(new Array(6))
@@ -82,9 +82,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     document.documentElement.style.setProperty('--button-width', unitWidth+"px");
   },[unitWidth])
 
-  useEffect(()=>{
-    console.trace("Selector selected components: " + [...selectorSelectedComponents])
-  },[selectorSelectedComponents])
+  // useEffect(()=>{
+  //   console.trace("Selector selected components: " + [...selectorSelectedComponents])
+  // },[selectorSelectedComponents])
 
   const updateCurrentConfig = useCallback((index: number, component: ComponentRepresentation) => {
     const newConfig = componentRepresentations.map((c, i)=>{
@@ -270,14 +270,14 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
 
   const handleDragResize = useCallback((e: React.PointerEvent<HTMLDivElement>) =>{
     e.preventDefault();
-    if(!singleSelectedComponentId){
+    if(singleSelectedComponentId === -1){
       return
     }
     if(!containerRef.current){
       return
     }
     const selectedComponent = componentRepresentations[singleSelectedComponentId]
-    
+    console.log(selectedComponent)
     var anchorPos
     if(dragResizeCorner === 'top-left'){
       anchorPos = {anchorX: selectedComponent.x + selectedComponent.w - 1, anchorY: selectedComponent.y + selectedComponent.h - 1}
@@ -522,7 +522,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
             [position]: true,
             editing,
             isSelectorDragging,
-          }
+            
+          },
+          dragResizeCorner
         )
       } 
       ref={containerRef}
@@ -540,6 +542,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         (component.type === 'button') ?
         <Button 
         dragResizing={dragResizeCorner!==undefined && singleSelectedComponentId === index}
+        cornerDragged={dragResizeCorner}
         colorsUsed={colorsUsed}
         customizationMenuOpen={customizationMenuOpen}
         setCustomizationMenuOpen={setCustomizationMenuOpen}

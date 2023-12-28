@@ -39,6 +39,7 @@ import { lighten } from '../../utils/colorModifier';
 
 interface Props{
   dragResizing: boolean;
+  cornerDragged: string|undefined;
   colorsUsed:string[];
   customizationMenuOpen: boolean;
     singleSelected: boolean;
@@ -64,6 +65,7 @@ interface Props{
 
 export const Button: React.FC<Props> = ({
   dragResizing,
+  cornerDragged,
   colorsUsed,
   customizationMenuOpen,
   singleSelected,
@@ -268,23 +270,26 @@ export const Button: React.FC<Props> = ({
             'handle',
             {
               editing,
-              singleSelected
-            }
+              singleSelected,
+              dragResizing
+            },
+            cornerDragged
           )
         }>
         {singleSelected? <TbArrowsMove className='handle dragHandle'/>:""}
         </div>
 
-        <div className='top-left resizeHandle'/>
-        <div className='top-right resizeHandle'/>
-        <div className='bottom-left resizeHandle'/>
-        <div className='bottom-right resizeHandle'/>
+        <div className={'top-left resizeHandle ' + (dragResizing? (cornerDragged!=='top-left'? 'hidden':'big'): '')}/>
+        <div className={'top-right resizeHandle ' + (dragResizing? (cornerDragged!=='top-right'? 'hidden':'big'): '')}/>
+        <div className={'bottom-left resizeHandle ' + (dragResizing? (cornerDragged!=='bottom-left'? 'hidden':'big'): '')}/>
+        <div className={'bottom-right resizeHandle ' + (dragResizing? (cornerDragged!=='bottom-right'? 'hidden':'big'): '')}/>
 
         <div id='menu' className={
           classNames(
             'menu',
             {
-              singleSelected
+              singleSelected,
+              dragResizing
             }
           )
         }> 

@@ -13,6 +13,22 @@
     cursor: crosshair;
 }
 
+.controller-container.top-left{
+    cursor: nwse-resize !important;
+}
+
+.controller-container.top-right{
+    cursor: nesw-resize !important;
+}
+
+.controller-container.bottom-left{
+    cursor: nesw-resize !important;
+}
+
+.controller-container.bottom-right{
+    cursor: nwse-resize !important;
+}
+
 .controller-container.editing{
     background-color: var(--controller-container-grid-background-color);
     background-size: var(--button-width) var(--button-width);
