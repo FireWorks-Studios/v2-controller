@@ -1,0 +1,50 @@
+.centerContainer{
+    --screenWidth: 100vw;
+    --screenHeight: 100vh;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: var(--centerContainerWidth);
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menuBar{
+    flex: 1 0 100%;
+    height: 40px;
+    color: #696969;
+}
+
+.IconBtn{
+    float: left;
+    font-size: 30px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.searchBar{
+    margin-top: 5px;
+    height: 30px;
+    border-radius: 100px;
+    border: solid 3px #696969;
+    color: #696969;
+    width: calc(var(--centerContainerWidth) - 210px);
+}
+
+.IconBtn.right{
+    float: right;
+    margin-left: 5px;
+    margin-right: 0px;
+}
+
+iframe {
+    flex: 1 0 100%;
+    height: calc(calc(var(--centerContainerWidth) * 0.75));
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+  }

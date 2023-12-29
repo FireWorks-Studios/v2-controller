@@ -277,7 +277,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       return
     }
     const selectedComponent = componentRepresentations[singleSelectedComponentId]
-    console.log(selectedComponent)
+    // console.log(selectedComponent)
     var anchorPos
     if(dragResizeCorner === 'top-left'){
       anchorPos = {anchorX: selectedComponent.x + selectedComponent.w - 1, anchorY: selectedComponent.y + selectedComponent.h - 1}
@@ -288,7 +288,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     }else{
       anchorPos = {anchorX: selectedComponent.x + selectedComponent.w - 1, anchorY: selectedComponent.y}
     }
-    console.log(anchorPos)
+    // console.log(anchorPos)
 
     var targetPos
     const divRect = containerRef.current?.getBoundingClientRect();
@@ -301,11 +301,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     const localGridX = Math.floor(localX/unitWidth)
     const localGridY = Math.floor(localY/unitWidth)
     targetPos = {targetX: localGridX, targetY: localGridY}
-    console.log(targetPos)
+    // console.log(targetPos)
 
     const topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
     const bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
-    console.log(topLeftPos, bottomRightPos)
+    // console.log(topLeftPos, bottomRightPos)
 
     var validPos = []
     for(var i = topLeftPos.x; i <= bottomRightPos.x; i++){
@@ -318,7 +318,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
           w: Math.max(i, anchorPos.anchorX) - Math.min(i, anchorPos.anchorX) + 1,
           h: Math.max(j, anchorPos.anchorY) - Math.min(j, anchorPos.anchorY) + 1
         }
-        console.log(testBox)
+        // console.log(testBox)
         //check collisions
         const nonSelectedComponents = componentRepresentations.filter(
           (component) =>
@@ -345,7 +345,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         }
       }
     }
-    console.log(validPos)
+    // console.log(validPos)
     let closestPos = validPos[0]
     let closestDistance = Number.MAX_VALUE
     for(const pos of validPos){
@@ -371,7 +371,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         }
       }
     }
-    console.log(closestPos)
+    // console.log(closestPos)
     updateCurrentConfig(singleSelectedComponentId, {
       ...selectedComponent,
       ...closestPos

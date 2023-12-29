@@ -2,6 +2,7 @@ import { ControllerContainer } from "./components/ControllerContainer/Controller
 import "./App.css";
 import React, { useEffect, useState, useRef } from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core";
+import { CenterContainer } from "./components/CenterContainer/CenterContainer";
 
 const theme = createTheme({
   palette: {
@@ -32,11 +33,25 @@ function App() {
   const [editing, setEditing] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [screenOritentation, setScreenOrientation] = useState(window.matchMedia("(orientation: portrait)").matches? 'portrait':'landscape')
+
+  window.matchMedia("(orientation: portrait)").addEventListener("change", e => {
+    const portrait = e.matches;
+
+    if (portrait) {
+        // do something
+        setScreenOrientation('portrait')
+    } else {
+        // do something else
+        setScreenOrientation('landscape')
+    }
+});
 
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
       setScreenHeight(window.innerHeight);
+
     };
 
     window.addEventListener("resize", handleResize);
@@ -46,16 +61,31 @@ function App() {
     };
   }, []);
 
-  const handleUndo = () => {
-    
-  };
+  function toggleEditing(){
+    setEditing(!editing)
+  }
+
+  const appStyles = {
+    '--screenWidth': screenWidth,
+    '--screenHeight': screenHeight,
+  }as React.CSSProperties;
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="App noscroll prevent-select">
+      <div className="App noscroll prevent-select" style={appStyles}>
+        <CenterContainer
+        toggleEditing={toggleEditing}
+          screenOrientation={screenOritentation}
+          screenWidth={screenWidth}
+          screenHeight={screenHeight}
+        />
+        {/* <button className="edit" onClick={() => setEditing(!editing)}>
+          edit
+        </button> */}
+        {screenOritentation === 'portrait'? 
         <ControllerContainer
           position={"center"}
-          unitWidth={Math.min((screenWidth - 8) / 6, (screenHeight - 8) / 3)}
+          unitWidth={(screenWidth - 8) / 6}
           defaultComponentRepresentations={[
             {
               type: "button",
@@ -158,10 +188,36 @@ function App() {
             },
           ]}
           editing={editing}
-        />
-        <button className="edit" onClick={() => setEditing(!editing)}>
-          edit
-        </button>
+        />:''
+        }
+        {screenOritentation === 'landscape'?
+          <ControllerContainer
+          position={"left"}
+          unitWidth={(screenHeight - 8 - 48) / 7}
+          defaultComponentRepresentations={[
+            {
+              type: "button",
+              styling: [],
+              mapping: "ArrowUp",
+              container: "center",
+              x: 1,
+              y: 0,
+              w: 1,
+              h: 1,
+              color: '#006aff'
+            }
+          ]}
+          editing={editing}
+        />:''}
+        {screenOritentation === 'landscape'?
+          <ControllerContainer
+          position={"right"}
+          unitWidth={(screenHeight - 8 - 48) / 7}
+          defaultComponentRepresentations={[]}
+          editing={editing}
+        />:''}
+
+        
       </div>
     </ThemeProvider>
   );

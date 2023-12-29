@@ -39,7 +39,7 @@ import './DeleteSnackbar.css';
           onClick={handleUndo}
           className="undo-button"
         >
-          UNDO
+          undo
         </Button>
         <IconButton
           size="small"
@@ -63,11 +63,11 @@ import './DeleteSnackbar.css';
         action={action}
         ContentProps={{
         sx:{
-          borderRadius: "10px",
+          borderRadius: "8px",
           color: "#959595",
           bgcolor: "#ffffff",
           fontWeight: "bold",
-          border: "dashed 2px #959595",
+          border: "solid 2px #959595",
         }
        }}
       />

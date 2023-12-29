@@ -5,8 +5,21 @@
     background-image:
       linear-gradient(to right, var(--controller-container-grid-line-color) 5px, transparent 5px),
       linear-gradient(to bottom, var(--controller-container-grid-line-color) 5px, transparent 5px);
-      margin-top: 60px;
     touch-action: none;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.controller-container.left{
+    position: fixed;
+    top: 40px;
+}
+
+.controller-container.right{
+    position: fixed;
+    top: 40px;
+    right: 0;
 }
 
 .controller-container.isSelectorDragging{
