@@ -20,19 +20,21 @@ interface Props{
     screenWidth: number
     screenHeight: number
     toggleEditing(): void
+    centerContainerWidth: number
 }
 
 export const CenterContainer: React.FC<Props> = ({
     screenOrientation,
     screenWidth,
     screenHeight,
-    toggleEditing
+    toggleEditing,
+    centerContainerWidth
 }:Props) => {
 
   const styles = {
     '--screenWidth': screenWidth,
     '--screenHeight': screenHeight,
-    '--centerContainerWidth': (screenOrientation === 'portrait'? (screenWidth - 12) + "px" : (screenHeight - 40)/0.75 - 6 + "px")
+    // '--centerContainerWidth': (screenOrientation === 'portrait'? (screenWidth - 12) + "px" : (screenHeight - 40)/0.75 - 6 + "px")
   }as React.CSSProperties;
 
     return(

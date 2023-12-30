@@ -7,6 +7,11 @@
 
     --screenWidth: 100vw;
     --screenHeight: 100vh;
+    --centerContainerWidth: 100vw;
+    --unitWidth: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 *{
@@ -14,9 +19,19 @@
 }
 
 .App{
-    width: 100vw;
-    height: 100vh;
+    width: var(--centerContainerWidth);
+    height: var(--screenHeight);
+    overflow: visible;
 }
+
+.App.portrait{
+    width: calc(var(--centerContainerWidth) + 12px);
+}
+
+.App.landscape{
+    width: min(calc(var(--centerContainerWidth) + (6 * var(--unitWidth))), 100vw);
+}
+
 
 .edit{
     width: 48px;

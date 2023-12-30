@@ -3,8 +3,8 @@
     background-size: var(--button-width) var(--button-width);
     background-position: top -2.5px left -2.5px;
     background-image:
-      linear-gradient(to right, var(--controller-container-grid-line-color) 5px, transparent 5px),
-      linear-gradient(to bottom, var(--controller-container-grid-line-color) 5px, transparent 5px);
+      linear-gradient(to right, #ffffff00 5px, transparent 5px),
+      linear-gradient(to bottom, #ffffff00 5px, transparent 5px);
     touch-action: none;
 
     margin-left: auto;
@@ -12,14 +12,13 @@
 }
 
 .controller-container.left{
-    position: fixed;
+    float: left;
     top: 40px;
 }
 
 .controller-container.right{
-    position: fixed;
+    float: right;
     top: 40px;
-    right: 0;
 }
 
 .controller-container.isSelectorDragging{
@@ -56,9 +55,9 @@
 }
 .controller-container.left{
     width: calc(var(--button-width)*3);
-    height: calc(var(--button-width)*7);
+    height: calc(var(--button-width)*6);
 }
 .controller-container.right{
     width: calc(var(--button-width)*3);
-    height: calc(var(--button-width)*7);
+    height: calc(var(--button-width)*6);
 }

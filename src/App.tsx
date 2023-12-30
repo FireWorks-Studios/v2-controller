@@ -3,6 +3,7 @@ import "./App.css";
 import React, { useEffect, useState, useRef } from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import { CenterContainer } from "./components/CenterContainer/CenterContainer";
+import classNames from "classnames";
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,8 @@ function App() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [screenOritentation, setScreenOrientation] = useState(window.matchMedia("(orientation: portrait)").matches? 'portrait':'landscape')
+  const [centerContainerWidth, setCenterContainerWidth] = useState(screenWidth - 12)
+  const [overlay, setOverlay] = useState(false);
 
   window.matchMedia("(orientation: portrait)").addEventListener("change", e => {
     const portrait = e.matches;
@@ -41,9 +44,11 @@ function App() {
     if (portrait) {
         // do something
         setScreenOrientation('portrait')
+        setCenterContainerWidth(screenWidth - 12)
     } else {
         // do something else
         setScreenOrientation('landscape')
+        setCenterContainerWidth((screenHeight - 40)/0.75 - 6)
     }
 });
 
@@ -51,7 +56,6 @@ function App() {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
       setScreenHeight(window.innerHeight);
-
     };
 
     window.addEventListener("resize", handleResize);
@@ -59,25 +63,33 @@ function App() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [screenWidth, screenHeight, screenOritentation, setScreenWidth]);
 
   function toggleEditing(){
     setEditing(!editing)
   }
 
   const appStyles = {
-    '--screenWidth': screenWidth,
-    '--screenHeight': screenHeight,
+    '--screenWidth': screenWidth + 'px',
+    '--screenHeight': screenHeight  + 'px',
+    '--centerContainerWidth': (screenOritentation === 'portrait'? (screenWidth - 12) + "px" : (screenHeight - 40)/0.75 - 6 + "px"),
+    '--unitWidth': (screenOritentation === 'portrait'? ((screenWidth - 8) / 6)  + "px": (overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))) + "px"),
   }as React.CSSProperties;
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="App noscroll prevent-select" style={appStyles}>
+      <div className={
+        classNames(
+          "App noscroll prevent-select",
+          screenOritentation
+        )
+      } style={appStyles}>
         <CenterContainer
         toggleEditing={toggleEditing}
           screenOrientation={screenOritentation}
           screenWidth={screenWidth}
           screenHeight={screenHeight}
+          centerContainerWidth={centerContainerWidth}
         />
         {/* <button className="edit" onClick={() => setEditing(!editing)}>
           edit
@@ -193,13 +205,13 @@ function App() {
         {screenOritentation === 'landscape'?
           <ControllerContainer
           position={"left"}
-          unitWidth={(screenHeight - 8 - 48) / 7}
+          unitWidth={overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))}
           defaultComponentRepresentations={[
             {
               type: "button",
               styling: [],
               mapping: "ArrowUp",
-              container: "center",
+              container: "left",
               x: 1,
               y: 0,
               w: 1,
@@ -212,7 +224,7 @@ function App() {
         {screenOritentation === 'landscape'?
           <ControllerContainer
           position={"right"}
-          unitWidth={(screenHeight - 8 - 48) / 7}
+          unitWidth={overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))}
           defaultComponentRepresentations={[]}
           editing={editing}
         />:''}
