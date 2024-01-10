@@ -68,6 +68,7 @@
     "@storybook/testing-library": "^0.2.2",
     "babel-plugin-named-exports-order": "^0.0.2",
     "eslint-plugin-storybook": "^0.6.15",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "prop-types": "^15.8.1",
     "storybook": "^7.5.1",
     "webpack": "^5.89.0"
