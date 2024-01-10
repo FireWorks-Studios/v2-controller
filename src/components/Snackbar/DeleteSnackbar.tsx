@@ -1,10 +1,8 @@
-import React, { SetStateAction, useCallback, useEffect } from "react";
-import { createTheme, Typography, ThemeProvider} from '@material-ui/core';
+import React, { SetStateAction, useCallback } from "react";
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { ControllerContainer } from "../ControllerContainer/ControllerContainer";
 import './DeleteSnackbar.css';
 
   export default function DeleteSnackbar({

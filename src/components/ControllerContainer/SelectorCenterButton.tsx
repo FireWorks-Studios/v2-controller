@@ -8,8 +8,6 @@ import { FaPlus } from "react-icons/fa6";
 
 interface Props{
     type: 'move' | 'add';
-    x: number;
-    y: number;
     w: number;
     h: number;
     unitWidth: number;
@@ -17,8 +15,6 @@ interface Props{
 
 export const SelectorCenterButton: React.FC<Props> = ({
     type,
-    x = 0,
-    y = 0,
     w = 0,
     h = 0,
     unitWidth,
@@ -37,7 +33,7 @@ export const SelectorCenterButton: React.FC<Props> = ({
         style={styles}
         >
             <div className="center-icon-container">
-                {type == 'move'? <TbArrowsMove/>: <FaPlus/>}
+                {type === 'move'? <TbArrowsMove/>: <FaPlus/>}
             </div>
         </div>
     )

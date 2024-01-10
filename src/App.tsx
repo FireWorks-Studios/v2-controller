@@ -1,6 +1,6 @@
 import { ControllerContainer } from "./components/ControllerContainer/ControllerContainer";
 import "./App.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import { CenterContainer } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
@@ -36,7 +36,7 @@ function App() {
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [screenOritentation, setScreenOrientation] = useState(window.matchMedia("(orientation: portrait)").matches? 'portrait':'landscape')
   const [centerContainerWidth, setCenterContainerWidth] = useState(screenWidth - 12)
-  const [overlay, setOverlay] = useState(false);
+  const [overlay] = useState(false);
 
   window.matchMedia("(orientation: portrait)").addEventListener("change", e => {
     const portrait = e.matches;

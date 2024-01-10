@@ -54,6 +54,7 @@ export type DropdownOption = typeof dropdownOptions[number]
 
 interface Props {
   editing: boolean;
+  // eslint-disable-next-line no-unused-vars
   updateMapping(mapping: DropdownOption['value']): void
   value: string;
 }

@@ -1,8 +1,5 @@
-import React, { useEffect } from "react"
+import React from "react"
 import './CenterContainer.css'
-import { IconButton } from "@mui/material"
-import {FaFlag, FaPause, FaGear} from 'react-icons/fa6'
-import { TbOctagonFilled } from "react-icons/tb"
 import { PiFlagBold } from "react-icons/pi";
 import { PiPauseBold } from "react-icons/pi";
 import { PiOctagonBold } from "react-icons/pi";
@@ -28,7 +25,6 @@ export const CenterContainer: React.FC<Props> = ({
     screenWidth,
     screenHeight,
     toggleEditing,
-    centerContainerWidth
 }:Props) => {
 
   const styles = {

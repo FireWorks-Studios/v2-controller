@@ -1,4 +1,3 @@
-import { DraggableData } from "react-draggable";
 import { ComponentRepresentation } from "../components/ControllerContainer/ControllerContainer";
 
 export function findClosestEmptySpot(

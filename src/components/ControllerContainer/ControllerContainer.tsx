@@ -6,7 +6,7 @@ import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
 import classNames from 'classnames';
 import { DropdownOption } from '../Button/Dropdown';
 import { Selector } from './Selector';
-import { GetSelectedComponents, SelectionInteraction, checkOverlap, resizeSelectorToFitSelectedComponents } from '../../utils/selector';
+import { GetSelectedComponents, SelectionInteraction, checkOverlap } from '../../utils/selector';
 import { checkValidSelectionDropPos } from '../../utils/selector';
 import DeleteSnackbar from '../Snackbar/DeleteSnackbar';
 
@@ -41,7 +41,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [isSelectorDragging, setIsSelectorDragging] = useState(false);
   const [isSelectorSelecting, setIsSelectorSelecting] = useState(false);
   const [selectorDeltaPosition, setSelectorDeltaPosition] = useState({ deltaX: 0, deltaY: 0 });
-  const [selectorStartPosition, setSelectorStartPosition] = useState({ x: 0, y: 0 });
+  const [selectorStartPosition] = useState({ x: 0, y: 0 });
   const [selectorSize, setSelectorSize] = useState({ w: 1, h: 1 });
   const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
   const [selectorSelectedComponents, setSelectorSelectedComponents] = useState<ComponentRepresentation[]>([])
@@ -572,7 +572,6 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       w={selectorSize.w}
       h={selectorSize.h}
       unitWidth={unitWidth}
-      container={position}
       selectionType={selectionType}
       setSelectorDeltaPosition={setSelectorDeltaPosition}
       checkValidSelectionDropPos={handleCheckValidSelectionDropPos}

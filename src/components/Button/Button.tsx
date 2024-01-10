@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useImperativeHandle } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import './Button.css'
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
@@ -8,28 +8,20 @@ import classNames from 'classnames';
 import { ParsedDropdownValue } from './ParsedDropdownValue';
 import { checkValidDropPos, findClosestEmptySpot, checkOutOfBounds, getControllerContainerDimensions} from '../../utils/position';
 import { UserInteraction } from '../../utils/interaction';
-import { IoClose } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { MdOutlineMoreVert } from "react-icons/md";
-import { VscSparkle } from "react-icons/vsc";
-import { HiSparkles } from "react-icons/hi2";
 import { PiSparkleBold } from "react-icons/pi";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import { FaRegCircle } from "react-icons/fa";
-import { TbBrush } from "react-icons/tb";
 import { LuBrush } from "react-icons/lu";
 import { FaSquare } from "react-icons/fa";
 
-
-
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Checkbox, ListItemIcon, ListItemText, Switch, Typography } from '@material-ui/core';
-import { FavoriteBorder, Favorite, Margin } from '@mui/icons-material';
+import { ListItemIcon, ListItemText } from '@material-ui/core';
 
 
 import { MuiColorInput } from 'mui-color-input'
-import { Color, Divider, IconButton, ListItem, ListItemSecondaryAction } from '@mui/material';
+import { Divider, IconButton } from '@mui/material';
 
 import { BsToggleOff } from "react-icons/bs";
 import { BsToggleOn } from "react-icons/bs";
@@ -52,14 +44,19 @@ interface Props{
     noTransition: boolean;
     selected: boolean;
     selectorDeltaPosition: {deltaX: number, deltaY: number};
+    // eslint-disable-next-line no-unused-vars
     updateCurrentConfig(index: number, component: ComponentRepresentation): void;
+    // eslint-disable-next-line no-unused-vars
     deleteComponentRepresentation(index: number): void;
     checkValidDropPos(
+      // eslint-disable-next-line no-unused-vars
       params: Omit<Parameters<typeof checkValidDropPos>[0], 'componentRepresentations'>
     ): ReturnType<typeof checkValidDropPos>
     findClosestEmptySpot(
+      // eslint-disable-next-line no-unused-vars
       params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
     ): ReturnType<typeof findClosestEmptySpot>
+    // eslint-disable-next-line no-unused-vars
     setCustomizationMenuOpen(value: boolean): void;
 }
 
@@ -138,7 +135,7 @@ export const Button: React.FC<Props> = ({
           return
         case 'topOutOfBounds':
           console.log('delete this component if in portrait')
-          if(component.container == 'center'){
+          if(component.container === 'center'){
             // console.log('delete this!')
             deleteComponentRepresentation(index);
           }

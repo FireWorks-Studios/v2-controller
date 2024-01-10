@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import './Selector.css';
 import classNames from "classnames";
 import { SelectorCenterButton } from "./SelectorCenterButton";
 import { IoClose } from "react-icons/io5";
 import Draggable, { DraggableEventHandler } from "react-draggable";
-import { ComponentRepresentation } from "./ControllerContainer";
 
 interface Props{
     selecting: boolean;
@@ -14,7 +13,6 @@ interface Props{
     w: number;
     h: number;
     unitWidth: number;
-    container: 'center' | 'left' | 'right'
     selectionType: 'move' | 'add'
     setSelectorDeltaPosition: React.Dispatch<React.SetStateAction<{
         deltaX: number;
@@ -32,7 +30,6 @@ export const Selector: React.FC<Props> = ({
     w = 1,
     h = 1,
     unitWidth,
-    container,
     selectionType = 'move',
     setSelectorDeltaPosition,
     checkValidSelectionDropPos
@@ -72,7 +69,7 @@ export const Selector: React.FC<Props> = ({
             }
             style={styles}
             >
-                <SelectorCenterButton type={selectionType} x={x} y={y} w={w} h={h} unitWidth={unitWidth}/>
+                <SelectorCenterButton type={selectionType} w={w} h={h} unitWidth={unitWidth}/>
                 <IoClose className="delete-icon"></IoClose>
             </div>
         </Draggable>
