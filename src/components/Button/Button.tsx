@@ -30,43 +30,47 @@ import { lighten } from '../../utils/colorModifier';
 
 
 interface Props{
-  dragResizing: boolean;
-  cornerDragged: string|undefined;
-  colorsUsed:string[];
-  customizationMenuOpen: boolean;
-    singleSelected: boolean;
-    index: number;
-    touchEvents: React.TouchEvent<HTMLDivElement> | null;
-    pointerEvents: React.PointerEvent<HTMLDivElement> | null;
-    component: ComponentRepresentation;
-    unitWidth: number;
-    editing: boolean;
-    noTransition: boolean;
-    selected: boolean;
-    selectorDeltaPosition: {deltaX: number, deltaY: number};
-    // eslint-disable-next-line no-unused-vars
-    updateCurrentConfig(index: number, component: ComponentRepresentation): void;
-    // eslint-disable-next-line no-unused-vars
-    deleteComponentRepresentation(index: number): void;
-    checkValidDropPos(
-      // eslint-disable-next-line no-unused-vars
-      params: Omit<Parameters<typeof checkValidDropPos>[0], 'componentRepresentations'>
-    ): ReturnType<typeof checkValidDropPos>
-    findClosestEmptySpot(
-      // eslint-disable-next-line no-unused-vars
-      params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
-    ): ReturnType<typeof findClosestEmptySpot>
-    // eslint-disable-next-line no-unused-vars
-    setCustomizationMenuOpen(value: boolean): void;
+  variant: 'component'|'static-dummy'|'draggable-dummy'
+  dragResizing?: boolean;
+  cornerDragged?: string|undefined;
+  colorsUsed?: string[];
+  customizationMenuOpen?: boolean;
+  singleSelected?: boolean;
+  index?: number;
+  touchEvents?: React.TouchEvent<HTMLDivElement> | null;
+  pointerEvents?: React.PointerEvent<HTMLDivElement> | null;
+  component: ComponentRepresentation;
+  unitWidth: number;
+  editing?: boolean;
+  noTransition?: boolean;
+  selected?: boolean;
+  selectorDeltaPosition?: {deltaX: number, deltaY: number};
+  // eslint-disable-next-line no-unused-vars
+  updateCurrentConfig?(index: number, component: ComponentRepresentation): void;
+  // eslint-disable-next-line no-unused-vars
+  deleteComponentRepresentation?(index: number): void;
+  // eslint-disable-next-line no-unused-vars 
+  checkValidDropPos?(
+    // eslint-disable-next-line no-unused-vars 
+    params: Omit<Parameters<typeof checkValidDropPos>[0], 'componentRepresentations'>
+  ): ReturnType<typeof checkValidDropPos>
+  // eslint-disable-next-line no-unused-vars
+  findClosestEmptySpot?(
+    // eslint-disable-next-line no-unused-vars 
+    params: Omit<Parameters<typeof findClosestEmptySpot>[0], 'componentRepresentations'>
+  ): ReturnType<typeof findClosestEmptySpot>
+  // eslint-disable-next-line no-unused-vars
+  setCustomizationMenuOpen?(value: boolean): void;
 }
 
 export const Button: React.FC<Props> = ({
-  dragResizing,
-  cornerDragged,
-  colorsUsed,
-  customizationMenuOpen,
-  singleSelected,
-  index,
+  variant,
+  dragResizing = false,
+  cornerDragged = undefined,
+  colorsUsed = [],
+  customizationMenuOpen = false,
+  singleSelected = false,
+  index = -1,
   touchEvents,
   pointerEvents,
   component,
@@ -75,11 +79,11 @@ export const Button: React.FC<Props> = ({
   noTransition = false,
   selected = false,
   selectorDeltaPosition = {deltaX: 0, deltaY: 0},
-  updateCurrentConfig,
-  deleteComponentRepresentation,
-  checkValidDropPos,
-  findClosestEmptySpot,
-  setCustomizationMenuOpen,
+  updateCurrentConfig = ()=>{},
+  deleteComponentRepresentation = ()=>{},
+  checkValidDropPos = ()=>{return(false)},
+  findClosestEmptySpot = ()=>{return({x:0, y:0})},
+  setCustomizationMenuOpen = () => {},
 }: Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [pressed, setPressed] = useState(false)
@@ -141,9 +145,17 @@ export const Button: React.FC<Props> = ({
           }
           return
         case 'leftOutOfBounds':
+          if(component.container == 'right'){
+            // console.log('delete this!')
+            deleteComponentRepresentation(index);
+          }
           console.log('delete this component if in landscape and is in right container')
           return
           case 'rightOutOfBounds':
+            if(component.container == 'left'){
+              // console.log('delete this!')
+              deleteComponentRepresentation(index);
+            }
             console.log('delete this component if in landscape and is in left container')
             return
         case 'invalidOutOfBounds':
@@ -221,6 +233,16 @@ export const Button: React.FC<Props> = ({
     }
   }, [component, selected, selectorDeltaPosition, unitWidth, buttonRef]) 
   
+  const isDraggable = useCallback(():boolean => {
+    if(variant === 'component'){
+      return editing
+    }else if(variant === 'draggable-dummy'){
+      return true
+    }else{
+      return false
+    }
+  }, [variant, editing])
+
   const buttonStyles = {
     '--w': component.w,
     '--h': component.h,
@@ -234,16 +256,16 @@ export const Button: React.FC<Props> = ({
       handle=".handle"
       // grid={[unitWidth, unitWidth]}
       defaultPosition={{x: unitWidth*component.x, y: unitWidth*component.y}}
-      bounds={"parent"}
       scale={1}
       position={componentPosition()}
       allowAnyClick={true}
-      disabled={!editing}
+      disabled={!isDraggable}
       onStop={handleStop}
     >
       <button id={index.toString()} className={
         classNames(
           'button',
+          variant,
           component.styling.join(' '),
           {
             pressed,
@@ -290,13 +312,13 @@ export const Button: React.FC<Props> = ({
             }
           )
         }> 
-          <PiSparkleBold id={'customizationMenuBtn'+index} className='moreOptions' onClick={() => setCustomizationMenuOpen(!customizationMenuOpen)}/>
+          <PiSparkleBold id={'customizationMenuBtn'+component.container+index} className='moreOptions' onClick={() => setCustomizationMenuOpen(!customizationMenuOpen)}/>
           <FaRegTrashAlt className='delete' onClick={() => deleteComponentRepresentation(index)}/> 
         </div>
 
         <Menu
-          anchorEl={document.getElementById('customizationMenuBtn'+index)}
-          open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+index)!= null && singleSelected}
+          anchorEl={document.getElementById('customizationMenuBtn'+component.container+index)}
+          open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+component.container+index)!= null && singleSelected}
         >
         <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
           <ListItemIcon><FaRegCircle /></ListItemIcon>

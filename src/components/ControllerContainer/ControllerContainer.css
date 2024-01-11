@@ -6,7 +6,7 @@
       linear-gradient(to right, #ffffff00 5px, transparent 5px),
       linear-gradient(to bottom, #ffffff00 5px, transparent 5px);
     touch-action: none;
-
+    margin-top: 4px;
     margin-left: auto;
     margin-right: auto;
 }

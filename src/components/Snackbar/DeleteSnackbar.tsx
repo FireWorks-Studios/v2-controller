@@ -36,6 +36,7 @@ import './DeleteSnackbar.css';
           size="small" 
           onClick={handleUndo}
           className="undo-button"
+          sx={{textTransform: 'none'}}
         >
           undo
         </Button>

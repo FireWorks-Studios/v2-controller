@@ -9,6 +9,7 @@ import { Selector } from './Selector';
 import { GetSelectedComponents, SelectionInteraction, checkOverlap } from '../../utils/selector';
 import { checkValidSelectionDropPos } from '../../utils/selector';
 import DeleteSnackbar from '../Snackbar/DeleteSnackbar';
+import ClickAwayListener from 'react-click-away-listener';
 
 export interface ComponentRepresentation {
   type: 'button' | 'joystick' | 'scroller' | 'wheel',
@@ -27,11 +28,12 @@ interface Props{
   unitWidth: number,
   defaultComponentRepresentations: ComponentRepresentation[],
   editing: boolean,
+  updateComponentRepresentations: React.Dispatch<React.SetStateAction<ComponentRepresentation[]>>
 }
 
 type SelectionType = 'move' | 'add'
 
-export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defaultComponentRepresentations, editing}:Props) => {
+export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [componentRepresentations, setComponentRepresentations] = useState(defaultComponentRepresentations)
@@ -57,6 +59,10 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
   const [colorsUsed, setColorsUsed] = useState<string[]>(new Array(6))
 
   const [dragResizeCorner, setDragResizeCorner] = useState<string>()
+
+  useEffect(()=>{
+    updateComponentRepresentations(componentRepresentations)
+  },[componentRepresentations])
 
   useEffect(()=>{
     var tempColors = new Array(6);
@@ -303,9 +309,22 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     targetPos = {targetX: localGridX, targetY: localGridY}
     // console.log(targetPos)
 
-    const topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
-    const bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
-    // console.log(topLeftPos, bottomRightPos)
+    var topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
+    var bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+
+    if(dragResizeCorner === 'top-left'){
+      topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
+      bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+    }else if(dragResizeCorner === 'top-right'){
+      topLeftPos = {x: Math.min(anchorPos.anchorX), y: Math.min(anchorPos.anchorY, targetPos.targetY)}
+      bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+  }else if(dragResizeCorner === 'bottom-right'){
+    topLeftPos = {x: Math.min(anchorPos.anchorX), y: Math.min(anchorPos.anchorY)}
+    bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+  }else{
+    topLeftPos = {x: Math.min(anchorPos.anchorX, targetPos.targetX), y: Math.min(anchorPos.anchorY)}
+    bottomRightPos = {x: Math.max(anchorPos.anchorX, targetPos.targetX), y: Math.max(anchorPos.anchorY, targetPos.targetY)}
+  }
 
     var validPos = []
     for(var i = topLeftPos.x; i <= bottomRightPos.x; i++){
@@ -512,7 +531,13 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     );
   }, [componentRepresentations])
 
+  const handleClickAway = () => {
+    setIsSelectorSelecting(false)
+    setSingleSelectedComponentId(-1)
+	};
+
   return (
+    <ClickAwayListener onClickAway={handleClickAway}>
     <div 
       id='controllerContainer'
       className={
@@ -536,11 +561,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       onPointerMove={handlePointerMove}
       onPointerCancel={handlePointerUp}
       onPointerLeave={handlePointerUp}
-      // onPointerEnter={handlePointerUp}
     >  
       {componentRepresentations.map((component, index)=>(
         (component.type === 'button') ?
-        <Button 
+        <Button
+        variant='component' 
         dragResizing={dragResizeCorner!==undefined && singleSelectedComponentId === index}
         cornerDragged={dragResizeCorner}
         colorsUsed={colorsUsed}
@@ -583,5 +608,6 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       setIsOpen={setDeleteSnackbarIsOpen}
       undoDelete={undoDelete}/>
     </div>
+    </ClickAwayListener>
   );
 }
