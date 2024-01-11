@@ -2,7 +2,6 @@
     --screenWidth: 100vw;
     --screenHeight: 100vh;
     border-radius: 8px;
-    overflow: hidden;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -10,6 +9,15 @@
     width: var(--centerContainerWidth);
     margin-left: auto;
     margin-right: auto;
+
+    touch-action: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+
+    --color: #006aff;
+    --colorDarker: #3f56ff; 
+    --colorLighter: #638dff;
 }
 
 .centerContainer.landscape{
@@ -29,6 +37,34 @@
     font-size: 30px;
     margin-top: 5px;
     margin-right: 5px;
+}
+
+.IconBtn.editing{
+    background-color: var(--colorLighter);
+    color: white;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.IconBtn.description{
+    background-color: var(--colorLighter);
+    color: white;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.IconBtn.selected{
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--colorDarker),
+        var(--colorDarker) 5px,
+        var(--colorLighter) 5px,
+        var(--colorLighter) 10px
+        );
+      background-size: 200% 200%;
+      animation: barberpole 5s linear infinite;
+      border: solid 2px var(--colorDarker);
+      padding: 0px;
 }
 
 .searchBar{
@@ -52,4 +88,52 @@ iframe {
     border: none;
     border-radius: 8px;
     overflow: hidden;
+  }
+
+  .centerContentFrame{
+    height: calc(calc(var(--centerContainerWidth) * 0.75));
+    width: var(--centerContainerWidth);
+    outline: 2px ;
+    border-radius: 8px;
+    position: absolute;
+    margin-left: 0 auto;
+    margin-right: 0 auto;
+    margin-top: 40px;
+    visibility: hidden;
+    background-color: #ebf1fc;
+    border: solid #dde9fd 2px;
+    color: #2e2e2e;
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-size: 18px;
+    white-space: pre-line;
+
+    touch-action: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
+
+  .centerContentFrame.editing{
+    visibility: visible;
+  }
+
+  .centerContentFrame.description{
+    visibility: visible;
+  }
+
+  .descriptionContainer{
+    white-space: pre-line;
+    display: none;
+  }
+
+  .descriptionContainer.selected{
+    display: block;
+  }
+
+  .editorContainer{
+    display: none;
+  }
+
+  .editorContainer.selected{
+    display: block;
   }

@@ -70,6 +70,36 @@ export function findClosestEmptySpot(
   return { x: closestX, y: closestY };
 }
 
+export function checkValidAppend({x, y, component, componentRepresentations}:{x: number, y: number, component: ComponentRepresentation, componentRepresentations: ComponentRepresentation[]}):boolean {
+  const left = x;
+  const right = x + component.w - 1;
+  const top = y;
+  const bottom = y + component.h - 1;
+  for (let i = 0; i < componentRepresentations.length; i++) {
+    const currentComponent = componentRepresentations[i];
+
+    // Calculate the left, right, top, and bottom coordinates of the current component
+    const currentLeft = currentComponent.x;
+    const currentRight = currentComponent.x + currentComponent.w - 1;
+    const currentTop = currentComponent.y;
+    const currentBottom = currentComponent.y + currentComponent.h - 1;
+
+    // Check for overlap
+    if (
+      left <= currentRight &&
+      right >= currentLeft &&
+      top <= currentBottom &&
+      bottom >= currentTop
+    ) {
+      // Overlap detected, return false
+      return false;
+    }
+  }
+
+  // No overlap detected, return true
+  return true;
+}
+
 export function checkValidDropPos({
   x, y, index, componentRepresentations
 }: {

@@ -135,6 +135,14 @@ button.pressed.short{
     z-index: 0;
 }
 
+.button.draggable-dummy{
+    z-index: 100;
+}
+
+.button.draggable-dummy.append-successful{
+    transition: transform 0s;
+}
+
 .button-bottom.singleSelected{
     background: repeating-linear-gradient(
     -45deg,
