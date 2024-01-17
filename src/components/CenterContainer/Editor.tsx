@@ -116,6 +116,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           size="small"
           variant="contained"
           sx={{
+            fontSize: "14px",
             minHeight: "34px",
             height: "34px",
             padding: "9px",

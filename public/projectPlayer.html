@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * data: blob:">
     <meta name="robots" content="noindex">
-    <title>Scaffolding Demo</title>
+    <title>Project Player</title>
     <style>
       body {
         background-color: rgb(255, 255, 255);
-        color: #ffab19;
+        color: #3f56ff;
         font-family: sans-serif;
 
         margin: 0; 
@@ -47,7 +47,8 @@
         cursor: default;
         user-select: none;
         -webkit-user-select: none;
-        background-color: rgb(255, 255, 255);
+        background-color: #dadada;
+        border-radius: 8px;
       }
       #launch {
         background-color: rgba(0, 0, 0, 0.7);
@@ -134,7 +135,6 @@
 
     <script>
       const PROJECT_ID = location.hash.substr(1) || '1';
-
       const appElement = document.getElementById('app');
       const launchScreen = document.getElementById('launch');
       const loadingScreen = document.getElementById('loading');
@@ -158,6 +158,44 @@
         setProgress(0.2 + (loaded / total) * 0.8)
       };
       setProgress(0.1);
+
+      //connect scaffolding to menu bar button controls
+      const greenFlagBtn = window.parent.document.getElementById('GreenFlagBtn')
+      const pauseBtn = window.parent.document.getElementById('PauseBtn')
+      const stopBtn = window.parent.document.getElementById('StopBtn')
+      const muteBtn = window.parent.document.getElementById('MuteBtn')
+      const descriptionContainer = window.parent.document.getElementById('descriptionContainer')
+
+      greenFlagBtn.addEventListener('click', () => {
+        scaffolding.greenFlag();
+        launchScreen.hidden = true;
+        scaffolding.start();
+      });
+      scaffolding.addEventListener('PROJECT_RUN_START', () => {
+        greenFlagBtn.classList.add('active');
+      });
+      scaffolding.addEventListener('PROJECT_RUN_STOP', () => {
+        greenFlagBtn.classList.remove('active');
+      });
+
+      stopBtn.addEventListener('click', () => {
+        scaffolding.stopAll();
+      });
+
+      pauseBtn.addEventListener('click', () => {
+        scaffolding.vm.runtime.ioDevices.clock.pause()
+        console.log(scaffolding.vm.runtime.ioDevices)
+      });
+
+      muteBtn.addEventListener('click', () => {
+        scaffolding.vm.runtime.audioEngine.inputNode.gain.value = 1 - scaffolding.vm.runtime.audioEngine.inputNode.gain.value;
+      });
+
+      // turbo mode code
+      // pauseBtn.addEventListener('click', () => {
+      //   scaffolding.vm.runtime.turboMode = !scaffolding.vm.runtime.turboMode
+      //   console.log(scaffolding.vm.runtime.turboMode)
+      // });
 
       // const greenFlagButton = document.createElement('img');
       // greenFlagButton.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.63 17.5"><path d="M.75 2a6.44 6.44 0 017.69 0h0a6.44 6.44 0 007.69 0v10.4a6.44 6.44 0 01-7.69 0h0a6.44 6.44 0 00-7.69 0" fill="#4cbf56" stroke="#45993d" stroke-linecap="round" stroke-linejoin="round"/><path stroke-width="1.5" fill="#4cbf56" stroke="#45993d" stroke-linecap="round" stroke-linejoin="round" d="M.75 16.75v-16"/></svg>');
@@ -231,6 +269,8 @@
           throw new Error('Failed to load project metadata. It is probably unshared.');
         }
         const projectMetadata = await metadataResponse.json();
+        console.log(projectMetadata)
+        descriptionContainer.innerHTML = projectMetadata.title + "\nby " + projectMetadata.author.username + '\n\nInsctructions:\n' + projectMetadata.instructions + '\n\nNotes and Credits:\n' + projectMetadata.description
         const token = projectMetadata.project_token;
         const dataResponse = await fetch(`https://projects.scratch.mit.edu/${PROJECT_ID}?token=${token}`);
         if (!dataResponse.ok) {
@@ -259,7 +299,6 @@
         errorScreen.hidden = false;
         errorInformation.textContent = `${error}`;
       };
-
       run().catch(handleError);
     </script>
   </body>

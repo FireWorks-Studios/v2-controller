@@ -67,13 +67,54 @@
       padding: 0px;
 }
 
-.searchBar{
+.searchBarContainer{
     margin-top: 5px;
+    margin-left: 105px;
+    position: absolute;
     height: 30px;
-    border-radius: 100px;
-    border: solid 3px #696969;
-    color: #696969;
     width: calc(var(--centerContainerWidth) - 210px);
+    border-radius: 100px;
+    color: #696969;
+    background-color: var(--colorDarker);
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.searchBar{
+    border-radius: 100px;
+    border: none;
+    color: #ffffff;
+    padding-left: 10px;
+    background-color: var(--colorLighter);
+    margin-top: 3px;
+    height: 24px;
+    font-size: 16px;
+    width: calc(var(--centerContainerWidth) - 278px);
+}
+
+.searchBar::placeholder{
+  color: #d3dfff
+}
+
+.searchButton{
+    font-size: 24px;
+    background-color: #ffffff00;
+    border: none;
+    color: #ffffff;
+    padding: 0%;
+    -ms-flex-align: end;
+    margin-top: 3px;
+}
+
+.linkButton{
+    padding: 0%;
+    font-size: 24px;
+    background-color: #ffffff00;
+    border: none;
+    color: #ffffff;
+    margin-top: 3px;
+    -ms-flex-align: start;
 }
 
 .IconBtn.right{
@@ -123,7 +164,11 @@ iframe {
 
   .descriptionContainer{
     white-space: pre-line;
+    padding: 8px;
     display: none;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
   }
 
   .descriptionContainer.selected{
