@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./CenterContainer.css";
 import { PiFlagBold } from "react-icons/pi";
 import { PiPauseBold } from "react-icons/pi";
@@ -7,9 +7,11 @@ import { PiGearSixBold } from "react-icons/pi";
 import { PiInfoBold } from "react-icons/pi";
 import { PiLinkBold } from "react-icons/pi";
 import { TbVolume } from "react-icons/tb";
+import { TbVolume3 } from "react-icons/tb";
 import { IoSearch } from "react-icons/io5";
 import classNames from "classnames";
 import Editor from "./Editor";
+import { PiPlayBold } from "react-icons/pi";
 import { parseScratchProjectId } from "../../utils/parseURL";
 
 interface Props {
@@ -24,6 +26,16 @@ interface Props {
   selectedTab: string;
   unitWidth: number;
   validDropCancelTransition: boolean;
+}
+
+interface CustomWindow extends Window {
+  scaffolding: any; // Replace 'any' with the appropriate type
+  pause: () => void;
+  resume: () => void;
+  start: () => void;
+  stop: () => void;
+  mute: () => void;
+  unmute: () => void;
 }
 
 export const CenterContainer: React.FC<Props> = ({
@@ -46,7 +58,18 @@ export const CenterContainer: React.FC<Props> = ({
 
   const [projectID, setProjectID] = useState("10128407");
   const [iframeKey, setIframeKey] = useState('');
-  const iframeRef = useRef<HTMLIFrameElement | null>(null)
+  const [paused, setPaused] = useState(false)
+  const [muted, setMuted] = useState(false)
+  const [scaffolding, setScaffolding] = useState<any>();
+  var iframe = document.getElementById('iframe') as HTMLIFrameElement;
+  var customContentWindow = iframe?.contentWindow as CustomWindow;
+
+  const handleLoad = () => {
+    iframe = document.getElementById('iframe') as HTMLIFrameElement;
+    customContentWindow = iframe?.contentWindow as CustomWindow;
+    setScaffolding(customContentWindow?.scaffolding);
+    console.log(scaffolding)
+  };
 
   useEffect(() => {
     console.log(selectedTab);
@@ -83,33 +106,25 @@ export const CenterContainer: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    // Message event listener
-    const handleMessage = (event: { source: any; data: { scaffolding: any; }; }) => {
-      // Ensure the message is sent from the iframe
-      if (event.source !== iframeRef.current?.contentWindow) {
-        return;
-      }
+  useEffect(()=>{
+    if(paused){
+      console.log('trigger pause')
+      customContentWindow?.pause()
+    }else{
+      console.log('trigger resume')
+      customContentWindow?.resume()
+    }
+  },[paused])
 
-      // Get the scaffolding object from the message
-      const { scaffolding } = event.data;
-
-      // Now you can use the scaffolding object
-      console.log(scaffolding);
-
-      // Do something with the scaffolding object in your React app
-      // ...
-    };
-
-    // Add event listener when the component mounts
-    window.addEventListener('message', handleMessage);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
+  useEffect(()=>{
+    if(muted){
+      console.log('trigger mute')
+      customContentWindow?.mute()
+    }else{
+      console.log('trigger unmute')
+      customContentWindow?.unmute()
+    }
+  },[muted])
 
   return (
     <div
@@ -118,9 +133,9 @@ export const CenterContainer: React.FC<Props> = ({
       style={styles}
     >
       <div className="menuBar">
-        <PiFlagBold id="GreenFlagBtn" className="IconBtn" style={{ color: "#4cbf55" }} />
-        <PiPauseBold id="PauseBtn" className="IconBtn" style={{ color: "#e8a554" }} />
-        <PiOctagonBold id="StopBtn" className="IconBtn" style={{ color: "#e85454" }} />
+        <PiFlagBold id="GreenFlagBtn" className="IconBtn" style={{ color: "#4cbf55" }} onClick={customContentWindow?.start}/>
+        {paused? <PiPlayBold id="PauseBtn" className="IconBtn" style={{ color: "#e8a554" }} onClick={()=>{setPaused(false)}}/>:<PiPauseBold id="PauseBtn" className="IconBtn" style={{ color: "#e8a554" }} onClick={()=>{setPaused(true)}}/>}
+        <PiOctagonBold id="StopBtn" className="IconBtn" style={{ color: "#e85454" }} onClick={customContentWindow?.stop}/>
         <form className="searchBarContainer" onSubmit={handleSubmit}>
             <button className="linkButton">
                 <PiLinkBold/>
@@ -144,9 +159,10 @@ export const CenterContainer: React.FC<Props> = ({
           })}
           onClick={toggleDescription}
         />
+        {muted? <TbVolume3 id="MuteBtn" className="IconBtn right" onClick={()=>setMuted(false)}/>:<TbVolume id="MuteBtn" className="IconBtn right" onClick={()=>setMuted(true)}/>}
         <TbVolume id="MuteBtn" className="IconBtn right" />
       </div>
-      <iframe ref={iframeRef} id="iframe" key={iframeKey} src={"/projectPlayer.html#" + projectID} />
+      <iframe id="iframe" key={iframeKey} src={"/projectPlayer.html#" + projectID} onLoad={handleLoad}/>
       <div
         className={classNames("centerContentFrame", { editing, description })}
       >

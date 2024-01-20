@@ -167,6 +167,7 @@
       const errorInformation = document.getElementById("error-information");
 
       const scaffolding = new Scaffolding.Scaffolding();
+      window.scaffolding = scaffolding;
       scaffolding.setup();
       scaffolding.appendTo(appElement);
 
@@ -189,8 +190,7 @@
       setProgress(0.1);
 
       //connect scaffolding to menu bar button controls
-      const greenFlagBtn =
-        window.parent.document.getElementById("GreenFlagBtn");
+      const greenFlagBtn = window.parent.document.getElementById("GreenFlagBtn");
       const pauseBtn = window.parent.document.getElementById("PauseBtn");
       const stopBtn = window.parent.document.getElementById("StopBtn");
       const muteBtn = window.parent.document.getElementById("MuteBtn");
@@ -198,21 +198,15 @@
         "descriptionContainer"
       );
 
-      greenFlagBtn.addEventListener("click", () => {
+      window.start = function(){
         scaffolding.greenFlag();
         launchScreen.hidden = true;
         scaffolding.start();
-      });
-      scaffolding.addEventListener("PROJECT_RUN_START", () => {
-        greenFlagBtn.classList.add("active");
-      });
-      scaffolding.addEventListener("PROJECT_RUN_STOP", () => {
-        greenFlagBtn.classList.remove("active");
-      });
+      }
 
-      stopBtn.addEventListener("click", () => {
+      window.stop = function(){
         scaffolding.stopAll();
-      });
+      }
 
       const STATUS_RUNNING = 0;
       const STATUS_PROMISE_WAIT = 1;
@@ -307,21 +301,9 @@
         );
       };
 
-      pauseBtn.addEventListener("click", () => {
-        scaffolding.vm.runtime.ioDevices.clock._paused =
-          !scaffolding.vm.runtime.ioDevices.clock._paused;
-        if (scaffolding.vm.runtime.ioDevices.clock._paused) {
-          scaffolding.vm.runtime.audioEngine.audioContext.suspend();
-          scaffolding.vm.runtime.ioDevices.clock.pause();
-          scaffolding.vm.runtime.threads.forEach(pauseThread);
-
-          const activeThread = scaffolding.vm.runtime.sequencer.activeThread;
-          if (activeThread) {
-            setSteppingThread(activeThread);
-            eventTarget.dispatchEvent(new CustomEvent("step"));
-          }
-        } else {
-          vm.runtime.audioEngine.audioContext.resume();
+      window.resume = function(){
+        scaffolding.vm.runtime.ioDevices.clock._paused = false;
+        vm.runtime.audioEngine.audioContext.resume();
           vm.runtime.ioDevices.clock.resume();
           for (const thread of vm.runtime.threads) {
             const pauseState = pausedThreadState.get(thread);
@@ -336,13 +318,28 @@
           // This must happen after the "change" event is fired to fix https://github.com/ScratchAddons/ScratchAddons/issues/4281
           stepUnsteppedThreads(lastSteppedThread);
           steppingThread = null;
-        }
-      });
+      }
 
-      muteBtn.addEventListener("click", () => {
-        scaffolding.vm.runtime.audioEngine.inputNode.gain.value =
-          1 - scaffolding.vm.runtime.audioEngine.inputNode.gain.value;
-      });
+      window.pause = function() {
+        scaffolding.vm.runtime.ioDevices.clock._paused = true;
+        scaffolding.vm.runtime.audioEngine.audioContext.suspend();
+          scaffolding.vm.runtime.ioDevices.clock.pause();
+          scaffolding.vm.runtime.threads.forEach(pauseThread);
+
+          const activeThread = scaffolding.vm.runtime.sequencer.activeThread;
+          if (activeThread) {
+            setSteppingThread(activeThread);
+            eventTarget.dispatchEvent(new CustomEvent("step"));
+          }
+      };
+
+      window.mute = function(){
+        scaffolding.vm.runtime.audioEngine.inputNode.gain.value = 0
+      }
+
+      window.unmute = function(){
+        scaffolding.vm.runtime.audioEngine.inputNode.gain.value = 1
+      }
 
       // turbo mode code
       // pauseBtn.addEventListener('click', () => {
