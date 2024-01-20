@@ -20,7 +20,8 @@ export interface ComponentRepresentation {
   y: number,
   w: number,
   h: number,
-  color: string
+  color: string,
+  pressed?: boolean,
 }
 
 interface Props{
@@ -80,7 +81,7 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
         }
       }
     }
-    console.log(tempColors)
+    // console.log(tempColors)
     setColorsUsed(tempColors);
   },[componentRepresentations])
 
@@ -104,9 +105,9 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
     closeDeleteSnackbar()
   }, [componentRepresentations])
 
-  useEffect(()=>{
-    console.log(componentRepresentations)
-  }, [componentRepresentations])
+  // useEffect(()=>{
+  //   console.log(componentRepresentations)
+  // }, [componentRepresentations])
 
   const deleteComponentRepresentation = useCallback((index: number) => {
     handleDeleteSnackbar(1);

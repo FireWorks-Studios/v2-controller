@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core";
 import { CenterContainer } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
 import { checkValidAppend } from "./utils/position";
+import { keyDict } from "./utils/keyMapping";
 
 const theme = createTheme({
   palette: {
@@ -32,137 +33,355 @@ const theme = createTheme({
 });
 
 const centerDefaultComponentRepresentations:ComponentRepresentation[] = 
-  [
-    {
-      type: "button",
-      styling: [],
-      mapping: "ArrowUp",
-      container: "center",
-      x: 1,
-      y: 0,
-      w: 1,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: ["round", "short"],
-      mapping: "Green Flag",
-      container: "center",
-      x: 2,
-      y: 0,
-      w: 1,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: ["round", "short"],
-      mapping: "Pause",
-      container: "center",
-      x: 3,
-      y: 0,
-      w: 1,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: ["round", "short"],
-      mapping: "Stop",
-      container: "center",
-      x: 4,
-      y: 0,
-      w: 2,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: [],
-      mapping: "ArrowLeft",
-      container: "center",
-      x: 0,
-      y: 1,
-      w: 2,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: [],
-      mapping: "ArrowDown",
-      container: "center",
-      x: 1,
-      y: 2,
-      w: 1,
-      h: 1,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: [],
-      mapping: "ArrowRight",
-      container: "center",
-      x: 2,
-      y: 1,
-      w: 2,
-      h: 2,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: [],
-      mapping: "a",
-      container: "center",
-      x: 5,
-      y: 1,
-      w: 1,
-      h: 2,
-      color: "#006aff",
-    },
-    {
-      type: "button",
-      styling: [],
-      mapping: "b",
-      container: "center",
-      x: 4,
-      y: 2,
-      w: 1,
-      h: 1,
-      color: "#006aff",
-    },
-  ]
+[
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "ArrowUp",
+      "container": "center",
+      "x": 1,
+      "y": 0,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  },
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "ArrowLeft",
+      "container": "center",
+      "x": 0,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  },
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "ArrowDown",
+      "container": "center",
+      "x": 1,
+      "y": 2,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  },
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "ArrowRight",
+      "container": "center",
+      "x": 2,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  },
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "a",
+      "container": "center",
+      "x": 5,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  },
+  {
+      "type": "button",
+      "styling": [],
+      "mapping": "b",
+      "container": "center",
+      "x": 4,
+      "y": 2,
+      "w": 1,
+      "h": 1,
+      "color": "#006aff",
+      "pressed": false
+  }
+]
 
   const leftDefaultComponentRepresentations:ComponentRepresentation[] = 
   [
     {
-      type: "button",
-      styling: [],
-      mapping: "ArrowUp",
-      container: "left",
-      x: 1,
-      y: 0,
-      w: 1,
-      h: 1,
-      color: "#006aff",
+        "type": "button",
+        "styling": [],
+        "mapping": "w",
+        "container": "left",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
     },
-  ]
+    {
+        "type": "button",
+        "styling": [],
+        "mapping": "a",
+        "container": "left",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [],
+        "mapping": "s",
+        "container": "left",
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [],
+        "mapping": "d",
+        "container": "left",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "short"
+        ],
+        "mapping": "e",
+        "container": "left",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "short"
+        ],
+        "mapping": "f",
+        "container": "left",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "1",
+        "container": "left",
+        "x": 0,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "2",
+        "container": "left",
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "3",
+        "container": "left",
+        "x": 2,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "4",
+        "container": "left",
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "5",
+        "container": "left",
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "6",
+        "container": "left",
+        "x": 2,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "7",
+        "container": "left",
+        "x": 0,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "8",
+        "container": "left",
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "9",
+        "container": "left",
+        "x": 2,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    }
+]
 
   const rightDefaultComponentRepresentations:ComponentRepresentation[] = 
   [
     {
-      type: "button",
-      styling: [],
-      mapping: "ArrowUp",
-      container: "right",
-      x: 1,
-      y: 0,
-      w: 1,
-      h: 1,
-      color: "#006aff",
+        "type": "button",
+        "styling": [],
+        "mapping": "Space",
+        "container": "right",
+        "x": 0,
+        "y": 1,
+        "w": 3,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
     },
-  ]
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "o",
+        "container": "right",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "round",
+            "short"
+        ],
+        "mapping": "p",
+        "container": "right",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    },
+    {
+        "type": "button",
+        "styling": [
+            "short"
+        ],
+        "mapping": "e",
+        "container": "right",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#006aff",
+        "pressed": false
+    }
+]
 
 function App() {
   const [editing, setEditing] = useState(false);
@@ -182,6 +401,8 @@ function App() {
 
   const [validDropCancelTransition, setValidDropCancelTransition] = useState(false)
 
+  const [scaffolding, setScaffolding] = useState<any>();
+
   window
     .matchMedia("(orientation: portrait)")
     .addEventListener("change", (e) => {
@@ -194,6 +415,51 @@ function App() {
       setScreenWidth(window.innerWidth);
       setScreenHeight(window.innerHeight);
     });
+
+  useEffect(()=>{
+    if(scaffolding === undefined){
+      return
+    }
+    var keysToFire: string[] = []
+    var keysToKill: string[]  = []
+    const readKeyDown = (componentRepresentations: ComponentRepresentation[]) => {
+      for (const componentRepresentation of componentRepresentations){
+        if(componentRepresentation.pressed){
+          if(!keysToFire.includes(componentRepresentation.mapping)){
+            keysToFire.push(componentRepresentation.mapping)
+          }
+        }
+      }
+    }
+    const readKeyUp = (componentRepresentations: ComponentRepresentation[]) => {
+      for (const componentRepresentation of componentRepresentations){
+        if(!componentRepresentation.pressed){
+          if(!keysToFire.includes(componentRepresentation.mapping)){
+            if(!keysToKill.includes(componentRepresentation.mapping)){
+              keysToKill.push(componentRepresentation.mapping)
+            }
+          }
+        }
+      }
+    }
+    readKeyDown(centerComponentRepresentations)
+    readKeyDown(leftComponentRepresentations)
+    readKeyDown(rightComponentRepresentations)
+    readKeyUp(centerComponentRepresentations)
+    readKeyUp(leftComponentRepresentations)
+    readKeyUp(rightComponentRepresentations)
+    console.log('keys to fire: ' + keysToFire)
+    console.log('keys to kill: ' + keysToKill)
+    // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
+    keysToKill.forEach((key) => {
+      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: false})
+    });
+
+    keysToFire.forEach((key) => {
+      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: true})
+    });
+
+  }, [scaffolding, centerComponentRepresentations, leftComponentRepresentations, rightComponentRepresentations])
 
   useEffect(() => {
     setScreenWidth(window.innerWidth);
@@ -419,6 +685,7 @@ function App() {
           screenWidth={screenWidth}
           screenHeight={screenHeight}
           centerContainerWidth={centerContainerWidth}
+          setAppScaffolding={setScaffolding}
         />
         {/* <button className="edit" onClick={() => setEditing(!editing)}>
           edit
