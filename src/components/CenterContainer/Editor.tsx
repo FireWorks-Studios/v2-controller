@@ -146,7 +146,8 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
                     y: 0,
                     w: 1,
                     h: 1,
-                    color: '#006aff'
+                    color: '#006aff',
+                    pressed: false
                   }
             }
           />

@@ -26,6 +26,7 @@ interface Props {
   selectedTab: string;
   unitWidth: number;
   validDropCancelTransition: boolean;
+  setAppScaffolding: React.Dispatch<React.SetStateAction<any>>
 }
 
 interface CustomWindow extends Window {
@@ -49,6 +50,7 @@ export const CenterContainer: React.FC<Props> = ({
   selectedTab,
   unitWidth,
   validDropCancelTransition,
+  setAppScaffolding
 }: Props) => {
   const styles = {
     "--screenWidth": screenWidth,
@@ -70,6 +72,10 @@ export const CenterContainer: React.FC<Props> = ({
     setScaffolding(customContentWindow?.scaffolding);
     console.log(scaffolding)
   };
+
+  useEffect(()=>{
+    setAppScaffolding(scaffolding)
+  },[scaffolding])
 
   useEffect(() => {
     console.log(selectedTab);

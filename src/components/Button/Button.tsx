@@ -89,6 +89,12 @@ export const Button: React.FC<Props> = ({
   const [pressed, setPressed] = useState(false)
 
   useEffect(()=>{
+    if(component.pressed !== pressed){
+      updateCurrentConfig(index, {...component, pressed})
+    }
+  })
+
+  useEffect(()=>{
     if(!singleSelected){
       setCustomizationMenuOpen(false)
     }
@@ -102,13 +108,13 @@ export const Button: React.FC<Props> = ({
       return
     }
     if (touchEvents) {
-      const pressed = 
+      const tempPressed = 
         UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(pressed)
+      setPressed(tempPressed)
     } else if (pointerEvents) {
-      const pressed = 
+      const tempPressed = 
         UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(pressed)
+      setPressed(tempPressed)
     }
   },[touchEvents, pointerEvents, editing])
 

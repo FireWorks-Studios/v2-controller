@@ -14,6 +14,7 @@
     align-items: center;
     touch-action: none;
     user-select: none;
+    overflow: hidden;
 }
 
 *{
@@ -32,7 +33,7 @@
 
 .App.landscape{
     width: min(calc(var(--centerContainerWidth) + (6 * var(--unitWidth))), 100vw);
-    overflow: visible;
+    overflow: hidden;
 }
 
 
