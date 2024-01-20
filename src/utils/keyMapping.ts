@@ -1,4 +1,4 @@
-export const keyDict: Record<string, number> = {
+export const keyDict = {
     'ArrowUp':38,
     'ArrowDown':40,
     'ArrowLeft':37,
@@ -44,4 +44,4 @@ export const keyDict: Record<string, number> = {
     '8':56,
     '9':57
 
-}
+} as const;

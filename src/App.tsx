@@ -452,11 +452,11 @@ function App() {
     console.log('keys to kill: ' + keysToKill)
     // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
     keysToKill.forEach((key) => {
-      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: false})
+      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key as keyof typeof keyDict], isDown: false})
     });
 
     keysToFire.forEach((key) => {
-      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: true})
+      scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key as keyof typeof keyDict], isDown: true})
     });
 
   }, [scaffolding, centerComponentRepresentations, leftComponentRepresentations, rightComponentRepresentations])
