@@ -74,6 +74,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           }}
         >
           <Tab
+            disableRipple
             label="Components"
             icon={<BsFillNutFill />}
             iconPosition="start"
@@ -93,6 +94,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
             }}
           />
           <Tab
+          disableRipple
             label="Advanced"
             {...a11yProps(1)}
             icon={<MdLightbulb />}
@@ -116,6 +118,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           size="small"
           variant="contained"
           sx={{
+            fontSize: "14px",
             minHeight: "34px",
             height: "34px",
             padding: "9px",
