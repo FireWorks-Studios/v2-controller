@@ -4,10 +4,14 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useStyles } from "./EditorStyles";
-import { Button as MuiButton } from "@mui/material";
-import { BsFillNutFill } from "react-icons/bs";
+import { Divider, IconButton, ListItemIcon, ListItemText, MenuItem, Button as MuiButton } from "@mui/material";
+import { BsFillNutFill, BsToggleOff, BsToggleOn } from "react-icons/bs";
 import { MdLightbulb } from "react-icons/md";
 import { DummyButton } from "../Button/DummyButton";
+import { PiExportBold, PiLightningBold, PiMouseBold } from "react-icons/pi";
+import { LuImport } from "react-icons/lu";
+import { LuAlignVerticalSpaceAround } from "react-icons/lu";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -26,6 +30,9 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      style={
+        {overflow: 'auto'}
+      }
     >
       {value === index && (
         <Box className={classes.tabPanel}>
@@ -153,7 +160,65 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Advanced options (incomplete lol)
+      <MenuItem dense={true} onClick={()=>{}}>
+          <ListItemIcon><PiMouseBold /></ListItemIcon>
+          <ListItemText>Mouse and Keyboard Mode</ListItemText>
+          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
+          {true? <BsToggleOn/>: <BsToggleOff/>}
+          </IconButton>
+        </MenuItem>
+
+        <MenuItem dense={true} onClick={()=>{}}>
+          <ListItemIcon><PiLightningBold /></ListItemIcon>
+          <ListItemText>Turbo Mode</ListItemText>
+          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
+          {true? <BsToggleOn/>: <BsToggleOff/>}
+          </IconButton>
+        </MenuItem>
+
+        <MenuItem dense={true} onClick={()=>{}}>
+          <ListItemIcon><LuAlignVerticalSpaceAround /></ListItemIcon>
+          <ListItemText>Safety Margin</ListItemText>
+          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
+          {true? <BsToggleOn/>: <BsToggleOff/>}
+          </IconButton>
+        </MenuItem>
+        <Divider/>
+        
+        <MuiButton startIcon={< PiExportBold/>} variant="contained"
+        size="small"
+        sx={{
+          fontSize: "14px",
+          minHeight: "34px",
+          height: "34px",
+          padding: "9px",
+          textTransform: "none",
+          backgroundColor: "#638dff",
+          boxShadow: "none",
+          "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
+          margin: "7px"
+        }}
+        >
+          Export Config
+        </MuiButton>
+
+        <MuiButton startIcon={<LuImport />} variant="contained"
+          size="small"
+          sx={{
+            fontSize: "14px",
+            minHeight: "34px",
+            height: "34px",
+            padding: "9px",
+            textTransform: "none",
+            boxShadow: "none",
+            "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
+            margin: "7px",
+            backgroundColor: "#638dff"
+          }}
+        >
+          Import Config
+        </MuiButton>
+
       </CustomTabPanel>
     </Box>
   );

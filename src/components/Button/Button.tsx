@@ -110,11 +110,23 @@ export const Button: React.FC<Props> = ({
     if (touchEvents) {
       const tempPressed = 
         UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(tempPressed)
+        if(!component.styling.includes('sticky')){
+          setPressed(tempPressed)
+        }else{
+          if(tempPressed){
+            setPressed(!pressed)
+          }
+        }
     } else if (pointerEvents) {
       const tempPressed = 
         UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(tempPressed)
+      if(!component.styling.includes('sticky')){
+        setPressed(tempPressed)
+      }else{
+        if(tempPressed){
+          setPressed(!pressed)
+        }
+      }
     }
   },[touchEvents, pointerEvents, editing])
 

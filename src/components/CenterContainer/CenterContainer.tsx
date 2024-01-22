@@ -169,6 +169,7 @@ export const CenterContainer: React.FC<Props> = ({
         <TbVolume id="MuteBtn" className="IconBtn right" />
       </div>
       <iframe id="iframe" key={iframeKey} src={"/projectPlayer.html#" + projectID} onLoad={handleLoad}/>
+      <div id="iframeMask" className="iframeMask MouseAndKeyboard"></div>
       <div
         className={classNames("centerContentFrame", { editing, description })}
       >
