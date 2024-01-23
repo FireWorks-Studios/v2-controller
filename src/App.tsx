@@ -1,7 +1,7 @@
 import { ComponentRepresentation, ControllerContainer } from "./components/ControllerContainer/ControllerContainer";
 import "./App.css";
 import React, { useCallback, useEffect, useState } from "react";
-import { CenterContainer } from "./components/CenterContainer/CenterContainer";
+import { CenterContainer, CustomWindow } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
 import { checkValidAppend } from "./utils/position";
 import { centerDefaultComponentRepresentations, keyDict, leftDefaultComponentRepresentations, rightDefaultComponentRepresentations } from "./utils/keyMapping";
@@ -30,6 +30,8 @@ function App() {
   const [pointerMousePos, setPointerMousePos] = useState<{x: number, y:number}|null>(null)
   const [pointerMouseDown, setPointerMouseDown] = useState(false)
 
+  const [controllerAdvancedConfig, setControllerAdvancedConfig] = useState<string[]>(['mouseAndKeyboardMode']) //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode'
+
   window
     .matchMedia("(orientation: portrait)")
     .addEventListener("change", (e) => {
@@ -39,8 +41,6 @@ function App() {
       } else {
         setScreenOrientation("landscape");
       }
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
     });
 
   useEffect(()=>{
@@ -96,26 +96,15 @@ function App() {
 
 
   useEffect(() => {
+    if(!controllerAdvancedConfig.includes('safetyMargin')){
     setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
+      setScreenHeight(window.innerHeight);
+    }else{
 
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 50);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 100);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 300);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 500);
-  }, [screenOritentation, setScreenWidth, setScreenHeight]);
+    setScreenWidth(window.innerWidth - 36);
+      setScreenHeight(window.innerHeight - 36);
+    }
+  }, [controllerAdvancedConfig]);
 
   useEffect(() => {
     if (screenOritentation === "portrait") {
@@ -138,8 +127,14 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
+      if(!controllerAdvancedConfig.includes('safetyMargin')){
+        setScreenWidth(window.innerWidth);
+          setScreenHeight(window.innerHeight);
+        }else{
+    
+        setScreenWidth(window.innerWidth - 36);
+          setScreenHeight(window.innerHeight - 36);
+        }
     };
 
     window.addEventListener("resize", handleResize);
@@ -147,7 +142,7 @@ function App() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [controllerAdvancedConfig]);
 
   function toggleEditing() {
     if (editing) {
@@ -232,11 +227,18 @@ function App() {
 
 
   useEffect(()=>{
-    const iframe = document.getElementById('iframe')
+  var iframe = document.getElementById('iframe') as HTMLIFrameElement;
     if(scaffolding === undefined || iframe === null){
       return
     }
     console.log("scaffolding found on recive mouse change")
+    var customContentWindow = iframe?.contentWindow as CustomWindow;
+    if(pointerMouseDown){
+    if(!customContentWindow?.hasStarted){
+      console.log('should start vm')
+      customContentWindow.start()
+    }
+    }
     if(pointerMousePos !== null){
       scaffolding.vm.postIOData('mouse', {isDown: pointerMouseDown, x: pointerMousePos.x, y: pointerMousePos.y, canvasWidth: iframe.clientWidth, canvasHeight: iframe.clientHeight})
       console.log("mouse down sent to scaffolding, position: ", pointerMousePos.x, pointerMousePos.y)
@@ -372,6 +374,8 @@ function App() {
         onPointerUpCapture={handlePointerUpCapture}
       >
         <CenterContainer
+        controllerAdvancedConfig={controllerAdvancedConfig}
+        setControllerAdvancedConfig={setControllerAdvancedConfig}
         validDropCancelTransition={validDropCancelTransition}
           unitWidth={unitWidth}
           selectedTab={selectedTab}

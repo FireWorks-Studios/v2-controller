@@ -30,9 +30,6 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
-      style={
-        {overflow: 'auto'}
-      }
     >
       {value === index && (
         <Box className={classes.tabPanel}>
@@ -54,9 +51,11 @@ interface Props{
     toggleEditing(): void
     unitWidth: number;
     validDropCancelTransition: boolean;
+    controllerAdvancedConfig: string[];
+    setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Editor({toggleEditing, unitWidth, validDropCancelTransition}:Props) {
+export default function Editor({toggleEditing, unitWidth, validDropCancelTransition, controllerAdvancedConfig, setControllerAdvancedConfig}:Props) {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
@@ -160,27 +159,33 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-      <MenuItem dense={true} onClick={()=>{}}>
+      <MenuItem dense={true} onClick={()=>{
+          !controllerAdvancedConfig.includes('mouseAndKeyboardMode')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'mouseAndKeyboardMode']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'mouseAndKeyboardMode'))
+          }}>
           <ListItemIcon><PiMouseBold /></ListItemIcon>
           <ListItemText>Mouse and Keyboard Mode</ListItemText>
           <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {true? <BsToggleOn/>: <BsToggleOff/>}
+          {controllerAdvancedConfig.includes('mouseAndKeyboardMode')? <BsToggleOn/>: <BsToggleOff/>}
           </IconButton>
         </MenuItem>
 
-        <MenuItem dense={true} onClick={()=>{}}>
+        <MenuItem dense={true} onClick={()=>{
+          !controllerAdvancedConfig.includes('turboMode')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'turboMode']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'turboMode'))
+          }}>
           <ListItemIcon><PiLightningBold /></ListItemIcon>
           <ListItemText>Turbo Mode</ListItemText>
           <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {true? <BsToggleOn/>: <BsToggleOff/>}
+          {controllerAdvancedConfig.includes('turboMode')? <BsToggleOn/>: <BsToggleOff/>}
           </IconButton>
         </MenuItem>
 
-        <MenuItem dense={true} onClick={()=>{}}>
+        <MenuItem dense={true} onClick={()=>{
+          !controllerAdvancedConfig.includes('safetyMargin')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'safetyMargin']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'safetyMargin'))
+          }}>
           <ListItemIcon><LuAlignVerticalSpaceAround /></ListItemIcon>
           <ListItemText>Safety Margin</ListItemText>
           <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {true? <BsToggleOn/>: <BsToggleOff/>}
+          {controllerAdvancedConfig.includes('safetyMargin')? <BsToggleOn/>: <BsToggleOff/>}
           </IconButton>
         </MenuItem>
         <Divider/>
@@ -198,6 +203,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
           "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
           margin: "7px"
         }}
+        disabled
         >
           Export Config
         </MuiButton>
@@ -215,6 +221,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
             margin: "7px",
             backgroundColor: "#638dff"
           }}
+          disabled
         >
           Import Config
         </MuiButton>

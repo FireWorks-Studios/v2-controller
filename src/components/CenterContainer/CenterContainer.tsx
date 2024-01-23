@@ -27,9 +27,11 @@ interface Props {
   unitWidth: number;
   validDropCancelTransition: boolean;
   setAppScaffolding: React.Dispatch<React.SetStateAction<any>>
+  controllerAdvancedConfig: string[]
+  setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-interface CustomWindow extends Window {
+export interface CustomWindow extends Window {
   scaffolding: any; // Replace 'any' with the appropriate type
   pause: () => void;
   resume: () => void;
@@ -37,6 +39,7 @@ interface CustomWindow extends Window {
   stop: () => void;
   mute: () => void;
   unmute: () => void;
+  hasStarted: boolean;
 }
 
 export const CenterContainer: React.FC<Props> = ({
@@ -50,7 +53,9 @@ export const CenterContainer: React.FC<Props> = ({
   selectedTab,
   unitWidth,
   validDropCancelTransition,
-  setAppScaffolding
+  setAppScaffolding,
+  controllerAdvancedConfig,
+  setControllerAdvancedConfig
 }: Props) => {
   const styles = {
     "--screenWidth": screenWidth,
@@ -113,6 +118,14 @@ export const CenterContainer: React.FC<Props> = ({
   };
 
   useEffect(()=>{
+    if(editing || description){
+      setPaused(true)
+    }else{
+      setPaused(false)
+    }
+  },[editing, description])
+
+  useEffect(()=>{
     if(paused){
       console.log('trigger pause')
       customContentWindow?.pause()
@@ -131,6 +144,19 @@ export const CenterContainer: React.FC<Props> = ({
       customContentWindow?.unmute()
     }
   },[muted])
+
+  useEffect(()=>{
+    if(scaffolding === undefined){
+      return
+    }
+    if(controllerAdvancedConfig.includes('turboMode')){
+      console.log('turboMode on', controllerAdvancedConfig)
+      scaffolding.vm.runtime.turboMode = true
+    }else{
+      console.log('turboMode off')
+      scaffolding.vm.runtime.turboMode = false
+    }
+  }, [controllerAdvancedConfig, scaffolding])
 
   return (
     <div
@@ -169,7 +195,7 @@ export const CenterContainer: React.FC<Props> = ({
         <TbVolume id="MuteBtn" className="IconBtn right" />
       </div>
       <iframe id="iframe" key={iframeKey} src={"/projectPlayer.html#" + projectID} onLoad={handleLoad}/>
-      <div id="iframeMask" className="iframeMask MouseAndKeyboard"></div>
+      <div id="iframeMask" className={!controllerAdvancedConfig.includes('mouseAndKeyboardMode')? "iframeMask" : "iframeMask MouseAndKeyboard"}></div>
       <div
         className={classNames("centerContentFrame", { editing, description })}
       >
@@ -188,6 +214,8 @@ export const CenterContainer: React.FC<Props> = ({
           })}
         >
           <Editor
+            controllerAdvancedConfig={controllerAdvancedConfig}
+            setControllerAdvancedConfig={setControllerAdvancedConfig}
             validDropCancelTransition={validDropCancelTransition}
             toggleEditing={toggleEditing}
             unitWidth={unitWidth}

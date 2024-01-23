@@ -177,6 +177,9 @@ iframe {
 
   .editorContainer{
     display: none;
+    height: 100%;
+    overflow: hidden;
+    /* overflow-y: auto; */
   }
 
   .editorContainer.selected{
