@@ -165,6 +165,7 @@
       const loadingInner = document.getElementById("loading-inner");
       const errorScreen = document.getElementById("error");
       const errorInformation = document.getElementById("error-information");
+      window.hasStarted = false;
 
       const scaffolding = new Scaffolding.Scaffolding();
       window.scaffolding = scaffolding;
@@ -202,6 +203,7 @@
         scaffolding.greenFlag();
         launchScreen.hidden = true;
         scaffolding.start();
+        window.hasStarted = true;
       }
 
       window.stop = function(){

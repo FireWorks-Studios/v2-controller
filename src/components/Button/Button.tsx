@@ -17,7 +17,7 @@ import { FaSquare } from "react-icons/fa";
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { ListItemIcon, ListItemText } from '@material-ui/core';
+import { ListItemIcon, ListItemText, ThemeProvider, createTheme } from '@material-ui/core';
 
 
 import { MuiColorInput } from 'mui-color-input'
@@ -62,6 +62,14 @@ interface Props{
   // eslint-disable-next-line no-unused-vars
   setCustomizationMenuOpen?(value: boolean): void;
 }
+
+const theme = createTheme({
+  typography: {
+    body1: {
+      fontSize: 14,
+    }
+  }
+})
 
 export const Button: React.FC<Props> = ({
   variant,
@@ -110,11 +118,23 @@ export const Button: React.FC<Props> = ({
     if (touchEvents) {
       const tempPressed = 
         UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(tempPressed)
+        if(!component.styling.includes('sticky')){
+          setPressed(tempPressed)
+        }else{
+          if(tempPressed){
+            setPressed(!pressed)
+          }
+        }
     } else if (pointerEvents) {
       const tempPressed = 
         UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect())
-      setPressed(tempPressed)
+      if(!component.styling.includes('sticky')){
+        setPressed(tempPressed)
+      }else{
+        if(tempPressed){
+          setPressed(!pressed)
+        }
+      }
     }
   },[touchEvents, pointerEvents, editing])
 
@@ -321,53 +341,53 @@ export const Button: React.FC<Props> = ({
           <PiSparkleBold id={'customizationMenuBtn'+component.container+index} className='moreOptions' onClick={() => setCustomizationMenuOpen(!customizationMenuOpen)}/>
           <FaRegTrashAlt className='delete' onClick={() => deleteComponentRepresentation(index)}/> 
         </div>
-
-        <Menu
-          anchorEl={document.getElementById('customizationMenuBtn'+component.container+index)}
-          open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+component.container+index)!= null && singleSelected}
-        >
-        <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
-          <ListItemIcon><FaRegCircle /></ListItemIcon>
-          <ListItemText>Round</ListItemText>
-          <IconButton edge="end" size='large' sx={component.styling.includes('round')? {color: component.color}: {}}>
-          {component.styling.includes('round')? <BsToggleOn/>: <BsToggleOff/>}
-          </IconButton>
-        </MenuItem>
-        <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
-          <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
-          <ListItemText>Short</ListItemText>
-          <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color}: {}}>
-          {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
-          </IconButton>
-        </MenuItem>
-        <Divider/>
-        <MenuItem dense={true} disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
-          <ListItemIcon><LuBrush /></ListItemIcon>
-          <ListItemText>Color</ListItemText>
-          <MuiColorInput id='MuiColorInput' size='small' value={component.color} onChange={updateColor} format='hex' variant='outlined' sx={{marginLeft: '10px', width: '150px', display: 'flex', alignItems: 'flex-end', marginRight: '-5px'}} isAlphaHidden={true}/>
-        </MenuItem>
-        <MenuItem dense disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
-          <IconButton sx={{color: colorsUsed[0]}} disabled={colorsUsed[0] === undefined} onClick={()=>updateColor(colorsUsed[0])}>
-          <FaSquare/>
-          </IconButton>
-          <IconButton sx={{color: colorsUsed[1]}} disabled={colorsUsed[1] === undefined} onClick={()=>updateColor(colorsUsed[1])}>
-          <FaSquare/>
-          </IconButton>
-          <IconButton sx={{color: colorsUsed[2]}} disabled={colorsUsed[2] === undefined} onClick={()=>updateColor(colorsUsed[2])}>
-          <FaSquare/>
-          </IconButton>
-          <IconButton sx={{color: colorsUsed[3]}} disabled={colorsUsed[3] === undefined} onClick={()=>updateColor(colorsUsed[3])}>
-          <FaSquare/>
-          </IconButton>
-          <IconButton sx={{color: colorsUsed[4]}} disabled={colorsUsed[4] === undefined} onClick={()=>updateColor(colorsUsed[4])}>
-          <FaSquare/>
-          </IconButton>
-          <IconButton sx={{color: colorsUsed[5]}} disabled={colorsUsed[5] === undefined} onClick={()=>updateColor(colorsUsed[5])}>
-          <FaSquare/>
-          </IconButton>
-        </MenuItem>
-      </Menu>
-
+        <ThemeProvider theme={theme}>
+            <Menu
+              anchorEl={document.getElementById('customizationMenuBtn'+component.container+index)}
+              open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+component.container+index)!= null && singleSelected}
+            >
+            <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
+              <ListItemIcon><FaRegCircle /></ListItemIcon>
+              <ListItemText>Round</ListItemText>
+              <IconButton edge="end" size='large' sx={{... component.styling.includes('round')? {color: component.color}: {}, padding: '0px', marginRight: '0px'}}>
+              {component.styling.includes('round')? <BsToggleOn/>: <BsToggleOff/>}
+              </IconButton>
+            </MenuItem>
+            <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
+              <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
+              <ListItemText>Short</ListItemText>
+              <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color, padding: '0px', marginRight: '3px'}: {padding: '0px', marginRight: '0px'}}>
+              {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
+              </IconButton>
+            </MenuItem>
+            <Divider/>
+            <MenuItem dense={true} disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
+              <ListItemIcon><LuBrush /></ListItemIcon>
+              <ListItemText>Color</ListItemText>
+              <MuiColorInput id='MuiColorInput' size='small' value={component.color} onChange={updateColor} format='hex' variant='outlined' sx={{marginLeft: '10px', width: '150px', display: 'flex', alignItems: 'flex-end', marginRight: '-5px'}} isAlphaHidden={true}/>
+            </MenuItem>
+            <MenuItem dense disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
+              <IconButton sx={{color: colorsUsed[0]}} disabled={colorsUsed[0] === undefined} onClick={()=>updateColor(colorsUsed[0])}>
+              <FaSquare/>
+              </IconButton>
+              <IconButton sx={{color: colorsUsed[1]}} disabled={colorsUsed[1] === undefined} onClick={()=>updateColor(colorsUsed[1])}>
+              <FaSquare/>
+              </IconButton>
+              <IconButton sx={{color: colorsUsed[2]}} disabled={colorsUsed[2] === undefined} onClick={()=>updateColor(colorsUsed[2])}>
+              <FaSquare/>
+              </IconButton>
+              <IconButton sx={{color: colorsUsed[3]}} disabled={colorsUsed[3] === undefined} onClick={()=>updateColor(colorsUsed[3])}>
+              <FaSquare/>
+              </IconButton>
+              <IconButton sx={{color: colorsUsed[4]}} disabled={colorsUsed[4] === undefined} onClick={()=>updateColor(colorsUsed[4])}>
+              <FaSquare/>
+              </IconButton>
+              <IconButton sx={{color: colorsUsed[5]}} disabled={colorsUsed[5] === undefined} onClick={()=>updateColor(colorsUsed[5])}>
+              <FaSquare/>
+              </IconButton>
+            </MenuItem>
+          </Menu>
+      </ThemeProvider>
         <Dropdown 
           editing={editing} 
           updateMapping={updateMapping} 
