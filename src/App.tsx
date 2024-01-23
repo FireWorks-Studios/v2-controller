@@ -1,387 +1,10 @@
 import { ComponentRepresentation, ControllerContainer } from "./components/ControllerContainer/ControllerContainer";
 import "./App.css";
 import React, { useCallback, useEffect, useState } from "react";
-import { createTheme, ThemeProvider } from "@material-ui/core";
-import { CenterContainer } from "./components/CenterContainer/CenterContainer";
+import { CenterContainer, CustomWindow } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
 import { checkValidAppend } from "./utils/position";
-import { keyDict } from "./utils/keyMapping";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#4d96fe",
-    },
-    secondary: {
-      main: "#FFFFFF",
-    },
-  },
-  typography: {
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(","),
-  },
-});
-
-const centerDefaultComponentRepresentations:ComponentRepresentation[] = 
-[
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "ArrowUp",
-      "container": "center",
-      "x": 1,
-      "y": 0,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  },
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "ArrowLeft",
-      "container": "center",
-      "x": 0,
-      "y": 1,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  },
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "ArrowDown",
-      "container": "center",
-      "x": 1,
-      "y": 2,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  },
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "ArrowRight",
-      "container": "center",
-      "x": 2,
-      "y": 1,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  },
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "a",
-      "container": "center",
-      "x": 5,
-      "y": 1,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  },
-  {
-      "type": "button",
-      "styling": [],
-      "mapping": "b",
-      "container": "center",
-      "x": 4,
-      "y": 2,
-      "w": 1,
-      "h": 1,
-      "color": "#006aff",
-      "pressed": false
-  }
-]
-
-  const leftDefaultComponentRepresentations:ComponentRepresentation[] = 
-  [
-    {
-        "type": "button",
-        "styling": [],
-        "mapping": "w",
-        "container": "left",
-        "x": 1,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [],
-        "mapping": "a",
-        "container": "left",
-        "x": 0,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [],
-        "mapping": "s",
-        "container": "left",
-        "x": 1,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [],
-        "mapping": "d",
-        "container": "left",
-        "x": 2,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "short"
-        ],
-        "mapping": "e",
-        "container": "left",
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "short"
-        ],
-        "mapping": "f",
-        "container": "left",
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "1",
-        "container": "left",
-        "x": 0,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "2",
-        "container": "left",
-        "x": 1,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "3",
-        "container": "left",
-        "x": 2,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "4",
-        "container": "left",
-        "x": 0,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "5",
-        "container": "left",
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "6",
-        "container": "left",
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "7",
-        "container": "left",
-        "x": 0,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "8",
-        "container": "left",
-        "x": 1,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "9",
-        "container": "left",
-        "x": 2,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    }
-]
-
-  const rightDefaultComponentRepresentations:ComponentRepresentation[] = 
-  [
-    {
-        "type": "button",
-        "styling": [],
-        "mapping": "Space",
-        "container": "right",
-        "x": 0,
-        "y": 1,
-        "w": 3,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "o",
-        "container": "right",
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "round",
-            "short"
-        ],
-        "mapping": "p",
-        "container": "right",
-        "x": 1,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    },
-    {
-        "type": "button",
-        "styling": [
-            "short"
-        ],
-        "mapping": "e",
-        "container": "right",
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-        "pressed": false
-    }
-]
+import { centerDefaultComponentRepresentations, keyDict, leftDefaultComponentRepresentations, rightDefaultComponentRepresentations } from "./utils/keyMapping";
 
 function App() {
   const [editing, setEditing] = useState(false);
@@ -403,6 +26,12 @@ function App() {
 
   const [scaffolding, setScaffolding] = useState<any>();
 
+  const [pointerEvents, setPointerEvents] = useState<React.PointerEvent<HTMLDivElement> | null>(null)
+  const [pointerMousePos, setPointerMousePos] = useState<{x: number, y:number}|null>(null)
+  const [pointerMouseDown, setPointerMouseDown] = useState(false)
+
+  const [controllerAdvancedConfig, setControllerAdvancedConfig] = useState<string[]>(['mouseAndKeyboardMode']) //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode'
+
   window
     .matchMedia("(orientation: portrait)")
     .addEventListener("change", (e) => {
@@ -412,8 +41,6 @@ function App() {
       } else {
         setScreenOrientation("landscape");
       }
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
     });
 
   useEffect(()=>{
@@ -452,36 +79,32 @@ function App() {
     console.log('keys to kill: ' + keysToKill)
     // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
     keysToKill.forEach((key) => {
+      if(key === "Space"){
+        key = ' '
+      }
       scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: false})
     });
 
     keysToFire.forEach((key) => {
+      if(key === "Space"){
+        key = ' '
+      }
       scaffolding.vm.postIOData('keyboard',{key:key, keyCode:keyDict[key], isDown: true})
     });
 
   }, [scaffolding, centerComponentRepresentations, leftComponentRepresentations, rightComponentRepresentations])
 
-  useEffect(() => {
-    setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
 
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
+  useEffect(() => {
+    if(!controllerAdvancedConfig.includes('safetyMargin')){
+    setScreenWidth(window.innerWidth);
       setScreenHeight(window.innerHeight);
-    }, 50);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 100);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 300);
-    setTimeout(() => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }, 500);
-  }, [screenOritentation, setScreenWidth, setScreenHeight]);
+    }else{
+
+    setScreenWidth(window.innerWidth - 36);
+      setScreenHeight(window.innerHeight - 36);
+    }
+  }, [controllerAdvancedConfig]);
 
   useEffect(() => {
     if (screenOritentation === "portrait") {
@@ -504,8 +127,14 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
+      if(!controllerAdvancedConfig.includes('safetyMargin')){
+        setScreenWidth(window.innerWidth);
+          setScreenHeight(window.innerHeight);
+        }else{
+    
+        setScreenWidth(window.innerWidth - 36);
+          setScreenHeight(window.innerHeight - 36);
+        }
     };
 
     window.addEventListener("resize", handleResize);
@@ -513,7 +142,7 @@ function App() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [controllerAdvancedConfig]);
 
   function toggleEditing() {
     if (editing) {
@@ -562,10 +191,77 @@ function App() {
     "--unitWidth": unitWidth + "px",
   } as React.CSSProperties;
 
+  useEffect(()=>{
+    if(pointerEvents === null){
+      setPointerMouseDown(false)
+      return
+    }
+    console.log(pointerEvents)
+    const { clientX, clientY, type } = pointerEvents;
+    const iframeMask = document.getElementById('iframeMask')
+    if(!iframeMask){
+      return
+    }
+    if(clientX > iframeMask.getBoundingClientRect().left && iframeMask.getBoundingClientRect().right > clientX && clientY > iframeMask.getBoundingClientRect().top && iframeMask.getBoundingClientRect().bottom > clientY){
+      console.log('pointer in frame')
+      console.log(clientX-iframeMask.getBoundingClientRect().x, clientY-iframeMask.getBoundingClientRect().y)
+      if(type === 'pointerdown'){
+        console.log('pointer down read')
+        setPointerMouseDown(true)
+        setPointerMousePos({x: clientX-iframeMask.getBoundingClientRect().x, y: clientY-iframeMask.getBoundingClientRect().y})
+      }else if(type === 'pointermove'){
+        console.log('pointer move read')
+        setPointerMouseDown(true)
+        setPointerMousePos({x: clientX-iframeMask.getBoundingClientRect().x, y: clientY-iframeMask.getBoundingClientRect().y})
+      }else{
+        console.log('pointer up read')
+        setPointerMouseDown(false)
+      }
+      
+      // scaffolding.vm.postIOData('mouse', {isDown: true, x: clientX-iframeMask.getBoundingClientRect().x, y: clientY-iframeMask.getBoundingClientRect().y})
+    }else{
+      // scaffolding.vm.postIOData('mouse', {isDown: false})
+      setPointerMouseDown(false) 
+    }
+  },[pointerEvents])
 
 
-  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>)=>{
+  useEffect(()=>{
+  var iframe = document.getElementById('iframe') as HTMLIFrameElement;
+    if(scaffolding === undefined || iframe === null){
+      return
+    }
+    console.log("scaffolding found on recive mouse change")
+    var customContentWindow = iframe?.contentWindow as CustomWindow;
+    if(pointerMouseDown){
+    if(!customContentWindow?.hasStarted){
+      console.log('should start vm')
+      customContentWindow.start()
+    }
+    }
+    if(pointerMousePos !== null){
+      scaffolding.vm.postIOData('mouse', {isDown: pointerMouseDown, x: pointerMousePos.x, y: pointerMousePos.y, canvasWidth: iframe.clientWidth, canvasHeight: iframe.clientHeight})
+      console.log("mouse down sent to scaffolding, position: ", pointerMousePos.x, pointerMousePos.y)
+    }else{
+      console.log("mouse position missing")
+    }
+  },[pointerMousePos, scaffolding, pointerMouseDown])
+
+  const handlePointerMoveCapture = useCallback((e: React.PointerEvent<HTMLDivElement>)=>{
+    if(pointerEvents?.pointerId === e.pointerId){
+      setPointerEvents(e);
+    }
+  },[pointerEvents])
+
+  const handlePointerDownCapture = useCallback((e: React.PointerEvent<HTMLDivElement>)=>{
     const { target } = e;
+    if(pointerEvents === null){
+      if(target instanceof Element){
+        if(target.closest('.iframeMask')){
+          setPointerEvents(e);
+        }
+      }
+    }
     if(target instanceof Element){
       if(target.closest('.draggable-dummy')){
         console.log(target.closest('.draggable-dummy'))
@@ -584,7 +280,7 @@ function App() {
         })
       }
     }
-  },[])
+  },[pointerEvents])
 
   const appendComponent = useCallback((container: 'center' | 'left' | 'right', x: number, y: number)=>{
     if(draggingComponent === null){
@@ -625,6 +321,9 @@ function App() {
   },[draggingComponent, centerComponentRepresentations, leftComponentRepresentations, rightComponentRepresentations])
 
   const handlePointerUpCapture = useCallback((e: React.PointerEvent<HTMLDivElement>)=>{
+    if(pointerEvents?.pointerId === e.pointerId){
+      setPointerEvents(null);
+    }
     if(draggingComponent !== null){
       const { clientX, clientY } = e;
       //check if the pointer up is inside a controller box
@@ -660,20 +359,23 @@ function App() {
         }
       }
     }
-  },[draggingComponent])
+  },[draggingComponent, pointerEvents])
 
   return (
-    <ThemeProvider theme={theme}>
       <div
+        id="App"
         className={classNames(
           "App noscroll prevent-select",
           screenOritentation
         )}
         style={appStyles}
-        onPointerDown={handlePointerDown}
+        onPointerDownCapture={handlePointerDownCapture}
+        onPointerMoveCapture={handlePointerMoveCapture}
         onPointerUpCapture={handlePointerUpCapture}
       >
         <CenterContainer
+        controllerAdvancedConfig={controllerAdvancedConfig}
+        setControllerAdvancedConfig={setControllerAdvancedConfig}
         validDropCancelTransition={validDropCancelTransition}
           unitWidth={unitWidth}
           selectedTab={selectedTab}
@@ -687,9 +389,6 @@ function App() {
           centerContainerWidth={centerContainerWidth}
           setAppScaffolding={setScaffolding}
         />
-        {/* <button className="edit" onClick={() => setEditing(!editing)}>
-          edit
-        </button> */}
         {screenOritentation === "portrait" ? (
           <ControllerContainer
             position={"center"}
@@ -726,7 +425,6 @@ function App() {
           ""
         )}
       </div>
-    </ThemeProvider>
   );
 }
 
