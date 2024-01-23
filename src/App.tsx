@@ -41,7 +41,22 @@ function App() {
       } else {
         setScreenOrientation("landscape");
       }
+      updateScreenDimensions()
     });
+
+  useEffect(()=>{
+    setTimeout(updateScreenDimensions, 50)
+    setTimeout(updateScreenDimensions, 100)
+    setTimeout(updateScreenDimensions, 200)
+    setTimeout(updateScreenDimensions, 500)
+    setTimeout(updateScreenDimensions, 1000)
+    setTimeout(updateScreenDimensions, 1500)
+    setTimeout(updateScreenDimensions, 2000)
+    setTimeout(updateScreenDimensions, 2500)
+    setTimeout(updateScreenDimensions, 3000)
+    setTimeout(updateScreenDimensions, 5000)
+  },[screenOritentation])
+
 
   useEffect(()=>{
     if(scaffolding === undefined){
@@ -94,17 +109,43 @@ function App() {
 
   }, [scaffolding, centerComponentRepresentations, leftComponentRepresentations, rightComponentRepresentations])
 
+  useEffect(() => {
+    const handleResize = () => {
+      // Logic to handle resize event
+      console.log('Window resized!');
+      updateScreenDimensions()
+    };
+
+    // Attach the event listener
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // Empty dependency array to ensure the effect runs only once
 
   useEffect(() => {
-    if(!controllerAdvancedConfig.includes('safetyMargin')){
-    setScreenWidth(window.innerWidth);
-      setScreenHeight(window.innerHeight);
-    }else{
-
-    setScreenWidth(window.innerWidth - 36);
-      setScreenHeight(window.innerHeight - 36);
-    }
+    updateScreenDimensions()
   }, [controllerAdvancedConfig]);
+
+  const updateScreenDimensions = () =>{
+    if(!controllerAdvancedConfig.includes('safetyMargin')){
+    if(window.innerWidth !== screenWidth){
+      setScreenWidth(window.innerWidth);
+    }
+    if(window.innerHeight !== screenHeight){
+      setScreenHeight(window.innerHeight);
+    }
+      }else{
+        if(window.innerWidth - 36 !== screenWidth){
+          setScreenWidth(window.innerWidth - 36);
+        }
+        if(window.innerHeight - 36 !== screenHeight){
+          setScreenHeight(window.innerHeight - 36);
+        }
+      }
+  }
 
   useEffect(() => {
     if (screenOritentation === "portrait") {
