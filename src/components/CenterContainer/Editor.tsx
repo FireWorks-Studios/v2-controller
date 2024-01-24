@@ -225,7 +225,9 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
         >
           Import Config
         </MuiButton>
-
+        <MenuItem dense disableRipple disabled>
+          ScratchGO v2 beta v1.0.28
+        </MenuItem>
       </CustomTabPanel>
     </Box>
   );

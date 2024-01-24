@@ -407,7 +407,8 @@ function App() {
         id="App"
         className={classNames(
           "App noscroll prevent-select",
-          screenOritentation
+          screenOritentation,
+          (controllerAdvancedConfig.includes('safetyMargin')? 'safetyMargin':'')
         )}
         style={appStyles}
         onPointerDownCapture={handlePointerDownCapture}

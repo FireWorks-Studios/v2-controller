@@ -26,6 +26,10 @@
     height: var(--screenHeight);
 }
 
+.App.safetyMargin{
+    margin-top: 18px;
+}
+
 .App.portrait{
     width: calc(var(--centerContainerWidth) + 12px);
     overflow: hidden;
