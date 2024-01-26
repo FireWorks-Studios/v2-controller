@@ -25,6 +25,7 @@ export interface ComponentRepresentation {
 }
 
 interface Props{
+  screenOrientation: 'portrait' | 'landscape',
   position: 'center' | 'left' | 'right',
   unitWidth: number,
   defaultComponentRepresentations: ComponentRepresentation[],
@@ -34,7 +35,7 @@ interface Props{
 
 type SelectionType = 'move' | 'add'
 
-export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations}:Props) => {
+export const ControllerContainer: React.FC<Props> = ({screenOrientation, position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [componentRepresentations, setComponentRepresentations] = useState(defaultComponentRepresentations)
@@ -544,11 +545,11 @@ export const ControllerContainer: React.FC<Props> = ({position, unitWidth, defau
       className={
         classNames(
           "controller-container",
+          screenOrientation,
           {
             [position]: true,
             editing,
             isSelectorDragging,
-            
           },
           dragResizeCorner
         )

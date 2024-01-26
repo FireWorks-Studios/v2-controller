@@ -82,10 +82,6 @@ export const CenterContainer: React.FC<Props> = ({
     setAppScaffolding(scaffolding)
   },[scaffolding])
 
-  useEffect(() => {
-    console.log(selectedTab);
-  }, [selectedTab]);
-
   const handleChangeProjectID = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectID(parseScratchProjectId(event.target.value)||"https://scratch.mit.edu/projects/736088939/");
 
