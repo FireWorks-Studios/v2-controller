@@ -14,8 +14,17 @@ export function useWindowSize(): WindowSize {
   useEffect(() => {
     function handleResize() {
       setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+      });
+      setTimeout(failSafeResize, 5)
+      setTimeout(failSafeResize, 10)
+    }
+
+    function failSafeResize(){
+      setWindowSize({
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
       });
     }
 
