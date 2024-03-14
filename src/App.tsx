@@ -18,9 +18,12 @@ import {
 } from "./utils/keyMapping";
 import { useWindowSize } from "./utils/windowResize";
 import { useRenderCount } from "@uidotdev/usehooks";
+import { MdFullscreen } from "react-icons/md";
+import { MdFullscreenExit } from "react-icons/md";
 
 function App() {
   console.trace();
+  const [fullscreen, setFullscreen] = useState(false);
   const renderCount = useRenderCount();
   const { width, height } = useWindowSize();
 
@@ -88,6 +91,35 @@ function App() {
       mediaQueryList.removeEventListener("change", handleOrientationChange);
     };
   }, []);
+
+  function toggleFullscreen(){
+    setFullscreen(!fullscreen)
+  }
+
+  useEffect(()=>{
+    if(fullscreen){
+      document.body.classList.add('fullscreen')
+      if(document.fullscreenEnabled){
+        document.getElementById('iframe')?.requestFullscreen()
+      }
+    }else{
+      document.body.classList.remove('fullscreen')
+    }
+  },[fullscreen])
+
+  function fullscreenchanged() {
+    // document.fullscreenElement will point to the element that
+    // is in fullscreen mode if there is one. If there isn't one,
+    // the value of the property is null.
+    if (document.fullscreenElement) {
+      console.log(`Element: ${document.fullscreenElement.id} entered fullscreen mode.`);
+    } else {
+      console.log("Leaving fullscreen mode.");
+      setFullscreen(false)
+    }
+  }
+  
+  document.addEventListener("fullscreenchange", fullscreenchanged);
 
   useEffect(() => {
     console.log("App render count:", renderCount);
@@ -503,16 +535,22 @@ function App() {
   return (
     <div
       id="App"
-      className={classNames(
-        "App noscroll prevent-select",
-        screenOritentation,
-        controllerAdvancedConfig.includes("safetyMargin") ? "safetyMargin" : ""
-      )}
+      className={classNames("App noscroll prevent-select", screenOritentation, {
+        safetyMargin: controllerAdvancedConfig.includes("safetyMargin"),
+      })}
       style={appStyles}
       onPointerDownCapture={handlePointerDownCapture}
       onPointerMoveCapture={handlePointerMoveCapture}
       onPointerUpCapture={handlePointerUpCapture}
     >
+      {controllerAdvancedConfig.includes("handheldMode") ? (
+        fullscreen ? 
+        (<MdFullscreenExit id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>)
+        : (<MdFullscreen id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>)
+
+      ) : (
+        ""
+      )}
       <CenterContainer
         controllerAdvancedConfig={controllerAdvancedConfig}
         setControllerAdvancedConfig={setControllerAdvancedConfig}

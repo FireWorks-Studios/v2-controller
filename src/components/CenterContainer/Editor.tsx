@@ -21,8 +21,6 @@ import { LuImport} from "react-icons/lu";
 import { LuAlignVerticalSpaceAround } from "react-icons/lu";
 import { MdOutlineGamepad } from "react-icons/md";
 
-// import { MdFullscreen } from "react-icons/md";
-// import { MdFullscreenExit } from "react-icons/md";
 
 
 

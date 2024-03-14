@@ -154,6 +154,7 @@ export const CenterContainer: React.FC<Props> = ({
     }
   }, [controllerAdvancedConfig, scaffolding])
 
+
   return (
     <div
       id="centerContainer"
