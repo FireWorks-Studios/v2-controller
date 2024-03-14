@@ -4,13 +4,26 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useStyles } from "./EditorStyles";
-import { Divider, IconButton, ListItemIcon, ListItemText, MenuItem, Button as MuiButton } from "@mui/material";
+import {
+  Divider,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Button as MuiButton,
+} from "@mui/material";
 import { BsFillNutFill, BsToggleOff, BsToggleOn } from "react-icons/bs";
 import { MdLightbulb } from "react-icons/md";
 import { DummyButton } from "../Button/DummyButton";
 import { PiExportBold, PiLightningBold, PiMouseBold } from "react-icons/pi";
-import { LuImport } from "react-icons/lu";
+import { FaGamepad } from "react-icons/fa";
+import { LuImport} from "react-icons/lu";
 import { LuAlignVerticalSpaceAround } from "react-icons/lu";
+import { MdOutlineGamepad } from "react-icons/md";
+
+// import { MdFullscreen } from "react-icons/md";
+// import { MdFullscreenExit } from "react-icons/md";
+
 
 
 interface TabPanelProps {
@@ -47,15 +60,21 @@ function a11yProps(index: number) {
   };
 }
 
-interface Props{
-    toggleEditing(): void
-    unitWidth: number;
-    validDropCancelTransition: boolean;
-    controllerAdvancedConfig: string[];
-    setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>;
+interface Props {
+  toggleEditing(): void;
+  unitWidth: number;
+  validDropCancelTransition: boolean;
+  controllerAdvancedConfig: string[];
+  setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Editor({toggleEditing, unitWidth, validDropCancelTransition, controllerAdvancedConfig, setControllerAdvancedConfig}:Props) {
+export default function Editor({
+  toggleEditing,
+  unitWidth,
+  validDropCancelTransition,
+  controllerAdvancedConfig,
+  setControllerAdvancedConfig,
+}: Props) {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
@@ -70,7 +89,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
         sx={{ display: "flex", justifyContent: "space-between" }}
       >
         <Tabs
-          sx={{ height: "34px", minHeight: "34px"}}
+          sx={{ height: "34px", minHeight: "34px" }}
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
@@ -100,10 +119,30 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
             }}
           />
           <Tab
-          disableRipple
+            disableRipple
             label="Advanced"
             {...a11yProps(1)}
             icon={<MdLightbulb />}
+            iconPosition="start"
+            className={classes.tab}
+            sx={{
+              minHeight: "34px",
+              height: "34px",
+              padding: "9px",
+              textTransform: "none",
+              borderTopLeftRadius: "6px",
+              borderTopRightRadius: "6px",
+              "&.Mui-selected": {
+                backgroundColor: "#638dff",
+                color: "#ffffff",
+              },
+            }}
+          />
+          <Tab
+            disableRipple
+            label="Gamepad"
+            {...a11yProps(1)}
+            icon={<FaGamepad />}
             iconPosition="start"
             className={classes.tab}
             sx={{
@@ -139,76 +178,154 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
         </MuiButton>
       </Box>
       <CustomTabPanel value={value} index={0}>
-          <DummyButton
-            validDropCancelTransition={validDropCancelTransition}
-            unitWidth={unitWidth}
-            component={
-                {
-                    type: "button",
-                    styling: [],
-                    mapping: "ArrowUp",
-                    container: "left",
-                    x: 0,
-                    y: 0,
-                    w: 1,
-                    h: 1,
-                    color: '#006aff',
-                    pressed: false
-                  }
-            }
-          />
+        <DummyButton
+          validDropCancelTransition={validDropCancelTransition}
+          unitWidth={unitWidth}
+          component={{
+            type: "button",
+            styling: [],
+            mapping: "ArrowUp",
+            container: "left",
+            x: 0,
+            y: 0,
+            w: 1,
+            h: 1,
+            color: "#006aff",
+            pressed: false,
+          }}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-      <MenuItem dense={true} onClick={()=>{
-          !controllerAdvancedConfig.includes('mouseAndKeyboardMode')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'mouseAndKeyboardMode']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'mouseAndKeyboardMode'))
-          }}>
-          <ListItemIcon><PiMouseBold /></ListItemIcon>
+        <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("mouseAndKeyboardMode")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "mouseAndKeyboardMode",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter(
+                    (e) => e !== "mouseAndKeyboardMode"
+                  )
+                );
+          }}
+        >
+          <ListItemIcon>
+            <PiMouseBold />
+          </ListItemIcon>
           <ListItemText>Mouse and Keyboard Mode</ListItemText>
-          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {controllerAdvancedConfig.includes('mouseAndKeyboardMode')? <BsToggleOn/>: <BsToggleOff/>}
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("mouseAndKeyboardMode") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
           </IconButton>
         </MenuItem>
 
-        <MenuItem dense={true} onClick={()=>{
-          !controllerAdvancedConfig.includes('turboMode')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'turboMode']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'turboMode'))
-          }}>
-          <ListItemIcon><PiLightningBold /></ListItemIcon>
+        <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("turboMode")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "turboMode",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter((e) => e !== "turboMode")
+                );
+          }}
+        >
+          <ListItemIcon>
+            <PiLightningBold />
+          </ListItemIcon>
           <ListItemText>Turbo Mode</ListItemText>
-          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {controllerAdvancedConfig.includes('turboMode')? <BsToggleOn/>: <BsToggleOff/>}
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("turboMode") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
           </IconButton>
         </MenuItem>
 
-        <MenuItem dense={true} onClick={()=>{
-          !controllerAdvancedConfig.includes('safetyMargin')? setControllerAdvancedConfig([...controllerAdvancedConfig, 'safetyMargin']): setControllerAdvancedConfig(controllerAdvancedConfig.filter(e => e !== 'safetyMargin'))
-          }}>
-          <ListItemIcon><LuAlignVerticalSpaceAround /></ListItemIcon>
+        <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("safetyMargin")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "safetyMargin",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter((e) => e !== "safetyMargin")
+                );
+          }}
+        >
+          <ListItemIcon>
+            <LuAlignVerticalSpaceAround />
+          </ListItemIcon>
           <ListItemText>Safety Margin</ListItemText>
-          <IconButton edge="end" size='large' sx={{padding: '0px'}}>
-          {controllerAdvancedConfig.includes('safetyMargin')? <BsToggleOn/>: <BsToggleOff/>}
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("safetyMargin") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
           </IconButton>
         </MenuItem>
-        <Divider/>
-        
-        <MuiButton startIcon={< PiExportBold/>} variant="contained"
-        size="small"
-        sx={{
-          fontSize: "14px",
-          minHeight: "34px",
-          height: "34px",
-          padding: "9px",
-          textTransform: "none",
-          backgroundColor: "#638dff",
-          boxShadow: "none",
-          "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
-          margin: "7px"
-        }}
-        disabled
+
+        <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("handheldMode")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "handheldMode",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter((e) => e !== "handheldMode")
+                );
+          }}
+        >
+          <ListItemIcon>
+            <MdOutlineGamepad />
+          </ListItemIcon>
+          <ListItemText>Handheld Mode</ListItemText>
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("handheldMode") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
+          </IconButton>
+        </MenuItem>
+        <Divider />
+
+        <MuiButton
+          startIcon={<PiExportBold />}
+          variant="contained"
+          size="small"
+          sx={{
+            fontSize: "14px",
+            minHeight: "34px",
+            height: "34px",
+            padding: "9px",
+            textTransform: "none",
+            backgroundColor: "#638dff",
+            boxShadow: "none",
+            "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
+            margin: "7px",
+          }}
+          disabled
         >
           Export Config
         </MuiButton>
 
-        <MuiButton startIcon={<LuImport />} variant="contained"
+        <MuiButton
+          startIcon={<LuImport />}
+          variant="contained"
           size="small"
           sx={{
             fontSize: "14px",
@@ -219,7 +336,7 @@ export default function Editor({toggleEditing, unitWidth, validDropCancelTransit
             boxShadow: "none",
             "&:hover": { backgroundColor: "#638dff", boxShadow: "none" },
             margin: "7px",
-            backgroundColor: "#638dff"
+            backgroundColor: "#638dff",
           }}
           disabled
         >

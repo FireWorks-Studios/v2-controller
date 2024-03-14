@@ -30,12 +30,13 @@ interface Props{
   unitWidth: number,
   defaultComponentRepresentations: ComponentRepresentation[],
   editing: boolean,
-  updateComponentRepresentations: React.Dispatch<React.SetStateAction<ComponentRepresentation[]>>
+  updateComponentRepresentations: React.Dispatch<React.SetStateAction<ComponentRepresentation[]>>,
+  handheldMode: boolean
 }
 
 type SelectionType = 'move' | 'add'
 
-export const ControllerContainer: React.FC<Props> = ({screenOrientation, position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations}:Props) => {
+export const ControllerContainer: React.FC<Props> = ({screenOrientation, position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations, handheldMode}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [componentRepresentations, setComponentRepresentations] = useState(defaultComponentRepresentations)
@@ -550,8 +551,9 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
             [position]: true,
             editing,
             isSelectorDragging,
+            handheldMode,
           },
-          dragResizeCorner
+          dragResizeCorner,
         )
       } 
       ref={containerRef}

@@ -20,7 +20,7 @@ import { useWindowSize } from "./utils/windowResize";
 import { useRenderCount } from "@uidotdev/usehooks";
 
 function App() {
-  console.trace()
+  console.trace();
   const renderCount = useRenderCount();
   const { width, height } = useWindowSize();
 
@@ -40,7 +40,10 @@ function App() {
     screenWidth - 12
   );
   const [overlay] = useState(false);
-  const [unitWidth, setUnitWidth] = useState<{portrait: number, landscape: number}>({portrait: 150, landscape: 150});
+  const [unitWidth, setUnitWidth] = useState<{
+    portrait: number;
+    landscape: number;
+  }>({ portrait: 150, landscape: 150 });
 
   const [draggingComponent, setDraggingComponent] =
     useState<ComponentRepresentation | null>(null);
@@ -86,9 +89,9 @@ function App() {
     };
   }, []);
 
-    useEffect(()=>{
-      console.log("App render count:",renderCount)
-    },[renderCount])
+  useEffect(() => {
+    console.log("App render count:", renderCount);
+  }, [renderCount]);
 
   useEffect(() => {
     if (scaffolding === undefined) {
@@ -168,30 +171,35 @@ function App() {
       setScreenWidth(width - 36);
       setScreenHeight(height - 36);
     }
-  },[controllerAdvancedConfig, width, height, screenOritentation])
+  }, [controllerAdvancedConfig, width, height, screenOritentation]);
 
   useEffect(() => {
     if (screenOritentation === "portrait") {
       setCenterContainerWidth(width - 12);
-      setUnitWidth({...unitWidth , portrait: (screenWidth - 8) / 6});
+      setUnitWidth({ ...unitWidth, portrait: (screenWidth - 8) / 6 });
     } else {
       setCenterContainerWidth((height - 40) / 0.75 - 6);
       if (overlay) {
-        setUnitWidth({...unitWidth, landscape: (screenHeight - 46) / 6});
+        setUnitWidth({ ...unitWidth, landscape: (screenHeight - 46) / 6 });
       } else {
-        setUnitWidth(
-          {
-            ...unitWidth, 
-            landscape: 
-              Math.min(
-              (screenHeight - 46) / 6,
-              (screenWidth - (((screenHeight - 40) / 0.75) - 6)) / 6
-          )}
-          
-        );
+        setUnitWidth({
+          ...unitWidth,
+          landscape: Math.min(
+            (screenHeight - 46) / 6,
+            (screenWidth - ((screenHeight - 40) / 0.75 - 6)) / 6
+          ),
+        });
       }
     }
-  }, [screenWidth, screenHeight, screenOritentation, width, height, overlay]);
+  }, [
+    screenWidth,
+    screenHeight,
+    screenOritentation,
+    width,
+    height,
+    overlay,
+    controllerAdvancedConfig,
+  ]);
 
   const toggleEditing = useCallback(() => {
     if (editing) {
@@ -209,7 +217,7 @@ function App() {
       setEditing(true);
       setSelectedTab("editor");
     }
-  },[editing, selectedTab, description])
+  }, [editing, selectedTab, description]);
 
   const toggleDescription = useCallback(() => {
     if (description) {
@@ -227,7 +235,7 @@ function App() {
       setDescription(true);
       setSelectedTab("description");
     }
-  },[description, selectedTab, editing])
+  }, [description, selectedTab, editing]);
 
   const appStyles = {
     "--screenWidth": screenWidth + "px",
@@ -436,8 +444,12 @@ function App() {
           ) {
             console.log(`Pointer is inside center controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - top) / unitWidth[screenOritentation]);
+            const localX = Math.floor(
+              (clientX - left) / unitWidth[screenOritentation]
+            );
+            const localY = Math.floor(
+              (clientY - top) / unitWidth[screenOritentation]
+            );
             appendComponent("center", localX, localY);
           }
         } else if (screenOritentation === "landscape") {
@@ -454,8 +466,12 @@ function App() {
           ) {
             console.log(`Pointer is inside left controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - l.left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - l.top) / unitWidth[screenOritentation]);
+            const localX = Math.floor(
+              (clientX - l.left) / unitWidth[screenOritentation]
+            );
+            const localY = Math.floor(
+              (clientY - l.top) / unitWidth[screenOritentation]
+            );
             appendComponent("left", localX, localY);
           }
           const rightControllerContainer = document.getElementsByClassName(
@@ -470,8 +486,12 @@ function App() {
           ) {
             console.log(`Pointer is inside right controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - r.left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - r.top) / unitWidth[screenOritentation]);
+            const localX = Math.floor(
+              (clientX - r.left) / unitWidth[screenOritentation]
+            );
+            const localY = Math.floor(
+              (clientY - r.top) / unitWidth[screenOritentation]
+            );
             appendComponent("right", localX, localY);
           }
         }
@@ -509,6 +529,7 @@ function App() {
         centerContainerWidth={centerContainerWidth}
         setAppScaffolding={setScaffolding}
       />
+
       <ControllerContainer
         screenOrientation={screenOritentation}
         position={"left"}
@@ -516,6 +537,7 @@ function App() {
         defaultComponentRepresentations={leftComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setLeftComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
       <ControllerContainer
         screenOrientation={screenOritentation}
@@ -524,6 +546,7 @@ function App() {
         defaultComponentRepresentations={centerComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setCenterComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
       <ControllerContainer
         screenOrientation={screenOritentation}
@@ -532,6 +555,7 @@ function App() {
         defaultComponentRepresentations={rightComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setRightComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
     </div>
   );

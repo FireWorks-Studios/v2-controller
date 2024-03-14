@@ -32,6 +32,10 @@
     display: block;
 }
 
+.handheldMode{
+    display: none !important;
+}
+
 .controller-container.isSelectorDragging{
     cursor: crosshair;
 }
