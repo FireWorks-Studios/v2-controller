@@ -20,6 +20,8 @@ import { FaGamepad } from "react-icons/fa";
 import { LuImport} from "react-icons/lu";
 import { LuAlignVerticalSpaceAround } from "react-icons/lu";
 import { MdOutlineGamepad } from "react-icons/md";
+import { MdFullscreen } from "react-icons/md";
+
 
 
 
@@ -138,8 +140,8 @@ export default function Editor({
           />
           <Tab
             disableRipple
-            label="Gamepad"
-            {...a11yProps(1)}
+            label="Handheld"
+            {...a11yProps(2)}
             icon={<FaGamepad />}
             iconPosition="start"
             className={classes.tab}
@@ -276,29 +278,34 @@ export default function Editor({
 
         <MenuItem
           dense={true}
+          disabled={!document.fullscreenEnabled}
           onClick={() => {
-            !controllerAdvancedConfig.includes("handheldMode")
-              ? setControllerAdvancedConfig([
-                  ...controllerAdvancedConfig,
-                  "handheldMode",
-                ])
+            !document.fullscreenElement
+              ? document.getElementById('App')?.requestFullscreen()
               : setControllerAdvancedConfig(
                   controllerAdvancedConfig.filter((e) => e !== "handheldMode")
                 );
+                if (document.fullscreenElement) {
+                  if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                  }
+                }
+
           }}
         >
           <ListItemIcon>
-            <MdOutlineGamepad />
+            <MdFullscreen />
           </ListItemIcon>
-          <ListItemText>Handheld Mode</ListItemText>
+          <ListItemText>Fullscreen (iOS doesn't support)</ListItemText>
           <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
-            {controllerAdvancedConfig.includes("handheldMode") ? (
+            {document.fullscreenElement ? (
               <BsToggleOn />
             ) : (
               <BsToggleOff />
             )}
           </IconButton>
         </MenuItem>
+
         <Divider />
 
         <MuiButton
@@ -341,7 +348,34 @@ export default function Editor({
           Import Config
         </MuiButton>
         <MenuItem dense disableRipple disabled>
-          ScratchGO v2 beta v1.0.28
+          ScratchGO v2 beta v1.0.29
+        </MenuItem>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+      <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("handheldMode")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "handheldMode",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter((e) => e !== "handheldMode")
+                );
+          }}
+        >
+          <ListItemIcon>
+            <MdOutlineGamepad />
+          </ListItemIcon>
+          <ListItemText>Handheld Mode</ListItemText>
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("handheldMode") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
+          </IconButton>
         </MenuItem>
       </CustomTabPanel>
     </Box>

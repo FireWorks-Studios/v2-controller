@@ -132,8 +132,28 @@
   top: 0px;
   right: 0px;
   border-radius: 4px;
-  background-color: #797979a4;
+  background-color: #696969;
   color: #ffffff;
+}
+
+.MenuBarToggleBtn{
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border-radius: 4px;
+  border: solid 3px;
+  padding: 1px;
+  color: #696969;
+}
+
+.MenuBarToggleBtn.menuBarShown{
+  position: fixed;
+  top: 40px;
+  right: 0px;
+  border-radius: 4px;
+  border: solid 3px;
+  padding: 1px;
+  color: #696969;
 }
 
 iframe {
@@ -167,11 +187,15 @@ iframe {
     user-select: none; /* Standard syntax */
   }
 
-  .centerContentFrame.editing{
+  .centerContentFrame{
+    visibility: hidden;
+  }
+
+  .centerContentFrame.menuBarShown.editing{
     visibility: visible;
   }
 
-  .centerContentFrame.description{
+  .centerContentFrame.menuBarShown.description{
     visibility: visible;
   }
 

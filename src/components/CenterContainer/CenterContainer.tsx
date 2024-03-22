@@ -26,9 +26,10 @@ interface Props {
   selectedTab: string;
   unitWidth: number;
   validDropCancelTransition: boolean;
-  setAppScaffolding: React.Dispatch<React.SetStateAction<any>>
-  controllerAdvancedConfig: string[]
-  setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>
+  setAppScaffolding: React.Dispatch<React.SetStateAction<any>>;
+  controllerAdvancedConfig: string[];
+  setControllerAdvancedConfig: React.Dispatch<React.SetStateAction<string[]>>;
+  menuBarShown: boolean;
 }
 
 export interface CustomWindow extends Window {
@@ -55,7 +56,8 @@ export const CenterContainer: React.FC<Props> = ({
   validDropCancelTransition,
   setAppScaffolding,
   controllerAdvancedConfig,
-  setControllerAdvancedConfig
+  setControllerAdvancedConfig,
+  menuBarShown
 }: Props) => {
   const styles = {
     "--screenWidth": screenWidth,
@@ -64,96 +66,100 @@ export const CenterContainer: React.FC<Props> = ({
   } as React.CSSProperties;
 
   const [projectID, setProjectID] = useState("10128407");
-  const [iframeKey, setIframeKey] = useState('');
-  const [paused, setPaused] = useState(false)
-  const [muted, setMuted] = useState(false)
+  const [iframeKey, setIframeKey] = useState("");
+  const [paused, setPaused] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [scaffolding, setScaffolding] = useState<any>();
-  var iframe = document.getElementById('iframe') as HTMLIFrameElement;
+  var iframe = document.getElementById("iframe") as HTMLIFrameElement;
   var customContentWindow = iframe?.contentWindow as CustomWindow;
 
   const handleLoad = () => {
-    iframe = document.getElementById('iframe') as HTMLIFrameElement;
+    iframe = document.getElementById("iframe") as HTMLIFrameElement;
     customContentWindow = iframe?.contentWindow as CustomWindow;
     setScaffolding(customContentWindow?.scaffolding);
-    console.log(scaffolding)
+    console.log(scaffolding);
   };
 
-  useEffect(()=>{
-    setAppScaffolding(scaffolding)
-  },[scaffolding])
+  useEffect(() => {
+    setAppScaffolding(scaffolding);
+  }, [scaffolding]);
 
-  const handleChangeProjectID = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setProjectID(parseScratchProjectId(event.target.value)||"https://scratch.mit.edu/projects/736088939/");
+  const handleChangeProjectID = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setProjectID(
+        parseScratchProjectId(event.target.value) ||
+          "https://scratch.mit.edu/projects/736088939/"
+      );
 
+      // Generate a new key to trigger iframe reload
+      const newKey = Date.now().toString();
+
+      // Update the key state to trigger the reload
+      setIframeKey(newKey);
+    },
+    [projectID]
+  );
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("Submitted Project ID:", projectID);
     // Generate a new key to trigger iframe reload
     const newKey = Date.now().toString();
 
     // Update the key state to trigger the reload
     setIframeKey(newKey);
-  }, [projectID]);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log('Submitted Project ID:', projectID);
-        // Generate a new key to trigger iframe reload
-    const newKey = Date.now().toString();
-
-    // Update the key state to trigger the reload
-    setIframeKey(newKey);
-
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-              // Generate a new key to trigger iframe reload
-    const newKey = Date.now().toString();
+    if (e.key === "Enter") {
+      // Generate a new key to trigger iframe reload
+      const newKey = Date.now().toString();
 
-    // Update the key state to trigger the reload
-    setIframeKey(newKey);
+      // Update the key state to trigger the reload
+      setIframeKey(newKey);
     }
   };
 
-  useEffect(()=>{
-    if(editing || description){
-      setPaused(true)
-    }else{
-      setPaused(false)
+  useEffect(() => {
+    if (editing || description) {
+      setPaused(true);
+    } else {
+      setPaused(false);
     }
-  },[editing, description])
+  }, [editing, description]);
 
-  useEffect(()=>{
-    if(paused){
-      console.log('trigger pause')
-      customContentWindow?.pause()
-    }else{
-      console.log('trigger resume')
-      customContentWindow?.resume()
+  useEffect(() => {
+    if (paused) {
+      console.log("trigger pause");
+      customContentWindow?.pause();
+    } else {
+      console.log("trigger resume");
+      customContentWindow?.resume();
     }
-  },[paused])
+  }, [paused]);
 
-  useEffect(()=>{
-    if(muted){
-      console.log('trigger mute')
-      customContentWindow?.mute()
-    }else{
-      console.log('trigger unmute')
-      customContentWindow?.unmute()
+  useEffect(() => {
+    if (muted) {
+      console.log("trigger mute");
+      customContentWindow?.mute();
+    } else {
+      console.log("trigger unmute");
+      customContentWindow?.unmute();
     }
-  },[muted])
+  }, [muted]);
 
-  useEffect(()=>{
-    if(scaffolding === undefined){
-      return
+  useEffect(() => {
+    if (scaffolding === undefined) {
+      return;
     }
-    if(controllerAdvancedConfig.includes('turboMode')){
-      console.log('turboMode on', controllerAdvancedConfig)
-      scaffolding.vm.runtime.turboMode = true
-    }else{
-      console.log('turboMode off')
-      scaffolding.vm.runtime.turboMode = false
+    if (controllerAdvancedConfig.includes("turboMode")) {
+      console.log("turboMode on", controllerAdvancedConfig);
+      scaffolding.vm.runtime.turboMode = true;
+    } else {
+      console.log("turboMode off");
+      scaffolding.vm.runtime.turboMode = false;
     }
-  }, [controllerAdvancedConfig, scaffolding])
-
+  }, [controllerAdvancedConfig, scaffolding]);
 
   return (
     <div
@@ -161,15 +167,50 @@ export const CenterContainer: React.FC<Props> = ({
       className={classNames("centerContainer", screenOrientation)}
       style={styles}
     >
-      <div className="menuBar">
-        <PiFlagBold id="GreenFlagBtn" className="IconBtn" style={{ color: "#4cbf55" }} onClick={customContentWindow?.start}/>
-        {paused? <PiPlayBold id="PauseBtn" className="IconBtn" style={{ color: "#e8a554" }} onClick={()=>{setPaused(false)}}/>:<PiPauseBold id="PauseBtn" className="IconBtn" style={{ color: "#e8a554" }} onClick={()=>{setPaused(true)}}/>}
-        <PiOctagonBold id="StopBtn" className="IconBtn" style={{ color: "#e85454" }} onClick={customContentWindow?.stop}/>
+      {menuBarShown?       <div className="menuBar">
+        <PiFlagBold
+          id="GreenFlagBtn"
+          className="IconBtn"
+          style={{ color: "#4cbf55" }}
+          onClick={customContentWindow?.start}
+        />
+        {paused ? (
+          <PiPlayBold
+            id="PauseBtn"
+            className="IconBtn"
+            style={{ color: "#e8a554" }}
+            onClick={() => {
+              setPaused(false);
+            }}
+          />
+        ) : (
+          <PiPauseBold
+            id="PauseBtn"
+            className="IconBtn"
+            style={{ color: "#e8a554" }}
+            onClick={() => {
+              setPaused(true);
+            }}
+          />
+        )}
+        <PiOctagonBold
+          id="StopBtn"
+          className="IconBtn"
+          style={{ color: "#e85454" }}
+          onClick={customContentWindow?.stop}
+        />
         <form className="searchBarContainer" onSubmit={handleSubmit}>
-            <button className="linkButton">
-                <PiLinkBold/>
-            </button>
-          <input className="searchBar" type="text" placeholder={"https://scratch.mit.edu/projects/"+projectID+'/'} onChange={handleChangeProjectID} onKeyPress={handleKeyPress} inputMode="search"></input>
+          <button className="linkButton">
+            <PiLinkBold />
+          </button>
+          <input
+            className="searchBar"
+            type="text"
+            placeholder={"https://scratch.mit.edu/projects/" + projectID + "/"}
+            onChange={handleChangeProjectID}
+            onKeyPress={handleKeyPress}
+            inputMode="search"
+          ></input>
           <button type="submit" className="searchButton">
             <IoSearch />
           </button>
@@ -188,13 +229,38 @@ export const CenterContainer: React.FC<Props> = ({
           })}
           onClick={toggleDescription}
         />
-        {muted? <TbVolume3 id="MuteBtn" className="IconBtn right" onClick={()=>setMuted(false)}/>:<TbVolume id="MuteBtn" className="IconBtn right" onClick={()=>setMuted(true)}/>}
+        {muted ? (
+          <TbVolume3
+            id="MuteBtn"
+            className="IconBtn right"
+            onClick={() => setMuted(false)}
+          />
+        ) : (
+          <TbVolume
+            id="MuteBtn"
+            className="IconBtn right"
+            onClick={() => setMuted(true)}
+          />
+        )}
         <TbVolume id="MuteBtn" className="IconBtn right" />
-      </div>
-      <iframe id="iframe" key={iframeKey} src={"/projectPlayer.html#" + projectID} onLoad={handleLoad}/>
-      <div id="iframeMask" className={!controllerAdvancedConfig.includes('mouseAndKeyboardMode')? "iframeMask" : "iframeMask MouseAndKeyboard"}></div>
+      </div>:""}
+
+      <iframe
+        id="iframe"
+        key={iframeKey}
+        src={"/projectPlayer.html#" + projectID}
+        onLoad={handleLoad}
+      />
       <div
-        className={classNames("centerContentFrame", { editing, description })}
+        id="iframeMask"
+        className={
+          !controllerAdvancedConfig.includes("mouseAndKeyboardMode")
+            ? "iframeMask"
+            : "iframeMask MouseAndKeyboard"
+        }
+      ></div>
+      <div
+        className={classNames("centerContentFrame", { editing, description, menuBarShown })}
       >
         <div
           id="descriptionContainer"

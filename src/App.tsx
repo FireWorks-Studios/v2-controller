@@ -20,6 +20,9 @@ import { useWindowSize } from "./utils/windowResize";
 import { useRenderCount } from "@uidotdev/usehooks";
 import { MdFullscreen } from "react-icons/md";
 import { MdFullscreenExit } from "react-icons/md";
+import { FaCaretUp } from "react-icons/fa6";
+import { FaCaretDown } from "react-icons/fa";
+
 
 function App() {
   console.trace();
@@ -72,7 +75,9 @@ function App() {
 
   const [controllerAdvancedConfig, setControllerAdvancedConfig] = useState<
     string[]
-  >(["mouseAndKeyboardMode"]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode'
+  >(["mouseAndKeyboardMode"]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode', 'handheldMode'
+
+  const [menuBarShown, setMenuBarShown] = useState(true);
 
   useEffect(() => {
     const handleOrientationChange = (e: MediaQueryListEvent) => {
@@ -92,34 +97,57 @@ function App() {
     };
   }, []);
 
-  function toggleFullscreen(){
-    setFullscreen(!fullscreen)
-  }
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen(prevFullscreen => !prevFullscreen);
+  }, []);
+
+  const toggleMenuBar = useCallback(() => {
+    setMenuBarShown(prevMenuBar => !prevMenuBar);
+  }, []);
 
   useEffect(()=>{
     if(fullscreen){
-      document.body.classList.add('fullscreen')
+      // document.body.classList.add('fullscreen')
       if(document.fullscreenEnabled){
-        document.getElementById('iframe')?.requestFullscreen()
+        document.getElementById('App')?.requestFullscreen()
       }
     }else{
-      document.body.classList.remove('fullscreen')
+      // document.body.classList.remove('fullscreen');
+      setControllerAdvancedConfig(
+        controllerAdvancedConfig.filter((e) => e !== "handheldMode")
+      );
+      if (document.fullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
     }
   },[fullscreen])
 
-  function fullscreenchanged() {
-    // document.fullscreenElement will point to the element that
-    // is in fullscreen mode if there is one. If there isn't one,
-    // the value of the property is null.
+  useEffect(()=>{
+    if(controllerAdvancedConfig.includes("handheldMode")){
+      setFullscreen(true);
+    }else{
+      setFullscreen(false);
+    }
+  },[controllerAdvancedConfig])
+
+  const handleFullscreenChange = useCallback(() => {
     if (document.fullscreenElement) {
       console.log(`Element: ${document.fullscreenElement.id} entered fullscreen mode.`);
     } else {
       console.log("Leaving fullscreen mode.");
-      setFullscreen(false)
+      setFullscreen(false);
     }
-  }
+  }, []);
   
-  document.addEventListener("fullscreenchange", fullscreenchanged);
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [handleFullscreenChange]);
 
   useEffect(() => {
     console.log("App render count:", renderCount);
@@ -210,17 +238,31 @@ function App() {
       setCenterContainerWidth(width - 12);
       setUnitWidth({ ...unitWidth, portrait: (screenWidth - 8) / 6 });
     } else {
-      setCenterContainerWidth((height - 40) / 0.75 - 6);
+      if(menuBarShown){
+        setCenterContainerWidth((height - 40) / 0.75 - 6);
+      }else{
+        setCenterContainerWidth((height) / 0.75 - 6);
+      }
       if (overlay) {
         setUnitWidth({ ...unitWidth, landscape: (screenHeight - 46) / 6 });
       } else {
-        setUnitWidth({
-          ...unitWidth,
-          landscape: Math.min(
-            (screenHeight - 46) / 6,
-            (screenWidth - ((screenHeight - 40) / 0.75 - 6)) / 6
-          ),
-        });
+        if(menuBarShown){
+          setUnitWidth({
+            ...unitWidth,
+            landscape: Math.min(
+              (screenHeight - 46) / 6,
+              (screenWidth - ((screenHeight - 40) / 0.75 - 6)) / 6
+            ),
+          });
+        }else{
+          setUnitWidth({
+            ...unitWidth,
+            landscape: Math.min(
+              (screenHeight - 46) / 6,
+              (screenWidth - ((screenHeight) / 0.75 - 6)) / 6
+            ),
+          });
+        }
       }
     }
   }, [
@@ -275,7 +317,7 @@ function App() {
     "--centerContainerWidth":
       screenOritentation === "portrait"
         ? screenWidth - 12 + "px"
-        : (screenHeight - 40) / 0.75 - 6 + "px",
+        : menuBarShown? (screenHeight - 40) / 0.75 - 6 + "px": (screenHeight) / 0.75 + "px",
     // '--unitWidth': (screenOritentation === 'portrait'? ((screenWidth - 8) / 6)  + "px": (overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))) + "px"),
     "--unitWidth": unitWidth[screenOritentation] + "px",
   } as React.CSSProperties;
@@ -537,6 +579,7 @@ function App() {
       id="App"
       className={classNames("App noscroll prevent-select", screenOritentation, {
         safetyMargin: controllerAdvancedConfig.includes("safetyMargin"),
+        handheldModeBg: controllerAdvancedConfig.includes("handheldMode"),
       })}
       style={appStyles}
       onPointerDownCapture={handlePointerDownCapture}
@@ -545,7 +588,17 @@ function App() {
     >
       {controllerAdvancedConfig.includes("handheldMode") ? (
         fullscreen ? 
-        (<MdFullscreenExit id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>)
+        (
+          <>
+          {menuBarShown?         <MdFullscreenExit id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>:""}
+
+          {menuBarShown?                 <FaCaretUp className={classNames('IconBtn', 'MenuBarToggleBtn', {menuBarShown})} onClick={toggleMenuBar}/>: <FaCaretDown className={classNames('IconBtn', 'MenuBarToggleBtn', {menuBarShown})} onClick={toggleMenuBar}/>}
+        
+
+          </>
+
+
+        )
         : (<MdFullscreen id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>)
 
       ) : (
@@ -566,6 +619,7 @@ function App() {
         screenHeight={screenHeight}
         centerContainerWidth={centerContainerWidth}
         setAppScaffolding={setScaffolding}
+        menuBarShown={menuBarShown}
       />
 
       <ControllerContainer
