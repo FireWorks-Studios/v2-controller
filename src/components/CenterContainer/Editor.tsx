@@ -17,14 +17,12 @@ import { MdLightbulb } from "react-icons/md";
 import { DummyButton } from "../Button/DummyButton";
 import { PiExportBold, PiLightningBold, PiMouseBold } from "react-icons/pi";
 import { FaGamepad } from "react-icons/fa";
-import { LuImport} from "react-icons/lu";
+import { LuImport } from "react-icons/lu";
 import { LuAlignVerticalSpaceAround } from "react-icons/lu";
 import { MdOutlineGamepad } from "react-icons/md";
 import { MdFullscreen } from "react-icons/md";
-
-
-
-
+import "./Editor.css";
+import GamepadMapping from "./GamepadMapping.tsx";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -281,16 +279,15 @@ export default function Editor({
           disabled={!document.fullscreenEnabled}
           onClick={() => {
             !document.fullscreenElement
-              ? document.getElementById('App')?.requestFullscreen()
+              ? document.getElementById("App")?.requestFullscreen()
               : setControllerAdvancedConfig(
                   controllerAdvancedConfig.filter((e) => e !== "handheldMode")
                 );
-                if (document.fullscreenElement) {
-                  if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                  }
-                }
-
+            if (document.fullscreenElement) {
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              }
+            }
           }}
         >
           <ListItemIcon>
@@ -298,11 +295,7 @@ export default function Editor({
           </ListItemIcon>
           <ListItemText>Fullscreen (iOS doesn't support)</ListItemText>
           <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
-            {document.fullscreenElement ? (
-              <BsToggleOn />
-            ) : (
-              <BsToggleOff />
-            )}
+            {document.fullscreenElement ? <BsToggleOn /> : <BsToggleOff />}
           </IconButton>
         </MenuItem>
 
@@ -352,7 +345,7 @@ export default function Editor({
         </MenuItem>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-      <MenuItem
+        <MenuItem
           dense={true}
           onClick={() => {
             !controllerAdvancedConfig.includes("handheldMode")
@@ -377,6 +370,18 @@ export default function Editor({
             )}
           </IconButton>
         </MenuItem>
+        <div id="controller-not-connected-area" className="controller-status">
+          <div className="loader"></div>
+          <div>Controller not connected, press any button to start.</div>
+        </div>
+        <div id="controller-connected-area">
+          <div id="controller-connected" className="controller-status">
+            Connected
+          </div>
+          <div id="buttons"></div>
+        </div>
+        <GamepadMapping />
+
       </CustomTabPanel>
     </Box>
   );
