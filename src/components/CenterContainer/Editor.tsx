@@ -376,7 +376,7 @@ export default function Editor({
         </div>
         <div id="controller-connected-area">
           <div id="controller-connected" className="controller-status">
-            Connected
+            Controller connected
           </div>
           <div id="buttons"></div>
         </div>

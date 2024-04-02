@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import dropdownOptions from "../Button/DropdownOptions";
 
 const GamepadMapping: React.FC = () => {
   useEffect(() => {
@@ -45,10 +46,10 @@ const GamepadMapping: React.FC = () => {
       const buttonArea = document.getElementById("buttons") as HTMLElement;
       buttonArea.innerHTML = "";
       for (let i = 0; i <= buttons.length; i++) {
-        buttonArea.innerHTML += createButtonHtml(i, 0);
+        buttonArea.innerHTML += createButtonHtml(i, 0, dropdownOptions);
       }
     }
-    function createButtonHtml(index: number, value: number) {
+    function createButtonHtml(index: number, value: number, dropdownOptions: any) {
       return `<div class="gamepadButton" id="button-${index}">
     <svg width="10px" height="50px">
         <rect width="10px" height="50px" fill="grey"></rect>
@@ -65,6 +66,14 @@ const GamepadMapping: React.FC = () => {
     <div class='button-text-area'>
         <div class="button-name">B${index}</div>
         <div class="button-value">${value.toFixed(2)}</div>
+        <select id="gamepadRemapDropdown" class="gamepadRemapDropdown">
+        ${dropdownOptions
+          .map(
+            (option: { value: any; label: any; }) =>
+              `<option key=${option.value} value=${option.value}>${option.label}</option>`
+          )
+          .join("")}
+        </select>
     </div>
 </div>`;
     }

@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import './Button.css'
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
-import Dropdown, { DropdownOption } from './Dropdown';
+import Dropdown from './Dropdown';
+import { DropdownOption } from './DropdownOptions';
 import {TbArrowsMove} from 'react-icons/tb'
 import classNames from 'classnames';
 import { ParsedDropdownValue } from './ParsedDropdownValue';
