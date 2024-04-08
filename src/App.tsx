@@ -23,7 +23,6 @@ import { MdFullscreenExit } from "react-icons/md";
 import { FaCaretUp } from "react-icons/fa6";
 import { FaCaretDown } from "react-icons/fa";
 
-
 function App() {
   console.trace();
   const [fullscreen, setFullscreen] = useState(false);
@@ -98,20 +97,20 @@ function App() {
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    setFullscreen(prevFullscreen => !prevFullscreen);
+    setFullscreen((prevFullscreen) => !prevFullscreen);
   }, []);
 
   const toggleMenuBar = useCallback(() => {
-    setMenuBarShown(prevMenuBar => !prevMenuBar);
+    setMenuBarShown((prevMenuBar) => !prevMenuBar);
   }, []);
 
-  useEffect(()=>{
-    if(fullscreen){
+  useEffect(() => {
+    if (fullscreen) {
       // document.body.classList.add('fullscreen')
-      if(document.fullscreenEnabled){
-        document.getElementById('App')?.requestFullscreen()
+      if (document.fullscreenEnabled) {
+        document.getElementById("App")?.requestFullscreen();
       }
-    }else{
+    } else {
       // document.body.classList.remove('fullscreen');
       setControllerAdvancedConfig(
         controllerAdvancedConfig.filter((e) => e !== "handheldMode")
@@ -122,30 +121,32 @@ function App() {
         }
       }
     }
-  },[fullscreen])
+  }, [fullscreen]);
 
-  useEffect(()=>{
-    if(controllerAdvancedConfig.includes("handheldMode")){
+  useEffect(() => {
+    if (controllerAdvancedConfig.includes("handheldMode")) {
       setFullscreen(true);
-    }else{
+    } else {
       setFullscreen(false);
     }
-  },[controllerAdvancedConfig])
+  }, [controllerAdvancedConfig]);
 
   const handleFullscreenChange = useCallback(() => {
     if (document.fullscreenElement) {
-      console.log(`Element: ${document.fullscreenElement.id} entered fullscreen mode.`);
+      console.log(
+        `Element: ${document.fullscreenElement.id} entered fullscreen mode.`
+      );
     } else {
       console.log("Leaving fullscreen mode.");
       setFullscreen(false);
     }
   }, []);
-  
+
   useEffect(() => {
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, [handleFullscreenChange]);
 
@@ -159,21 +160,14 @@ function App() {
     }
     var keysToFire: string[] = [];
     var keysToKill: string[] = [];
-    const readKeyDown = (
+    const readKey = (
       componentRepresentations: ComponentRepresentation[]
     ) => {
       for (const componentRepresentation of componentRepresentations) {
-        if (componentRepresentation.pressed) {
-          if (!keysToFire.includes(componentRepresentation.mapping)) {
+        if (!keysToFire.includes(componentRepresentation.mapping)) {
+          if (componentRepresentation.pressed) {
             keysToFire.push(componentRepresentation.mapping);
-          }
-        }
-      }
-    };
-    const readKeyUp = (componentRepresentations: ComponentRepresentation[]) => {
-      for (const componentRepresentation of componentRepresentations) {
-        if (!componentRepresentation.pressed) {
-          if (!keysToFire.includes(componentRepresentation.mapping)) {
+          } else {
             if (!keysToKill.includes(componentRepresentation.mapping)) {
               keysToKill.push(componentRepresentation.mapping);
             }
@@ -181,12 +175,9 @@ function App() {
         }
       }
     };
-    readKeyDown(centerComponentRepresentations);
-    readKeyDown(leftComponentRepresentations);
-    readKeyDown(rightComponentRepresentations);
-    readKeyUp(centerComponentRepresentations);
-    readKeyUp(leftComponentRepresentations);
-    readKeyUp(rightComponentRepresentations);
+    readKey(centerComponentRepresentations);
+    readKey(leftComponentRepresentations);
+    readKey(rightComponentRepresentations);
     console.log("keys to fire: " + keysToFire);
     console.log("keys to kill: " + keysToKill);
     // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
@@ -238,15 +229,15 @@ function App() {
       setCenterContainerWidth(width - 12);
       setUnitWidth({ ...unitWidth, portrait: (screenWidth - 8) / 6 });
     } else {
-      if(menuBarShown){
+      if (menuBarShown) {
         setCenterContainerWidth((height - 40) / 0.75 - 6);
-      }else{
-        setCenterContainerWidth((height) / 0.75 - 6);
+      } else {
+        setCenterContainerWidth(height / 0.75 - 6);
       }
       if (overlay) {
         setUnitWidth({ ...unitWidth, landscape: (screenHeight - 46) / 6 });
       } else {
-        if(menuBarShown){
+        if (menuBarShown) {
           setUnitWidth({
             ...unitWidth,
             landscape: Math.min(
@@ -254,12 +245,12 @@ function App() {
               (screenWidth - ((screenHeight - 40) / 0.75 - 6)) / 6
             ),
           });
-        }else{
+        } else {
           setUnitWidth({
             ...unitWidth,
             landscape: Math.min(
               (screenHeight - 46) / 6,
-              (screenWidth - ((screenHeight) / 0.75 - 6)) / 6
+              (screenWidth - (screenHeight / 0.75 - 6)) / 6
             ),
           });
         }
@@ -317,7 +308,9 @@ function App() {
     "--centerContainerWidth":
       screenOritentation === "portrait"
         ? screenWidth - 12 + "px"
-        : menuBarShown? (screenHeight - 40) / 0.75 - 6 + "px": (screenHeight) / 0.75 + "px",
+        : menuBarShown
+        ? (screenHeight - 40) / 0.75 - 6 + "px"
+        : screenHeight / 0.75 + "px",
     // '--unitWidth': (screenOritentation === 'portrait'? ((screenWidth - 8) / 6)  + "px": (overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))) + "px"),
     "--unitWidth": unitWidth[screenOritentation] + "px",
   } as React.CSSProperties;
@@ -587,20 +580,41 @@ function App() {
       onPointerUpCapture={handlePointerUpCapture}
     >
       {controllerAdvancedConfig.includes("handheldMode") ? (
-        fullscreen ? 
-        (
+        fullscreen ? (
           <>
-          {menuBarShown?         <MdFullscreenExit id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>:""}
+            {menuBarShown ? (
+              <MdFullscreenExit
+                id="FullscreenBtn"
+                className="IconBtn FullscreenBtn"
+                onClick={toggleFullscreen}
+              />
+            ) : (
+              ""
+            )}
 
-          {menuBarShown?                 <FaCaretUp className={classNames('IconBtn', 'MenuBarToggleBtn', {menuBarShown})} onClick={toggleMenuBar}/>: <FaCaretDown className={classNames('IconBtn', 'MenuBarToggleBtn', {menuBarShown})} onClick={toggleMenuBar}/>}
-        
-
+            {menuBarShown ? (
+              <FaCaretUp
+                className={classNames("IconBtn", "MenuBarToggleBtn", {
+                  menuBarShown,
+                })}
+                onClick={toggleMenuBar}
+              />
+            ) : (
+              <FaCaretDown
+                className={classNames("IconBtn", "MenuBarToggleBtn", {
+                  menuBarShown,
+                })}
+                onClick={toggleMenuBar}
+              />
+            )}
           </>
-
-
+        ) : (
+          <MdFullscreen
+            id="FullscreenBtn"
+            className="IconBtn FullscreenBtn"
+            onClick={toggleFullscreen}
+          />
         )
-        : (<MdFullscreen id="FullscreenBtn" className="IconBtn FullscreenBtn" onClick={toggleFullscreen}/>)
-
       ) : (
         ""
       )}

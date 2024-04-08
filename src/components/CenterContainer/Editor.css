@@ -104,11 +104,15 @@
   
   .axis-name {
     color: grey;
+    margin-top: -21px;
+    margin-bottom: -53px;
     font-weight: bolder;
   }
   
   .axis-value {
     color: rgb(126, 54, 54);
+    margin-top: -21px;
+    margin-bottom: -53px;
   }
   
   a {
