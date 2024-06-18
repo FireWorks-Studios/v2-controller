@@ -5,7 +5,6 @@ import { PiPauseBold } from "react-icons/pi";
 import { PiOctagonBold } from "react-icons/pi";
 import { PiGearSixBold } from "react-icons/pi";
 import { PiInfoBold } from "react-icons/pi";
-import { PiLinkBold } from "react-icons/pi";
 import { TbVolume } from "react-icons/tb";
 import { TbVolume3 } from "react-icons/tb";
 import { IoSearch } from "react-icons/io5";
@@ -13,6 +12,7 @@ import classNames from "classnames";
 import Editor from "./Editor";
 import { PiPlayBold } from "react-icons/pi";
 import { parseScratchProjectId } from "../../utils/parseURL";
+import { FileUploader } from "./FileUploader";
 
 interface Props {
   screenOrientation: string;
@@ -33,6 +33,7 @@ interface Props {
 }
 
 export interface CustomWindow extends Window {
+  loadProject: any;
   scaffolding: any; // Replace 'any' with the appropriate type
   pause: () => void;
   resume: () => void;
@@ -108,6 +109,10 @@ export const CenterContainer: React.FC<Props> = ({
 
     // Update the key state to trigger the reload
     setIframeKey(newKey);
+  };
+
+  const handleFile = (file: any) => {
+    customContentWindow?.loadProject(file)
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -200,9 +205,10 @@ export const CenterContainer: React.FC<Props> = ({
           onClick={customContentWindow?.stop}
         />
         <form className="searchBarContainer" onSubmit={handleSubmit}>
-          <button className="linkButton">
-            <PiLinkBold />
-          </button>
+          {/* <button className="linkButton">
+            <TbArrowBigDownFilled />
+          </button> */}
+          <FileUploader handleFile={handleFile} />
           <input
             className="searchBar"
             type="text"
