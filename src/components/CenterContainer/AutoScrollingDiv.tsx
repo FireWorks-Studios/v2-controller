@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import './AutoScrollingDiv.css';
 
 interface AutoScrollingDivProps {
+    hidden: boolean;
   children: React.ReactNode;
 }
 
-const AutoScrollingDiv: React.FC<AutoScrollingDivProps> = ({ children }) => {
+const AutoScrollingDiv: React.FC<AutoScrollingDivProps> = ({ hidden, children }) => {
   const scrollingDivRef = useRef<HTMLDivElement>(null);
   const scrollInterval = 60; // Time in milliseconds between each scroll step
   const scrollAmount = 1; // Number of pixels to scroll each time
@@ -37,7 +38,7 @@ const AutoScrollingDiv: React.FC<AutoScrollingDivProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="scrollingDiv" ref={scrollingDivRef}>
+    <div className={hidden? "scrollingDiv":"hidden scrollingDiv"} ref={scrollingDivRef}>
       {children}
     </div>
   );

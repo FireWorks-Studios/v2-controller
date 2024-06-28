@@ -37,7 +37,8 @@
       #app,
       #loading,
       #error,
-      #launch {
+      #launch,
+      #loadProject {
         position: absolute;
         top: 0;
         left: 0;
@@ -106,6 +107,16 @@
         border: 0;
         border-radius: 4px;
       }
+      .button-upload{
+        background-color: #ebf1fc;
+        margin: 3px;
+        border: none;
+        border-radius: 100px;
+        color: #3f56ff;
+        font-size: 16px;
+        padding-block: 1px;
+        padding-inline: 6px; 
+      }
       #error-information {
         font-family: monospace;
       }
@@ -148,6 +159,11 @@
       </div>
     </div>
 
+    <div id="loadProject" class="screen">
+      <button class="button-upload" onclick="triggerFileInput()">Click here to upload a .sb3 file!</button>
+      <input type="file" id="hiddenFileInput" style="display: none;" onchange="handleFileChange(event)">
+    </div>
+
     <div id="error" class="screen" hidden>
       <h1>Error</h1>
       <p id="error-information"></p>
@@ -158,6 +174,24 @@
     <script src="scaffolding/scaffolding-full.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
+
+      function triggerFileInput() {
+        document.getElementById('hiddenFileInput').click();
+      }
+
+      function handleFileChange(event) {
+        const fileUploaded = event.target.files[0];
+        if (fileUploaded) {
+          handleFile(fileUploaded);
+        }
+      }
+
+      function handleFile(file) {
+        // Implement your file handling logic here
+        console.log('File uploaded:', file);
+        loadProject(file);
+      }
+
       var PROJECT_ID = "1";
       const appElement = document.getElementById("app");
       const launchScreen = document.getElementById("launch");
@@ -363,6 +397,8 @@
 }
 
       window.loadProject = async function(file){
+        const loadProjectScreen = document.getElementById("loadProject");
+        loadProjectScreen.hidden = true;
         const zip = new JSZip();
         const unzippedData = await zip.loadAsync(file);
         const projectJsonFile = unzippedData.file('project.json');
