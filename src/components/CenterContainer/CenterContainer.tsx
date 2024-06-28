@@ -13,6 +13,7 @@ import Editor from "./Editor";
 import { PiPlayBold } from "react-icons/pi";
 import { parseScratchProjectId } from "../../utils/parseURL";
 import { FileUploader } from "./FileUploader";
+import { GameTitle } from "./GameTitle";
 
 interface Props {
   screenOrientation: string;
@@ -208,7 +209,10 @@ export const CenterContainer: React.FC<Props> = ({
           {/* <button className="linkButton">
             <TbArrowBigDownFilled />
           </button> */}
+
+          <GameTitle></GameTitle>
           <FileUploader handleFile={handleFile} />
+
           <input
             className="searchBar"
             type="text"

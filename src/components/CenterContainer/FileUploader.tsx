@@ -2,8 +2,7 @@ import { ChangeEvent, FC, useRef } from 'react';
 import "./FileUploaderStyles.css";
 
 interface FileUploaderProps {
-  // @ts-ignore
-  handleFile: (file: File) => void;
+  handleFile: (_file: any) => void;
 }
 
 export const FileUploader: FC<FileUploaderProps> = ({ handleFile }) => {
@@ -26,7 +25,7 @@ export const FileUploader: FC<FileUploaderProps> = ({ handleFile }) => {
         className="button-upload"
         onClick={handleClick}
       >
-        Upload a file
+        Upload
       </button>
       <input
         type="file"

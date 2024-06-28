@@ -158,7 +158,7 @@
     <script src="scaffolding/scaffolding-full.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
-      const PROJECT_ID = location.hash.substr(1) || "1";
+      var PROJECT_ID = "1";
       const appElement = document.getElementById("app");
       const launchScreen = document.getElementById("launch");
       const loadingScreen = document.getElementById("loading");
@@ -198,6 +198,13 @@
       const muteBtn = window.parent.document.getElementById("MuteBtn");
       const descriptionContainer = window.parent.document.getElementById(
         "descriptionContainer"
+      );
+      const titleSpan = window.parent.document.getElementById(
+        "gameTitleSpan"
+      );
+
+      const authorSpan = window.parent.document.getElementById(
+        "gameAuthorSpan"
       );
 
       window.start = function(){
@@ -344,6 +351,17 @@
         scaffolding.vm.runtime.audioEngine.inputNode.gain.value = 1
       }
 
+      function getVariableValue(projectData, variableName) {
+    for (const target of projectData.targets) {
+        for (const key in target.variables) {
+            if (target.variables[key][0] === variableName) {
+                return target.variables[key][1];
+            }
+        }
+    }
+    return undefined; // Return undefined if the variable is not found
+}
+
       window.loadProject = async function(file){
         const zip = new JSZip();
         const unzippedData = await zip.loadAsync(file);
@@ -352,6 +370,9 @@
           throw new Error('project.json file not found in the .sb3 archive');
         }
         const projectData = JSON.parse(await projectJsonFile.async('string'));
+        console.log(getVariableValue(projectData, "_SG_projectID"));
+        PROJECT_ID = getVariableValue(projectData, "_SG_projectID");
+        getProjectData();
         setProgress(0.1);
         await scaffolding.loadProject(projectData);
         scaffolding.setUsername("123");
@@ -389,6 +410,8 @@
         }
         const projectMetadata = await metadataResponse.json();
         console.log(projectMetadata);
+        titleSpan.innerHTML = projectMetadata?.title;
+        authorSpan.innerHTML = projectMetadata?.author.username;
         descriptionContainer.innerHTML =
           projectMetadata?.title +
           "\nby " +
@@ -397,14 +420,14 @@
           projectMetadata?.instructions +
           "\n\nNotes and Credits:\n" +
           projectMetadata.description;
-        const token = projectMetadata.project_token;
-        const dataResponse = await fetch(
-          `https://projects.scratch.mit.edu/${PROJECT_ID}?token=${token}`
-        );
-        if (!dataResponse.ok) {
-          throw new Error("Failed to load project data.");
-        }
-        return dataResponse.arrayBuffer();
+        // const token = projectMetadata.project_token;
+        // const dataResponse = await fetch(
+        //   `https://projects.scratch.mit.edu/${PROJECT_ID}?token=${token}`
+        // );
+        // if (!dataResponse.ok) {
+        //   throw new Error("Failed to load project data.");
+        // }
+        // return dataResponse.arrayBuffer();
       };
 
       
@@ -428,7 +451,7 @@
         errorScreen.hidden = false;
         errorInformation.textContent = `${error}`;
       };
-      run().catch(handleError);
+      // run().catch(handleError);
     </script>
   </body>
 </html>

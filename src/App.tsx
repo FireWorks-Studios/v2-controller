@@ -74,7 +74,7 @@ function App() {
 
   const [controllerAdvancedConfig, setControllerAdvancedConfig] = useState<
     string[]
-  >(["mouseAndKeyboardMode"]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode', 'handheldMode'
+  >([]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode', 'handheldMode'
 
   const [menuBarShown, setMenuBarShown] = useState(true);
 

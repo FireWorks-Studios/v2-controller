@@ -1,8 +1,10 @@
-.button-upload{
+.title-box{
     background-color: #ebf1fc;
     margin: 3px;
     border: none;
     border-radius: 100px;
     color: #3f56ff;
+    padding-block: 1px;
+    padding-inline: 6px;
     font-size: 16px;
 }

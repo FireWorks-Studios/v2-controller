@@ -91,6 +91,7 @@
     height: 24px;
     font-size: 16px;
     width: calc(var(--centerContainerWidth) - 278px);
+    display: none;
 }
 
 .searchBar::placeholder{
@@ -105,6 +106,7 @@
     padding: 0%;
     -ms-flex-align: end;
     margin-top: 3px;
+    display: none;
 }
 
 .linkButton{
