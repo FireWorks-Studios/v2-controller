@@ -401,6 +401,7 @@
         loadProjectScreen.hidden = true;
         const zip = new JSZip();
         const unzippedData = await zip.loadAsync(file);
+
         const projectJsonFile = unzippedData.file('project.json');
         if (!projectJsonFile) {
           throw new Error('project.json file not found in the .sb3 archive');
@@ -408,7 +409,8 @@
         const projectData = JSON.parse(await projectJsonFile.async('string'));
         console.log(getVariableValue(projectData, "_SG_projectID"));
         PROJECT_ID = getVariableValue(projectData, "_SG_projectID");
-        getProjectData();
+        setProjectMetaData(projectData);
+        // getProjectData();
         setProgress(0.1);
         await scaffolding.loadProject(projectData);
         scaffolding.setUsername("123");
@@ -428,6 +430,21 @@
           PROJECT_ID
         )
       );
+
+      const setProjectMetaData = (projectJson) =>{
+        const projectMetadata = projectJson.meta;
+        console.log(projectMetadata);
+        titleSpan.innerHTML = projectMetadata?.title;
+        authorSpan.innerHTML = projectMetadata?.author;
+        descriptionContainer.innerHTML =
+          projectMetadata?.title +
+          "\nby " +
+          projectMetadata?.author +
+          "\n\nInsctructions:\n" +
+          projectMetadata?.instructions +
+          "\n\nNotes and Credits:\n" +
+          projectMetadata.description;
+      };
 
       const getProjectData = async () => {
         var metadataResponse;
