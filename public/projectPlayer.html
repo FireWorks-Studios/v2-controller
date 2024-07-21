@@ -208,15 +208,26 @@
       scaffolding.appendTo(appElement);
 
       const { storage, vm } = scaffolding;
-      storage.addWebStore(
-        [
-          storage.AssetType.ImageVector,
-          storage.AssetType.ImageBitmap,
-          storage.AssetType.Sound,
-        ],
-        (asset) =>
-          `https://assets.scratch.mit.edu/internalapi/asset/${asset.assetId}.${asset.dataFormat}/get/`
-      );
+      let zip;
+      // Allow zip to be GC'd after project loads
+      vm.runtime.on('PROJECT_LOADED', () => (zip = null));
+      const findFileInZip = (path) => zip.file(path) || zip.file(new RegExp("^([^/]*/)?" + path + "$"))[0];
+      storage.addHelper({
+          load: (assetType, assetId, dataFormat) => {
+            if (!zip) {
+              throw new Error('Zip is not loaded or has been closed');
+            }
+            const path = assetId + '.' + dataFormat;
+            const file = findFileInZip(path);
+            if (!file) {
+              throw new Error('Asset is not in zip: ' + path)
+            }
+            return file
+              .async('uint8array')
+              .then((data) => storage.createAsset(assetType, dataFormat, data, assetId));
+          }
+        });
+
       const setProgress = (progress) => {
         loadingInner.style.width = `${progress * 100}%`;
       };
@@ -399,7 +410,7 @@
       window.loadProject = async function(file){
         const loadProjectScreen = document.getElementById("loadProject");
         loadProjectScreen.hidden = true;
-        const zip = new JSZip();
+        zip = new JSZip();
         const unzippedData = await zip.loadAsync(file);
 
         const projectJsonFile = unzippedData.file('project.json');
