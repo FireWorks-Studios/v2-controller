@@ -1,4 +1,6 @@
 import { ChangeEvent, FC, useRef } from 'react';
+import { LuImport } from "react-icons/lu";
+
 import "./FileUploaderStyles.css";
 
 interface FileUploaderProps {
@@ -25,13 +27,14 @@ export const FileUploader: FC<FileUploaderProps> = ({ handleFile }) => {
         className="button-upload"
         onClick={handleClick}
       >
-        Upload
+        <LuImport />
       </button>
       <input
         type="file"
         onChange={handleChange}
         ref={hiddenFileInput}
         style={{ display: 'none' }}
+        accept='.sb3, .sgo'
       />
     </>
   );

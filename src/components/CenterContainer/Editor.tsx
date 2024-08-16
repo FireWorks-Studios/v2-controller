@@ -15,14 +15,16 @@ import {
 import { BsFillNutFill, BsToggleOff, BsToggleOn } from "react-icons/bs";
 import { MdLightbulb } from "react-icons/md";
 import { DummyButton } from "../Button/DummyButton";
-import { PiExportBold, PiLightningBold, PiMouseBold } from "react-icons/pi";
-import { FaGamepad } from "react-icons/fa";
-import { LuImport } from "react-icons/lu";
+import { PiLightningBold, PiMouseBold } from "react-icons/pi";
+// import { FaGamepad } from "react-icons/fa";
+// import { LuImport } from "react-icons/lu";
 import { LuAlignVerticalSpaceAround } from "react-icons/lu";
 import { MdOutlineGamepad } from "react-icons/md";
-import { MdFullscreen } from "react-icons/md";
+// import { MdFullscreen } from "react-icons/md";
 import "./Editor.css";
 import GamepadMapping from "./GamepadMapping.tsx";
+// import { RiMoonClearLine } from "react-icons/ri";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -136,7 +138,7 @@ export default function Editor({
               },
             }}
           />
-          <Tab
+          {/* <Tab
             disableRipple
             label="Handheld"
             {...a11yProps(2)}
@@ -155,7 +157,8 @@ export default function Editor({
                 color: "#ffffff",
               },
             }}
-          />
+            disabled
+          /> */}
         </Tabs>
         <MuiButton
           size="small"
@@ -274,7 +277,33 @@ export default function Editor({
           </IconButton>
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
+          dense={true}
+          onClick={() => {
+            !controllerAdvancedConfig.includes("darkMode")
+              ? setControllerAdvancedConfig([
+                  ...controllerAdvancedConfig,
+                  "darkMode",
+                ])
+              : setControllerAdvancedConfig(
+                  controllerAdvancedConfig.filter((e) => e !== "darkMode")
+                );
+          }}
+        >
+          <ListItemIcon>
+          <RiMoonClearLine />
+          </ListItemIcon>
+          <ListItemText>Dark Mode</ListItemText>
+          <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
+            {controllerAdvancedConfig.includes("darkMode") ? (
+              <BsToggleOn />
+            ) : (
+              <BsToggleOff />
+            )}
+          </IconButton>
+        </MenuItem> */}
+
+        {/* <MenuItem
           dense={true}
           disabled={!document.fullscreenEnabled}
           onClick={() => {
@@ -297,11 +326,11 @@ export default function Editor({
           <IconButton edge="end" size="large" sx={{ padding: "0px" }}>
             {document.fullscreenElement ? <BsToggleOn /> : <BsToggleOff />}
           </IconButton>
-        </MenuItem>
+        </MenuItem> */}
 
         <Divider />
 
-        <MuiButton
+        {/* <MuiButton
           startIcon={<PiExportBold />}
           variant="contained"
           size="small"
@@ -319,9 +348,9 @@ export default function Editor({
           disabled
         >
           Export Config
-        </MuiButton>
+        </MuiButton> */}
 
-        <MuiButton
+        {/* <MuiButton
           startIcon={<LuImport />}
           variant="contained"
           size="small"
@@ -339,10 +368,12 @@ export default function Editor({
           disabled
         >
           Import Config
-        </MuiButton>
+        </MuiButton> */}
+
         <MenuItem dense disableRipple disabled>
-          ScratchGO v2 beta v1.0.29
+          ScratchGO v2 beta v1.0.43 by FireWorks Studios
         </MenuItem>
+
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <MenuItem

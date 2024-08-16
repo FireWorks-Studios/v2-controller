@@ -260,6 +260,7 @@ export const CenterContainer: React.FC<Props> = ({
         key={iframeKey}
         src={"./projectPlayer.html"}
         onLoad={handleLoad}
+        className="iframe"
       />
       <div
         id="iframeMask"
@@ -278,7 +279,8 @@ export const CenterContainer: React.FC<Props> = ({
             selected: selectedTab === "description",
           })}
         >
-          description
+          Nothing here yet... <br></br>
+          Load a project with a .sgo file to see it's info!
         </div>
         <div
           id="editorContainer"

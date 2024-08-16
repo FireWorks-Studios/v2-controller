@@ -10,6 +10,31 @@
 
       gtag('config', 'G-LYDVBPW5EB');
     </script>
+    <script>
+      let receivedChunks = [];
+      let expectedChunks = 0;
+
+      function receiveChunk(chunk, index, total) {
+        if (index === 0) {
+          receivedChunks = new Array(total);
+          expectedChunks = total;
+        }
+        
+        receivedChunks[index] = chunk;
+        document.getElementById('iframe').contentWindow.document.getElementById("debug console").innerText = "Recieved chunk: " + index + "/" + total;
+
+        if (receivedChunks.filter(Boolean).length === expectedChunks) {
+          const completeData = receivedChunks.join('');
+          loadProject(completeData);
+        }
+      }
+
+      function loadProject(fileB64String) {
+        console.log('Complete file received');
+        document.getElementById('iframe').contentWindow.document.getElementById("debug console").innerText = "Complete file received";
+        document.getElementById('iframe').contentWindow?.defineUploadFileByBase64(fileB64String);
+      }
+    </script>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content= "width=device-width, user-scalable=no">

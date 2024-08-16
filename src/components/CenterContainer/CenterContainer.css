@@ -239,3 +239,7 @@ iframe {
   .iframeMask.MouseAndKeyboard{
     pointer-events: all;
   }
+
+  .iframe{
+    border: solid #dde9fd 2px;
+  }

@@ -55,7 +55,6 @@
         user-select: none;
         -webkit-user-select: none;
         background-color: #dadada;
-        border-radius: 8px;
       }
       #launch {
         background-color: rgba(0, 0, 0, 0.7);
@@ -114,8 +113,8 @@
         border-radius: 100px;
         color: #3f56ff;
         font-size: 16px;
-        padding-block: 1px;
-        padding-inline: 6px; 
+        padding-block: 5px;
+        padding-inline: 15px;
       }
       #error-information {
         font-family: monospace;
@@ -160,8 +159,11 @@
     </div>
 
     <div id="loadProject" class="screen">
-      <button class="button-upload" onclick="triggerFileInput()">Click here to upload a .sb3 file!</button>
-      <input type="file" id="hiddenFileInput" style="display: none;" onchange="handleFileChange(event)">
+      <button id="loadProjectButton" class="button-upload" onclick="triggerFileInput()">Click here to import your<br/>Scratch project as a .sb3 or .sgo file!</button>
+      <input type="file" id="hiddenFileInput" style="display: none;" onchange="handleFileChange(event)" accept=".sb3, .sgo">
+      <div id="debug console">
+        v1.0.50
+      </div>
     </div>
 
     <div id="error" class="screen" hidden>
@@ -169,28 +171,104 @@
       <p id="error-information"></p>
     </div>
 
+
     <!-- If using Scaffolding as a library, update this path to where your scaffolding-[full|min].js is located. -->
     <!-- This could also be a jsdelivr URL. -->
     <script src="scaffolding/scaffolding-full.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
 
-      function triggerFileInput() {
-        document.getElementById('hiddenFileInput').click();
-      }
+    function triggerFileInput() {
+      document.getElementById('hiddenFileInput').click();
+    }
 
-      function handleFileChange(event) {
-        const fileUploaded = event.target.files[0];
-        if (fileUploaded) {
-          handleFile(fileUploaded);
+    function handleFileChange(event) {
+      const fileUploaded = event.target.files[0];
+      if (fileUploaded) {
+        document.getElementById("debug console").innerText = "fileUploaded found, attempting to handleFile of size: " + fileUploaded.size;
+        handleFile(fileUploaded);
+      }else{
+        document.getElementById("debug console").innerText = "fileUploaded can't be found";
+      }
+    }
+
+    function defineUploadFileByBase64(base64String){
+      const fileInput = document.getElementById('hiddenFileInput');
+      fileInput.value = ''; 
+
+      const blob = b64toBlob(base64String);
+
+      // Create a new File object
+      const file = new File([blob], "filename");
+
+      // Create a new DataTransfer object
+      const dataTransfer = new DataTransfer();
+
+      // Add the file to the DataTransfer object
+      dataTransfer.items.add(file);
+
+      // Assign the DataTransfer files to the fileInput
+      fileInput.files = dataTransfer.files;
+
+      // Update the debug console
+      document.getElementById("debug console").innerText = fileInput.files[0];
+
+      // Trigger the file change event
+      handleFileChange({ target: { files: fileInput.files } });
+
+    }
+
+    const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+      const byteCharacters = atob(b64Data);
+      const byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
         }
-      }
 
-      function handleFile(file) {
-        // Implement your file handling logic here
-        console.log('File uploaded:', file);
-        loadProject(file);
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
       }
+        
+      const blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+    }
+
+    function defineUploadFileByPath(path) {
+      const fileInput = document.getElementById('hiddenFileInput');
+      fileInput.value = ''; 
+
+      const fileData = new LocalFileData(path);
+
+      // Create a new File object
+      const file = constructFileFromLocalFileData(fileData);
+
+      // Create a new DataTransfer object
+      const dataTransfer = new DataTransfer();
+
+      // Add the file to the DataTransfer object
+      dataTransfer.items.add(file);
+
+      // Assign the DataTransfer files to the fileInput
+      fileInput.files = dataTransfer.files;
+
+      // Update the debug console
+      document.getElementById("debug console").innerText = fileInput.files[0];
+
+      // Trigger the file change event
+      handleFileChange({ target: { files: fileInput.files } });
+
+    }
+
+    function handleFile(file) {
+      // Implement your file handling logic here
+      console.log('File uploaded:', file.value);
+      loadProject(file);
+    }
 
       var PROJECT_ID = "1";
       const appElement = document.getElementById("app");
@@ -406,8 +484,8 @@
     }
     return undefined; // Return undefined if the variable is not found
 }
-
       window.loadProject = async function(file){
+        console.log(file);
         const loadProjectScreen = document.getElementById("loadProject");
         loadProjectScreen.hidden = true;
         zip = new JSZip();
