@@ -365,11 +365,12 @@ function App() {
 
   useEffect(() => {
     var iframe = document.getElementById("iframe") as HTMLIFrameElement;
+    var customContentWindow = iframe?.contentWindow as CustomWindow;
+    setScaffolding(customContentWindow?.scaffolding);
     if (scaffolding === undefined || iframe === null) {
       return;
     }
     console.log("scaffolding found on recive mouse change");
-    var customContentWindow = iframe?.contentWindow as CustomWindow;
     if (pointerMouseDown) {
       if (!customContentWindow?.hasStarted) {
         console.log("should start vm");

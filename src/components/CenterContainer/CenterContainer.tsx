@@ -258,7 +258,7 @@ export const CenterContainer: React.FC<Props> = ({
       <iframe
         id="iframe"
         key={iframeKey}
-        src={"/projectPlayer.html#" + projectID}
+        src={"./projectPlayer.html"}
         onLoad={handleLoad}
       />
       <div

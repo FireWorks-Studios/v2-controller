@@ -1,0 +1,593 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F3713ECD2C4F295500E8A59F /* ScratchGOApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3713ECC2C4F295500E8A59F /* ScratchGOApp.swift */; };
+		F3713ECF2C4F295500E8A59F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3713ECE2C4F295500E8A59F /* ContentView.swift */; };
+		F3713ED12C4F295800E8A59F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3713ED02C4F295800E8A59F /* Assets.xcassets */; };
+		F3713ED42C4F295800E8A59F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3713ED32C4F295800E8A59F /* Preview Assets.xcassets */; };
+		F3713EDE2C4F295900E8A59F /* ScratchGOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3713EDD2C4F295900E8A59F /* ScratchGOTests.swift */; };
+		F3713EE82C4F295900E8A59F /* ScratchGOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3713EE72C4F295900E8A59F /* ScratchGOUITests.swift */; };
+		F3713EEA2C4F295900E8A59F /* ScratchGOUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3713EE92C4F295900E8A59F /* ScratchGOUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F3713EDA2C4F295900E8A59F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3713EC12C4F295500E8A59F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3713EC82C4F295500E8A59F;
+			remoteInfo = ScratchGO;
+		};
+		F3713EE42C4F295900E8A59F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3713EC12C4F295500E8A59F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3713EC82C4F295500E8A59F;
+			remoteInfo = ScratchGO;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F3713EC92C4F295500E8A59F /* ScratchGO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScratchGO.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3713ECC2C4F295500E8A59F /* ScratchGOApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchGOApp.swift; sourceTree = "<group>"; };
+		F3713ECE2C4F295500E8A59F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F3713ED02C4F295800E8A59F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F3713ED32C4F295800E8A59F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F3713ED92C4F295900E8A59F /* ScratchGOTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScratchGOTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3713EDD2C4F295900E8A59F /* ScratchGOTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchGOTests.swift; sourceTree = "<group>"; };
+		F3713EE32C4F295900E8A59F /* ScratchGOUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScratchGOUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3713EE72C4F295900E8A59F /* ScratchGOUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchGOUITests.swift; sourceTree = "<group>"; };
+		F3713EE92C4F295900E8A59F /* ScratchGOUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchGOUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F3713EC62C4F295500E8A59F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713ED62C4F295900E8A59F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713EE02C4F295900E8A59F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F3713EC02C4F295500E8A59F = {
+			isa = PBXGroup;
+			children = (
+				F3713ECB2C4F295500E8A59F /* ScratchGO */,
+				F3713EDC2C4F295900E8A59F /* ScratchGOTests */,
+				F3713EE62C4F295900E8A59F /* ScratchGOUITests */,
+				F3713ECA2C4F295500E8A59F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F3713ECA2C4F295500E8A59F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3713EC92C4F295500E8A59F /* ScratchGO.app */,
+				F3713ED92C4F295900E8A59F /* ScratchGOTests.xctest */,
+				F3713EE32C4F295900E8A59F /* ScratchGOUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F3713ECB2C4F295500E8A59F /* ScratchGO */ = {
+			isa = PBXGroup;
+			children = (
+				F3713ECC2C4F295500E8A59F /* ScratchGOApp.swift */,
+				F3713ECE2C4F295500E8A59F /* ContentView.swift */,
+				F3713ED02C4F295800E8A59F /* Assets.xcassets */,
+				F3713ED22C4F295800E8A59F /* Preview Content */,
+			);
+			path = ScratchGO;
+			sourceTree = "<group>";
+		};
+		F3713ED22C4F295800E8A59F /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				F3713ED32C4F295800E8A59F /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F3713EDC2C4F295900E8A59F /* ScratchGOTests */ = {
+			isa = PBXGroup;
+			children = (
+				F3713EDD2C4F295900E8A59F /* ScratchGOTests.swift */,
+			);
+			path = ScratchGOTests;
+			sourceTree = "<group>";
+		};
+		F3713EE62C4F295900E8A59F /* ScratchGOUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F3713EE72C4F295900E8A59F /* ScratchGOUITests.swift */,
+				F3713EE92C4F295900E8A59F /* ScratchGOUITestsLaunchTests.swift */,
+			);
+			path = ScratchGOUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F3713EC82C4F295500E8A59F /* ScratchGO */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3713EED2C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGO" */;
+			buildPhases = (
+				F3713EC52C4F295500E8A59F /* Sources */,
+				F3713EC62C4F295500E8A59F /* Frameworks */,
+				F3713EC72C4F295500E8A59F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScratchGO;
+			productName = ScratchGO;
+			productReference = F3713EC92C4F295500E8A59F /* ScratchGO.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F3713ED82C4F295900E8A59F /* ScratchGOTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3713EF02C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGOTests" */;
+			buildPhases = (
+				F3713ED52C4F295900E8A59F /* Sources */,
+				F3713ED62C4F295900E8A59F /* Frameworks */,
+				F3713ED72C4F295900E8A59F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3713EDB2C4F295900E8A59F /* PBXTargetDependency */,
+			);
+			name = ScratchGOTests;
+			productName = ScratchGOTests;
+			productReference = F3713ED92C4F295900E8A59F /* ScratchGOTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F3713EE22C4F295900E8A59F /* ScratchGOUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3713EF32C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGOUITests" */;
+			buildPhases = (
+				F3713EDF2C4F295900E8A59F /* Sources */,
+				F3713EE02C4F295900E8A59F /* Frameworks */,
+				F3713EE12C4F295900E8A59F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3713EE52C4F295900E8A59F /* PBXTargetDependency */,
+			);
+			name = ScratchGOUITests;
+			productName = ScratchGOUITests;
+			productReference = F3713EE32C4F295900E8A59F /* ScratchGOUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F3713EC12C4F295500E8A59F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					F3713EC82C4F295500E8A59F = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					F3713ED82C4F295900E8A59F = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = F3713EC82C4F295500E8A59F;
+					};
+					F3713EE22C4F295900E8A59F = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = F3713EC82C4F295500E8A59F;
+					};
+				};
+			};
+			buildConfigurationList = F3713EC42C4F295500E8A59F /* Build configuration list for PBXProject "ScratchGO" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F3713EC02C4F295500E8A59F;
+			productRefGroup = F3713ECA2C4F295500E8A59F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F3713EC82C4F295500E8A59F /* ScratchGO */,
+				F3713ED82C4F295900E8A59F /* ScratchGOTests */,
+				F3713EE22C4F295900E8A59F /* ScratchGOUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F3713EC72C4F295500E8A59F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3713ED42C4F295800E8A59F /* Preview Assets.xcassets in Resources */,
+				F3713ED12C4F295800E8A59F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713ED72C4F295900E8A59F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713EE12C4F295900E8A59F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F3713EC52C4F295500E8A59F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3713ECF2C4F295500E8A59F /* ContentView.swift in Sources */,
+				F3713ECD2C4F295500E8A59F /* ScratchGOApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713ED52C4F295900E8A59F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3713EDE2C4F295900E8A59F /* ScratchGOTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3713EDF2C4F295900E8A59F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3713EE82C4F295900E8A59F /* ScratchGOUITests.swift in Sources */,
+				F3713EEA2C4F295900E8A59F /* ScratchGOUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F3713EDB2C4F295900E8A59F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3713EC82C4F295500E8A59F /* ScratchGO */;
+			targetProxy = F3713EDA2C4F295900E8A59F /* PBXContainerItemProxy */;
+		};
+		F3713EE52C4F295900E8A59F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3713EC82C4F295500E8A59F /* ScratchGO */;
+			targetProxy = F3713EE42C4F295900E8A59F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F3713EEB2C4F295900E8A59F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F3713EEC2C4F295900E8A59F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F3713EEE2C4F295900E8A59F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ScratchGO/Preview Content\"";
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3713EEF2C4F295900E8A59F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ScratchGO/Preview Content\"";
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F3713EF12C4F295900E8A59F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGOTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ScratchGO.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ScratchGO";
+			};
+			name = Debug;
+		};
+		F3713EF22C4F295900E8A59F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGOTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ScratchGO.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ScratchGO";
+			};
+			name = Release;
+		};
+		F3713EF42C4F295900E8A59F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGOUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ScratchGO;
+			};
+			name = Debug;
+		};
+		F3713EF52C4F295900E8A59F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SSUSLA7AFS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = FireworksStudios.ScratchGOUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ScratchGO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F3713EC42C4F295500E8A59F /* Build configuration list for PBXProject "ScratchGO" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3713EEB2C4F295900E8A59F /* Debug */,
+				F3713EEC2C4F295900E8A59F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3713EED2C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGO" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3713EEE2C4F295900E8A59F /* Debug */,
+				F3713EEF2C4F295900E8A59F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3713EF02C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGOTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3713EF12C4F295900E8A59F /* Debug */,
+				F3713EF22C4F295900E8A59F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3713EF32C4F295900E8A59F /* Build configuration list for PBXNativeTarget "ScratchGOUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3713EF42C4F295900E8A59F /* Debug */,
+				F3713EF52C4F295900E8A59F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F3713EC12C4F295500E8A59F /* Project object */;
+}
