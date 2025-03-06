@@ -9,3 +9,13 @@
     padding-left: 8px;
     padding-right: 8px;
 }
+
+.bigBtn{
+    position: absolute;
+    width: calc(var(--centerContainerWidth) / 4);
+    height: calc(var(--centerContainerWidth) / 4);
+    border-radius: 16px;
+    margin-left: calc(calc(var(--centerContainerWidth) * 0.375) - 105px);
+    margin-top: calc(calc(var(--centerContainerWidth) / 4) + 35px);
+    font-size: 16px;
+}

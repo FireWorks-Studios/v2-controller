@@ -5,15 +5,15 @@ import { PiPauseBold } from "react-icons/pi";
 import { PiOctagonBold } from "react-icons/pi";
 import { PiGearSixBold } from "react-icons/pi";
 import { PiInfoBold } from "react-icons/pi";
-import { TbVolume } from "react-icons/tb";
+import { TbArrowBigDownFilled, TbVolume } from "react-icons/tb";
 import { TbVolume3 } from "react-icons/tb";
 import { IoSearch } from "react-icons/io5";
 import classNames from "classnames";
 import Editor from "./Editor";
 import { PiPlayBold } from "react-icons/pi";
 import { parseScratchProjectId } from "../../utils/parseURL";
-import { FileUploader } from "./FileUploader";
-import { GameTitle } from "./GameTitle";
+// import { FileUploader } from "./FileUploader";
+// import { GameTitle } from "./GameTitle";
 
 interface Props {
   screenOrientation: string;
@@ -112,9 +112,9 @@ export const CenterContainer: React.FC<Props> = ({
     setIframeKey(newKey);
   };
 
-  const handleFile = (file: any) => {
-    customContentWindow?.loadProject(file)
-  };
+  // const handleFile = (file: any) => {
+  //   customContentWindow?.loadProject(file)
+  // };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -206,12 +206,12 @@ export const CenterContainer: React.FC<Props> = ({
           onClick={customContentWindow?.stop}
         />
         <form className="searchBarContainer" onSubmit={handleSubmit}>
-          {/* <button className="linkButton">
+          <button className="linkButton">
             <TbArrowBigDownFilled />
-          </button> */}
+          </button>
 
-          <GameTitle></GameTitle>
-          <FileUploader handleFile={handleFile} />
+          {/* <GameTitle></GameTitle> */}
+          {/* <FileUploader handleFile={handleFile} bigBtn={false} /> */}
 
           <input
             className="searchBar"
@@ -225,6 +225,7 @@ export const CenterContainer: React.FC<Props> = ({
             <IoSearch />
           </button>
         </form>
+        {/* <FileUploader handleFile={handleFile} bigBtn={true} /> */}
         <PiGearSixBold
           className={classNames("IconBtn right", {
             editing,
