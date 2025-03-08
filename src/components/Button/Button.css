@@ -98,6 +98,10 @@ button.pressed.short{
     display: none;
 }
 
+.button.joystick>.button-text{
+    display: none;
+}
+
 .arrow{
     transform: rotate(0deg); 
     display: inline-block;
@@ -325,6 +329,7 @@ button.pressed.short{
 }
 
 .joystickKnob{
+    display: block;
     position: absolute;
     width: calc(calc(var(--button-width)*var(--w))/2.5);
     max-width: calc(calc(var(--button-width)*var(--w)) - 8px);
@@ -334,6 +339,10 @@ button.pressed.short{
     background-color: var(--colorDarker);
     outline: solid 1px var(--color); /* Use outline instead of border */
     pointer-events: none;
+}
+
+.button.joystick.editing .joystickKnob{
+    display: none;
 }
 
 .joystickKnobTop{
@@ -347,18 +356,6 @@ button.pressed.short{
     border: solid calc(var(--button-width)/15) var(--colorDarker);
     pointer-events: none;
 }
-
-.button.joystick>.selectList{
-    position: absolute;
-    /* top: 50%; */
-    top: 2px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: calc(calc(var(--button-width)*3)/4);
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 10000px;
-} 
 
 .button.joystick>.button-bottom{
     border-radius: 50%;

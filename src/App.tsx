@@ -17,16 +17,16 @@ import {
   rightDefaultComponentRepresentations,
 } from "./utils/keyMapping";
 import { useWindowSize } from "./utils/windowResize";
-import { useRenderCount } from "@uidotdev/usehooks";
+// import { useRenderCount } from "@uidotdev/usehooks";
 import { MdFullscreen } from "react-icons/md";
 import { MdFullscreenExit } from "react-icons/md";
 import { FaCaretUp } from "react-icons/fa6";
 import { FaCaretDown } from "react-icons/fa";
 
 function App() {
-  console.trace();
+  // console.trace();
   const [fullscreen, setFullscreen] = useState(false);
-  const renderCount = useRenderCount();
+  // const renderCount = useRenderCount();
   const { width, height } = useWindowSize();
 
   const [editing, setEditing] = useState(false);
@@ -150,9 +150,9 @@ function App() {
     };
   }, [handleFullscreenChange]);
 
-  useEffect(() => {
-    console.log("App render count:", renderCount);
-  }, [renderCount]);
+  // useEffect(() => {
+  //   console.log("App render count:", renderCount);
+  // }, [renderCount]);
 
   useEffect(() => {
     if (scaffolding === undefined) {
@@ -163,6 +163,7 @@ function App() {
     const readKey = (
       componentRepresentations: ComponentRepresentation[]
     ) => {
+      var index = 0
       for (const componentRepresentation of componentRepresentations) {
         if(componentRepresentation.type == "button"){
           if (!keysToFire.includes(componentRepresentation.mapping[0])) {
@@ -181,14 +182,14 @@ function App() {
           const leftKey = componentRepresentation.mapping[2]
           const rightKey = componentRepresentation.mapping[3]
           const deadZone = 0.1
+          var joystickX = 0
+          var joystickY = 0
           if (componentRepresentation.pressed){
-            var joystickX = componentRepresentation.capturedTouchPositions[0].x
-            var joystickY = componentRepresentation.capturedTouchPositions[0].y
-          }else{
-            var joystickX = 0
-            var joystickY = 0
+            joystickX = componentRepresentation.capturedTouchPositions[0].x
+            joystickY = componentRepresentation.capturedTouchPositions[0].y
           }
-          console.log("app reading joystick val x: " + joystickX +" y: " + joystickY + " up: " + upKey + " down: " + downKey + " left: " + leftKey + " right: " + rightKey)
+          console.log("joystick read happend for joystick " + index)
+          console.log("app reading joystick " + index + " val x: " + joystickX +" y: " + joystickY + " up: " + upKey + " down: " + downKey + " left: " + leftKey + " right: " + rightKey)
           if(joystickY > deadZone){
             if (!keysToFire.includes(upKey)) {
               keysToFire.push(upKey);
@@ -226,6 +227,7 @@ function App() {
             }
           }
         }
+        index++
       }
     };
     readKey(centerComponentRepresentations);

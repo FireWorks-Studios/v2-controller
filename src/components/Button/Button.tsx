@@ -170,11 +170,11 @@ export const Button: React.FC<Props> = ({
       const [tempPressed, capturedTouches] = UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect());
       if(tempPressed){
         setTouchPositions(capturedTouches);
-        // if(componentType == "joystick"){
-        //   capturedTouches.forEach(({ x, y }) => {
-        //     console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
-        //   });
-        // }
+        if(componentType == "joystick"){
+          capturedTouches.forEach(({ x, y }) => {
+            console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
+          });
+        }
       }else{
         setTouchPositions([
           {
@@ -285,17 +285,14 @@ export const Button: React.FC<Props> = ({
     }
   }, [checkValidDropPos, component, findClosestEmptySpot, index, unitWidth, updateCurrentConfig])
 
-  const updateMapping = useCallback((mapping: DropdownOption['value'][]) => {
-    // if(['Green Flag', 'Pause', 'Stop', 'Remap'].includes(mapping)){
-    //   component.styling.push("short", "round")
-    // }else{
-    //   component.styling = []
-    // }
+  const updateMapping = useCallback((newVal: DropdownOption['value'], id: number) => {
+    const newMapping = [...component.mapping];
+    newMapping[id] = newVal;
     updateCurrentConfig(index, {
       ...component,
-      mapping
-    })
-  }, [component, index, updateCurrentConfig])
+      mapping: newMapping
+    });
+  }, [component, index, updateCurrentConfig]);
 
   const updateStyling = useCallback((styling: string[])=>{
     updateCurrentConfig(index, {
@@ -492,29 +489,63 @@ export const Button: React.FC<Props> = ({
             </MenuItem>
           </Menu>
       </ThemeProvider>
-      <Dropdown 
-        editing={editing} 
-        updateMapping={updateMapping} 
-        value={component.mapping[0]}
-      />
-
+      {componentType == "button"?
+        <Dropdown 
+          id={0}
+          editing={editing} 
+          updateMapping={updateMapping} 
+          value={component.mapping[0]}
+        />
+      :''
+      }
       {componentType == "joystick"? 
-        <div 
-          className='joystickKnob' 
-          style={{
-            position: 'absolute', 
-              left: `${touchPositions[0]?.knobX}px`, 
-              top: `${touchPositions[0]?.knobY}px`,
-              transform: 'translate(-50%, -50%)'
-          }}
+        <div
+          className='joystickBase'
         >
-          <div
-            className='joystickKnobTop'
+          <div 
+            className='joystickKnob' 
             style={{
               position: 'absolute', 
-                transform: `translate(${touchPositions[0]?.x * 20}%, ${touchPositions[0]?.y * -20 - 10}%)`
+                left: `${touchPositions[0]?.knobX}px`, 
+                top: `${touchPositions[0]?.knobY}px`,
+                transform: 'translate(-50%, -50%)'
             }}
-          ></div>
+          >
+            <div
+              className='joystickKnobTop'
+              style={{
+                position: 'absolute', 
+                  transform: `translate(${touchPositions[0]?.x * 20}%, ${touchPositions[0]?.y * -20 - 10}%)`
+              }}
+            ></div>
+          </div>
+          <div className='joystickText'>
+              {/* joystick text on the play mode for users to see what the mapping is even without getting into the editor */}
+          </div>
+          <Dropdown 
+            id={0}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[0]}
+          />
+          <Dropdown 
+            id={1}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[1]}
+          />
+          <Dropdown 
+            id={2}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[2]}
+          />
+          <Dropdown
+            id={3} 
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[3]}
+          />
         </div>
       :''
       }
