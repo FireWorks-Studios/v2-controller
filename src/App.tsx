@@ -164,12 +164,65 @@ function App() {
       componentRepresentations: ComponentRepresentation[]
     ) => {
       for (const componentRepresentation of componentRepresentations) {
-        if (!keysToFire.includes(componentRepresentation.mapping)) {
-          if (componentRepresentation.pressed) {
-            keysToFire.push(componentRepresentation.mapping);
-          } else {
-            if (!keysToKill.includes(componentRepresentation.mapping)) {
-              keysToKill.push(componentRepresentation.mapping);
+        if(componentRepresentation.type == "button"){
+          if (!keysToFire.includes(componentRepresentation.mapping[0])) {
+            if (componentRepresentation.pressed) {
+              keysToFire.push(componentRepresentation.mapping[0]);
+            } else {
+              if (!keysToKill.includes(componentRepresentation.mapping[0])) {
+                keysToKill.push(componentRepresentation.mapping[0]);
+              }
+            }
+          }
+        }else if(componentRepresentation.type == "joystick"){
+          //do unique testing for joystick
+          const upKey = componentRepresentation.mapping[0]
+          const downKey = componentRepresentation.mapping[1]
+          const leftKey = componentRepresentation.mapping[2]
+          const rightKey = componentRepresentation.mapping[3]
+          const deadZone = 0.1
+          if (componentRepresentation.pressed){
+            var joystickX = componentRepresentation.capturedTouchPositions[0].x
+            var joystickY = componentRepresentation.capturedTouchPositions[0].y
+          }else{
+            var joystickX = 0
+            var joystickY = 0
+          }
+          console.log("app reading joystick val x: " + joystickX +" y: " + joystickY + " up: " + upKey + " down: " + downKey + " left: " + leftKey + " right: " + rightKey)
+          if(joystickY > deadZone){
+            if (!keysToFire.includes(upKey)) {
+              keysToFire.push(upKey);
+            }
+          }else{
+            if (!keysToKill.includes(upKey)) {
+              keysToKill.push(upKey);
+            }
+          }
+          if(joystickY < -deadZone){
+            if (!keysToFire.includes(downKey)) {
+              keysToFire.push(downKey);
+            }
+          }else{
+            if (!keysToKill.includes(downKey)) {
+              keysToKill.push(downKey);
+            }
+          }
+          if(joystickX > deadZone){
+            if (!keysToFire.includes(rightKey)) {
+              keysToFire.push(rightKey);
+            }
+          }else{
+            if (!keysToKill.includes(rightKey)) {
+              keysToKill.push(rightKey);
+            }
+          }
+          if(joystickX < -deadZone){
+            if (!keysToFire.includes(leftKey)) {
+              keysToFire.push(leftKey);
+            }
+          }else{
+            if (!keysToKill.includes(leftKey)) {
+              keysToKill.push(leftKey);
             }
           }
         }
@@ -418,17 +471,33 @@ function App() {
           console.log(target.closest(".draggable-dummy"));
           setValidDropCancelTransition(false);
           // dragging dummy component -> add componentRepresentation of dummy component to the useState (hardcoded as default button for now) TODO: pass setDraggingComponent into dummy components so they can define the componentRepresentation themselves
-          setDraggingComponent({
-            type: "button",
-            styling: [],
-            mapping: "ArrowUp",
-            container: "left",
-            x: 0,
-            y: 0,
-            w: 1,
-            h: 1,
-            color: "#006aff",
-          });
+          if(target.closest(".draggable-dummy")?.classList.contains("joystick")){
+            setDraggingComponent({
+              type: "joystick",
+              styling: [],
+              mapping: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+              container: "left",
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
+              color: "#006aff",
+              capturedTouchPositions: []
+            });
+          }else{
+            setDraggingComponent({
+              type: "button",
+              styling: [],
+              mapping: ["ArrowUp"],
+              container: "left",
+              x: 0,
+              y: 0,
+              w: 1,
+              h: 1,
+              color: "#006aff",
+              capturedTouchPositions: []
+            });
+          }
         }
       }
     },

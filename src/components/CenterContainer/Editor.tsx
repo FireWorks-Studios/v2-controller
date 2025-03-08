@@ -182,7 +182,7 @@ export default function Editor({
           component={{
             type: "button",
             styling: [],
-            mapping: "ArrowUp",
+            mapping: ["ArrowUp"],
             container: "left",
             x: 0,
             y: 0,
@@ -190,8 +190,44 @@ export default function Editor({
             h: 1,
             color: "#006aff",
             pressed: false,
+            capturedTouchPositions: []
           }}
         />
+
+        <DummyButton
+          validDropCancelTransition={validDropCancelTransition}
+          unitWidth={unitWidth}
+          component={{
+            type: "joystick" as "joystick",
+            styling: [],
+            mapping: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+            container: "left",
+            x: 0,
+            y: 1.2,
+            w: 2,
+            h: 2,
+            color: "#006aff",
+            pressed: false,
+            capturedTouchPositions: []
+          }}
+        />
+{/* 
+        <DummyButton
+          validDropCancelTransition={validDropCancelTransition}
+          unitWidth={unitWidth}
+          component={{
+            type: "joystick" as "joystick",
+            styling: [],
+            mapping: "ArrowUp",
+            container: "left",
+            x: 3.4,
+            y: 0,
+            w: 2,
+            h: 2,
+            color: "#006aff",
+            pressed: false,
+          }}
+        /> */}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <MenuItem

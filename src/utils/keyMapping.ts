@@ -53,74 +53,80 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
   {
       "type": "button",
       "styling": [],
-      "mapping": "ArrowUp",
+      "mapping": ["ArrowUp"],
       "container": "center",
       "x": 1,
       "y": 0,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+        "pressed": false,
+      "capturedTouchPositions": [],
   },
   {
       "type": "button",
       "styling": [],
-      "mapping": "ArrowLeft",
+      "mapping": ["ArrowLeft"],
       "container": "center",
       "x": 0,
       "y": 1,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+            "pressed": false,
+      "capturedTouchPositions": [],
   },
   {
       "type": "button",
       "styling": [],
-      "mapping": "ArrowDown",
+      "mapping": ["ArrowDown"],
       "container": "center",
       "x": 1,
       "y": 2,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+            "pressed": false,
+      "capturedTouchPositions": [],
   },
   {
       "type": "button",
       "styling": [],
-      "mapping": "ArrowRight",
+      "mapping": ["ArrowRight"],
       "container": "center",
       "x": 2,
       "y": 1,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+            "pressed": false,
+      "capturedTouchPositions": [],
   },
   {
       "type": "button",
       "styling": [],
-      "mapping": "a",
+      "mapping": ["a"],
       "container": "center",
       "x": 5,
       "y": 1,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+            "pressed": false,
+      "capturedTouchPositions": [],
   },
   {
       "type": "button",
       "styling": [],
-      "mapping": "b",
+      "mapping": ["b"],
       "container": "center",
       "x": 4,
       "y": 2,
       "w": 1,
       "h": 1,
       "color": "#006aff",
-      "pressed": false
+            "pressed": false,
+      "capturedTouchPositions": []
   }
 ]
 
@@ -129,78 +135,84 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
     {
         "type": "button",
         "styling": [],
-        "mapping": "w",
+        "mapping": ["w"],
         "container": "left",
         "x": 1,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [],
-        "mapping": "a",
+        "mapping": ["a"],
         "container": "left",
         "x": 0,
         "y": 1,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [],
-        "mapping": "s",
+        "mapping": ["s"],
         "container": "left",
         "x": 1,
         "y": 2,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [],
-        "mapping": "d",
+        "mapping": ["d"],
         "container": "left",
         "x": 2,
         "y": 1,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [
             "short"
         ],
-        "mapping": "e",
+        "mapping": ["e"],
         "container": "left",
         "x": 2,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [
             "short"
         ],
-        "mapping": "f",
+        "mapping": ["f"],
         "container": "left",
         "x": 0,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -208,14 +220,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "1",
+        "mapping": ["1"],
         "container": "left",
         "x": 0,
         "y": 3,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -223,14 +236,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "2",
+        "mapping": ["2"],
         "container": "left",
         "x": 1,
         "y": 3,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -238,14 +252,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "3",
+        "mapping": ["3"],
         "container": "left",
         "x": 2,
         "y": 3,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -253,14 +268,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "4",
+        "mapping": ["4"],
         "container": "left",
         "x": 0,
         "y": 4,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -268,14 +284,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "5",
+        "mapping": ["5"],
         "container": "left",
         "x": 1,
         "y": 4,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -283,14 +300,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "6",
+        "mapping": ["6"],
         "container": "left",
         "x": 2,
         "y": 4,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -298,14 +316,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "7",
+        "mapping": ["7"],
         "container": "left",
         "x": 0,
         "y": 5,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -313,14 +332,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "8",
+        "mapping": ["8"],
         "container": "left",
         "x": 1,
         "y": 5,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -328,14 +348,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "9",
+        "mapping": ["9"],
         "container": "left",
         "x": 2,
         "y": 5,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     }
 ]
 
@@ -344,14 +365,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
     {
         "type": "button",
         "styling": [],
-        "mapping": "Space",
+        "mapping": ["Space"],
         "container": "right",
         "x": 0,
         "y": 1,
         "w": 3,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -359,14 +381,15 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "o",
+        "mapping": ["o"],
         "container": "right",
         "x": 0,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
@@ -374,27 +397,45 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
             "round",
             "short"
         ],
-        "mapping": "p",
+        "mapping": ["p"],
         "container": "right",
         "x": 1,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
     },
     {
         "type": "button",
         "styling": [
             "short"
         ],
-        "mapping": "e",
+        "mapping": ["e"],
         "container": "right",
         "x": 2,
         "y": 0,
         "w": 1,
         "h": 1,
         "color": "#006aff",
-        "pressed": false
+              "pressed": false,
+      "capturedTouchPositions": []
+    },
+    {
+        "type": "joystick",
+        "styling": [
+            "short",
+            "round"
+        ],
+        "mapping": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+        "container": "right",
+        "x": 0,
+        "y": 2,
+        "w": 2,
+        "h": 2,
+        "color": "#006aff",
+              "pressed": false,
+      "capturedTouchPositions": []
     }
 ]

@@ -8,7 +8,7 @@ import { DropdownOption } from './DropdownOptions';
 interface Props {
   editing: boolean;
   // eslint-disable-next-line no-unused-vars
-  updateMapping(mapping: DropdownOption['value']): void
+  updateMapping(mapping: DropdownOption['value'][]): void
   value: string;
 }
 
@@ -18,7 +18,7 @@ const Dropdown: React.FC<Props> = ({
     value,
 }: Props) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    updateMapping(event.target.value as DropdownOption['value'])
+    updateMapping([event.target.value as DropdownOption['value']])
   };
 
   return (
