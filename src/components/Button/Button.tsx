@@ -110,7 +110,7 @@ export const Button: React.FC<Props> = ({
     if(component.pressed !== pressed){
       updateCurrentConfig(index, {...component, pressed})
     }
-  })
+  }, [pressed])
 
   useEffect(()=>{
     if(componentType == "joystick"){
@@ -125,7 +125,7 @@ export const Button: React.FC<Props> = ({
         capturedTouchPositions: [{x:0, y:0}]
       });
     }
-  },[touchPositions])
+  },[touchPositions, setTouchPositions])
 
   useEffect(()=>{
     if(!singleSelected){
@@ -157,7 +157,7 @@ export const Button: React.FC<Props> = ({
         buttonRef.current.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [buttonRef]);
+  }, [buttonRef, setPressed, setTouchPositions]);
 
   useEffect(()=>{
     // never happens, just for ts type checking
@@ -219,7 +219,7 @@ export const Button: React.FC<Props> = ({
         }
       }
     }
-  },[touchEvents, pointerEvents, editing])
+  },[touchEvents, pointerEvents, editing, setTouchPositions])
 
   // useEffect(()=>{
   //   if(component.mapping[0] == 'Delete'){
@@ -237,8 +237,8 @@ export const Button: React.FC<Props> = ({
     const containerWidth = containerDimensions.w
     const containerHeight = containerDimensions.h
     if (checkValidDropPos({ x, y, index })) {
-      console.log(checkOutOfBounds({x, y, containerWidth, containerHeight}))
-      switch(checkOutOfBounds({x, y, containerWidth, containerHeight})){
+      console.log(checkOutOfBounds({x, y, droppedComponent: component}))
+      switch(checkOutOfBounds({x, y, droppedComponent: component})){
         case 'inBounds':
           updateCurrentConfig(index, {
             ...component,

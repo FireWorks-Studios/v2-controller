@@ -9,7 +9,7 @@ import {
   CustomWindow,
 } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
-import { checkValidAppend } from "./utils/position";
+import { checkValidAppend, findClosestEmptySpot } from "./utils/position";
 import {
   centerDefaultComponentRepresentations,
   keyDict,
@@ -165,6 +165,10 @@ function App() {
     ) => {
       var index = 0
       for (const componentRepresentation of componentRepresentations) {
+        //skip if component is last one
+        // if(index === componentRepresentations.length-1){
+        //   continue //somehow even skipping the last component, the joystick still fails
+        // }
         if(componentRepresentation.type == "button"){
           if (!keysToFire.includes(componentRepresentation.mapping[0])) {
             if (componentRepresentation.pressed) {
@@ -182,13 +186,15 @@ function App() {
           const leftKey = componentRepresentation.mapping[2]
           const rightKey = componentRepresentation.mapping[3]
           const deadZone = 0.1
-          var joystickX = 0
-          var joystickY = 0
-          if (componentRepresentation.pressed){
-            joystickX = componentRepresentation.capturedTouchPositions[0].x
-            joystickY = componentRepresentation.capturedTouchPositions[0].y
-          }
-          console.log("joystick read happend for joystick " + index)
+          const joystickX  = componentRepresentation.capturedTouchPositions[0]?.x || 0// there is something wrong here - if there's another component after this one, the capturedTouchPositions will be 0 
+          //but we do know the problem is limited to the controllercontainer
+          const joystickY = componentRepresentation.capturedTouchPositions[0]?.y || 0
+            console.log(
+            "joystick read happened for joystick " +
+              index +
+              " with touchPositions captured: " +
+              JSON.stringify(componentRepresentation.capturedTouchPositions)
+            );
           console.log("app reading joystick " + index + " val x: " + joystickX +" y: " + joystickY + " up: " + upKey + " down: " + downKey + " left: " + leftKey + " right: " + rightKey)
           if(joystickY > deadZone){
             if (!keysToFire.includes(upKey)) {
@@ -521,7 +527,6 @@ function App() {
       } else {
         tempComponentRepresentations = rightComponentRepresentations;
       }
-
       //check for collisions
       let valid = checkValidAppend({
         x,
@@ -566,7 +571,16 @@ function App() {
         setPointerEvents(null);
       }
       if (draggingComponent !== null) {
-        const { clientX, clientY } = e;
+        // const { clientX, clientY } = e;
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        //use top left corner of the dragging component as the reference point instead of clientX and clientY
+        const draggingComponentElement = document.querySelector(".react-draggable-dragging");
+        if (draggingComponentElement) {
+          const { left: draggingLeft, top: draggingTop } = draggingComponentElement.getBoundingClientRect();
+          clientX = draggingLeft;
+          clientY = draggingTop;
+        }
         //check if the pointer up is inside a controller box
         if (screenOritentation === "portrait") {
           const centerControllerContainer = document.getElementsByClassName(
@@ -574,63 +588,88 @@ function App() {
           )[0];
           const { left, top, right, bottom } =
             centerControllerContainer.getBoundingClientRect();
-          if (
-            clientX >= left &&
-            clientX <= right &&
-            clientY >= top &&
-            clientY <= bottom
-          ) {
+            const componentWidth = draggingComponentElement?.clientWidth || 0;
+            const componentHeight = draggingComponentElement?.clientHeight || 0;
+            if (
+            clientX + componentWidth / 2 >= left &&
+            clientX + componentWidth / 2 <= right &&
+            clientY + componentHeight / 2 >= top &&
+            clientY + componentHeight / 2 <= bottom
+            ) {
             console.log(`Pointer is inside center controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor(
-              (clientX - left) / unitWidth[screenOritentation]
-            );
-            const localY = Math.floor(
-              (clientY - top) / unitWidth[screenOritentation]
-            );
-            appendComponent("center", localX, localY);
+            let actualX = Math.max(left, Math.min(clientX, right));
+            let actualY = Math.max(top, Math.min(clientY, bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - left,
+              actualY: actualY - top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 6,
+              containerHeight: 3,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: centerComponentRepresentations
+            })
+
+            appendComponent("center", closest.x, closest.y);
           }
         } else if (screenOritentation === "landscape") {
           //landscape part
           const leftControllerContainer = document.getElementsByClassName(
             "controller-container left"
           )[0];
-          const l = leftControllerContainer.getBoundingClientRect();
+          const { left, top, right, bottom } = leftControllerContainer.getBoundingClientRect();
+          const componentWidth = draggingComponentElement?.clientWidth || 0;
+          const componentHeight = draggingComponentElement?.clientHeight || 0;
           if (
-            clientX >= l.left &&
-            clientX <= l.right &&
-            clientY >= l.top &&
-            clientY <= l.bottom
+            clientX + componentWidth / 2 >= left &&
+            clientX + componentWidth / 2 <= right &&
+            clientY + componentHeight / 2 >= top &&
+            clientY + componentHeight / 2 <= bottom
           ) {
             console.log(`Pointer is inside left controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor(
-              (clientX - l.left) / unitWidth[screenOritentation]
-            );
-            const localY = Math.floor(
-              (clientY - l.top) / unitWidth[screenOritentation]
-            );
-            appendComponent("left", localX, localY);
+            let actualX = Math.max(left, Math.min(clientX, right));
+            let actualY = Math.max(top, Math.min(clientY, bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - left,
+              actualY: actualY - top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 3,
+              containerHeight: 6,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: leftComponentRepresentations
+            })
+
+            appendComponent("left", closest.x, closest.y);
           }
           const rightControllerContainer = document.getElementsByClassName(
             "controller-container right"
           )[0];
-          const r = rightControllerContainer.getBoundingClientRect();
+          const r =
+            rightControllerContainer.getBoundingClientRect();
           if (
-            clientX >= r.left &&
-            clientX <= r.right &&
-            clientY >= r.top &&
-            clientY <= r.bottom
+            clientX + componentWidth / 2 >= r.left &&
+            clientX + componentWidth / 2 <= r.right &&
+            clientY + componentHeight / 2 >= r.top &&
+            clientY + componentHeight / 2 <= r.bottom
           ) {
             console.log(`Pointer is inside right controller`);
-            //determine localX and localY of where the drop occured
-            const localX = Math.floor(
-              (clientX - r.left) / unitWidth[screenOritentation]
-            );
-            const localY = Math.floor(
-              (clientY - r.top) / unitWidth[screenOritentation]
-            );
-            appendComponent("right", localX, localY);
+            let actualX = Math.max(r.left, Math.min(clientX, r.right));
+            let actualY = Math.max(r.top, Math.min(clientY, r.bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - r.left,
+              actualY: actualY - r.top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 6,
+              containerHeight: 3,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: rightComponentRepresentations
+            })
+
+            appendComponent("right", closest.x, closest.y);
           }
         }
       }

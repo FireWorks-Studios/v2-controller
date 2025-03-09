@@ -408,21 +408,6 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "capturedTouchPositions": []
     },
     {
-        "type": "button",
-        "styling": [
-            "short"
-        ],
-        "mapping": ["e"],
-        "container": "right",
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "color": "#006aff",
-              "pressed": false,
-      "capturedTouchPositions": []
-    },
-    {
         "type": "joystick",
         "styling": [
             "short",
@@ -434,6 +419,21 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "y": 2,
         "w": 2,
         "h": 2,
+        "color": "#006aff",
+              "pressed": false,
+      "capturedTouchPositions": []
+    },
+    {
+        "type": "button",
+        "styling": [
+            "short"
+        ],
+        "mapping": ["e"],
+        "container": "right",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
         "color": "#006aff",
               "pressed": false,
       "capturedTouchPositions": []
