@@ -61,7 +61,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
         "pressed": false,
-      "capturedTouchPositions": [],
+      "capturedTouchPositions": [{x: 0, y: 0}],
   },
   {
       "type": "button",
@@ -74,7 +74,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
             "pressed": false,
-      "capturedTouchPositions": [],
+      "capturedTouchPositions": [{x: 0, y: 0}],
   },
   {
       "type": "button",
@@ -87,7 +87,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
             "pressed": false,
-      "capturedTouchPositions": [],
+      "capturedTouchPositions": [{x: 0, y: 0}],
   },
   {
       "type": "button",
@@ -100,7 +100,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
             "pressed": false,
-      "capturedTouchPositions": [],
+      "capturedTouchPositions": [{x: 0, y: 0}],
   },
   {
       "type": "button",
@@ -113,7 +113,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
             "pressed": false,
-      "capturedTouchPositions": [],
+      "capturedTouchPositions": [{x: 0, y: 0}],
   },
   {
       "type": "button",
@@ -126,7 +126,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
       "h": 1,
       "color": "#006aff",
             "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
   }
 ]
 
@@ -143,7 +143,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -156,7 +156,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -169,7 +169,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -182,7 +182,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -197,7 +197,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -212,7 +212,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -228,7 +228,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -244,7 +244,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -260,7 +260,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -276,7 +276,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -292,7 +292,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -308,7 +308,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -324,7 +324,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -340,7 +340,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -356,7 +356,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     }
 ]
 
@@ -373,7 +373,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -389,7 +389,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -405,7 +405,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "joystick",
@@ -421,7 +421,7 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 2,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     },
     {
         "type": "button",
@@ -436,6 +436,6 @@ export const centerDefaultComponentRepresentations:ComponentRepresentation[] =
         "h": 1,
         "color": "#006aff",
               "pressed": false,
-      "capturedTouchPositions": []
+      "capturedTouchPositions": [{x: 0, y: 0}]
     }
 ]

@@ -160,88 +160,85 @@ function App() {
     }
     var keysToFire: string[] = [];
     var keysToKill: string[] = [];
-    const readKey = (
-      componentRepresentations: ComponentRepresentation[]
-    ) => {
-      var index = 0
+    const readKey = (componentRepresentations: ComponentRepresentation[]) => {
+      var index = 0;
       for (const componentRepresentation of componentRepresentations) {
-        //skip if component is last one
-        // if(index === componentRepresentations.length-1){
-        //   continue //somehow even skipping the last component, the joystick still fails
-        // }
-        if(componentRepresentation.type == "button"){
-          if (!keysToFire.includes(componentRepresentation.mapping[0])) {
-            if (componentRepresentation.pressed) {
+        if (componentRepresentation.type == "button") {
+          if (!keysToKill.includes(componentRepresentation.mapping[0])) {
+            keysToKill.push(componentRepresentation.mapping[0]);
+          }
+          if (componentRepresentation.pressed) {
+            if (!keysToFire.includes(componentRepresentation.mapping[0])) {
               keysToFire.push(componentRepresentation.mapping[0]);
-            } else {
-              if (!keysToKill.includes(componentRepresentation.mapping[0])) {
-                keysToKill.push(componentRepresentation.mapping[0]);
-              }
             }
           }
-        }else if(componentRepresentation.type == "joystick"){
-          //do unique testing for joystick
-          const upKey = componentRepresentation.mapping[0]
-          const downKey = componentRepresentation.mapping[1]
-          const leftKey = componentRepresentation.mapping[2]
-          const rightKey = componentRepresentation.mapping[3]
-          const deadZone = 0.1
-          const joystickX  = componentRepresentation.capturedTouchPositions[0]?.x || 0// there is something wrong here - if there's another component after this one, the capturedTouchPositions will be 0 
-          //but we do know the problem is limited to the controllercontainer
-          const joystickY = componentRepresentation.capturedTouchPositions[0]?.y || 0
-            console.log(
-            "joystick read happened for joystick " +
+        } else if (componentRepresentation.type === "joystick") {
+          const upKey = componentRepresentation.mapping[0];
+          const downKey = componentRepresentation.mapping[1];
+          const leftKey = componentRepresentation.mapping[2];
+          const rightKey = componentRepresentation.mapping[3];
+          const deadZone = 0.1;
+          const { x, y } = componentRepresentation.capturedTouchPositions[0];
+          console.log(
+            "app reading joystick " +
               index +
-              " with touchPositions captured: " +
-              JSON.stringify(componentRepresentation.capturedTouchPositions)
-            );
-          console.log("app reading joystick " + index + " val x: " + joystickX +" y: " + joystickY + " up: " + upKey + " down: " + downKey + " left: " + leftKey + " right: " + rightKey)
-          if(joystickY > deadZone){
-            if (!keysToFire.includes(upKey)) {
+              " val pressed: " + componentRepresentation.pressed +
+              " x: " +
+              x +
+              " y: " +
+              y +
+              " up: " +
+              upKey +
+              " down: " +
+              downKey +
+              " left: " +
+              leftKey +
+              " right: " +
+              rightKey
+          );
+
+          if (!keysToKill.includes(upKey)) {
+            keysToKill.push(upKey);
+          }
+          if (!keysToKill.includes(downKey)) {
+            keysToKill.push(downKey);
+          }
+          if (!keysToKill.includes(leftKey)) {
+            keysToKill.push(leftKey);
+          }
+          if (!keysToKill.includes(rightKey)) {
+            keysToKill.push(rightKey);
+          }
+
+          if (componentRepresentation.pressed) {
+            if (y > deadZone && !keysToFire.includes(upKey)) {
               keysToFire.push(upKey);
             }
-          }else{
-            if (!keysToKill.includes(upKey)) {
-              keysToKill.push(upKey);
-            }
-          }
-          if(joystickY < -deadZone){
-            if (!keysToFire.includes(downKey)) {
+            if (y < -deadZone && !keysToFire.includes(downKey)) {
               keysToFire.push(downKey);
             }
-          }else{
-            if (!keysToKill.includes(downKey)) {
-              keysToKill.push(downKey);
-            }
-          }
-          if(joystickX > deadZone){
-            if (!keysToFire.includes(rightKey)) {
+            if (x > deadZone && !keysToFire.includes(rightKey)) {
               keysToFire.push(rightKey);
             }
-          }else{
-            if (!keysToKill.includes(rightKey)) {
-              keysToKill.push(rightKey);
-            }
-          }
-          if(joystickX < -deadZone){
-            if (!keysToFire.includes(leftKey)) {
+            if (x < -deadZone && !keysToFire.includes(leftKey)) {
               keysToFire.push(leftKey);
-            }
-          }else{
-            if (!keysToKill.includes(leftKey)) {
-              keysToKill.push(leftKey);
             }
           }
         }
-        index++
+        index++;
       }
     };
+
     readKey(centerComponentRepresentations);
     readKey(leftComponentRepresentations);
     readKey(rightComponentRepresentations);
+
+    // Filter out keysToFire from keysToKill
+    keysToKill = keysToKill.filter((key) => !keysToFire.includes(key));
+
     console.log("keys to fire: " + keysToFire);
     console.log("keys to kill: " + keysToKill);
-    // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
+
     keysToKill.forEach((key) => {
       if (key === "Space") {
         key = " ";
@@ -490,7 +487,7 @@ function App() {
               w: 2,
               h: 2,
               color: "#006aff",
-              capturedTouchPositions: []
+              capturedTouchPositions: [{x: 0, y: 0}]
             });
           }else{
             setDraggingComponent({
@@ -503,7 +500,7 @@ function App() {
               w: 1,
               h: 1,
               color: "#006aff",
-              capturedTouchPositions: []
+              capturedTouchPositions: [{x: 0, y: 0}]
             });
           }
         }
@@ -663,8 +660,8 @@ function App() {
               actualY: actualY - r.top,
               unitWidth: unitWidth[screenOritentation],
               index: -1,
-              containerWidth: 6,
-              containerHeight: 3,
+              containerWidth: 3,
+              containerHeight: 6,
               componentRepresentation: draggingComponent,
               componentRepresentations: rightComponentRepresentations
             })

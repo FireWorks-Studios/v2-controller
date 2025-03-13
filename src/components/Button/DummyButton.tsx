@@ -24,7 +24,6 @@ export const DummyButton: React.FC<Props> = ({
             component={component}
             unitWidth={unitWidth}
             editing={true}
-            componentType={component.type}
         />
         <Button
             variant="draggable-dummy"
@@ -32,7 +31,6 @@ export const DummyButton: React.FC<Props> = ({
             unitWidth={unitWidth}
             editing={true}
             noTransition={validDropCancelTransition}
-            componentType={component.type}
         />
         </div>
     )

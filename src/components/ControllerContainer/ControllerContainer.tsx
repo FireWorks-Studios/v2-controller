@@ -97,6 +97,10 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
   // },[selectorSelectedComponents])
 
   const updateCurrentConfig = useCallback((index: number, component: ComponentRepresentation) => {
+    if(component.type === 'joystick'){  
+      const { x, y } = component.capturedTouchPositions[0];
+      console.log(`Joystick ${index} update called with captured touch positions: x=${x}, y=${y}`);
+    }
     const newConfig = componentRepresentations.map((c, i)=>{
       if(i === index){
         return component
@@ -571,7 +575,6 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
         (component.type === 'button' || component.type === 'joystick' ) ?
         <Button
         variant='component' 
-        componentType={component.type}
         dragResizing={dragResizeCorner!==undefined && singleSelectedComponentId === index}
         cornerDragged={dragResizeCorner}
         colorsUsed={colorsUsed}

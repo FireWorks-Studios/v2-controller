@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import './Button.css'
+import isEqual from 'lodash/isEqual';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
 import Dropdown from './Dropdown';
@@ -32,7 +33,6 @@ import { lighten } from '../../utils/colorModifier';
 
 interface Props{
   variant: 'component'|'static-dummy'|'draggable-dummy'
-  componentType: 'button'|'joystick'
   dragResizing?: boolean;
   cornerDragged?: string|undefined;
   colorsUsed?: string[];
@@ -76,7 +76,6 @@ const theme = createTheme({
 
 export const Button: React.FC<Props> = ({
   variant,
-  componentType,
   dragResizing = false,
   cornerDragged = undefined,
   colorsUsed = [],
@@ -91,7 +90,7 @@ export const Button: React.FC<Props> = ({
   noTransition = false,
   selected = false,
   selectorDeltaPosition = {deltaX: 0, deltaY: 0},
-  capturedTouchPositions = [],
+  capturedTouchPositions = [{x: 0, y: 0, knobX: 0, knobY: 0}],
   updateCurrentConfig = ()=>{},
   deleteComponentRepresentation = ()=>{},
   checkValidDropPos = ()=>{return(false)},
@@ -113,21 +112,6 @@ export const Button: React.FC<Props> = ({
   }, [pressed])
 
   useEffect(()=>{
-    if(componentType == "joystick"){
-      const updatedPositions = touchPositions.map(({ x, y }) => ({ x, y }));
-      updateCurrentConfig(index, {
-        ...component,
-        capturedTouchPositions: updatedPositions
-      });
-    }else if (componentType == "button"){
-      updateCurrentConfig(index, {
-        ...component,
-        capturedTouchPositions: [{x:0, y:0}]
-      });
-    }
-  },[touchPositions, setTouchPositions])
-
-  useEffect(()=>{
     if(!singleSelected){
       setCustomizationMenuOpen(false)
     }
@@ -138,12 +122,18 @@ export const Button: React.FC<Props> = ({
 
     const handlePointerUp = () => {
       if (!buttonRef.current) return;
+      if(editing){
+        return
+      }
       setPressed(false);
       setTouchPositions([{ x: 0, y: 0, knobX: buttonRef.current!.clientWidth / 2, knobY: buttonRef.current!.clientHeight / 2 }]);
     };
 
     const handleTouchEnd = () => {
       if (!buttonRef.current) return;
+      if(editing){
+        return
+      }
       setPressed(false);
       setTouchPositions([{ x: 0, y: 0, knobX: buttonRef.current!.clientWidth / 2, knobY: buttonRef.current!.clientHeight / 2 }]);
     };
@@ -170,11 +160,12 @@ export const Button: React.FC<Props> = ({
       const [tempPressed, capturedTouches] = UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect());
       if(tempPressed){
         setTouchPositions(capturedTouches);
-        if(componentType == "joystick"){
-          capturedTouches.forEach(({ x, y }) => {
-            console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
-          });
-        }
+        // if(component.type == "joystick"){
+        //   capturedTouches.forEach(({ x, y }) => {
+        //     console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
+        //   });
+        // }
+        // const updatedPositions = capturedTouches.map(({ x, y }) => ({ x, y }));
       }else{
         setTouchPositions([
           {
@@ -185,6 +176,7 @@ export const Button: React.FC<Props> = ({
           }
         ]);
       }
+
       if(!component.styling.includes('sticky')){
         setPressed(tempPressed)
       }else{
@@ -198,11 +190,12 @@ export const Button: React.FC<Props> = ({
       if(!component.styling.includes('sticky')){
         setPressed(tempPressed)
         if(tempPressed){
-          if(componentType == "joystick"){
-            capturedPointer.forEach(({ x, y }) => {
-              console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
-            });
-          }
+          setTouchPositions(capturedPointer);
+          // if(component.type == "joystick"){
+          //   capturedPointer.forEach(({ x, y }) => {
+          //     console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
+          //   });
+          // }
         }else{
           setTouchPositions([
             {
@@ -219,7 +212,24 @@ export const Button: React.FC<Props> = ({
         }
       }
     }
-  },[touchEvents, pointerEvents, editing, setTouchPositions])
+
+    
+  },[touchEvents, pointerEvents, editing, index, component])
+
+  useEffect(() => {
+    if (component.type !== 'joystick') {
+      return;
+    }
+    const joystickTouchPos = touchPositions.map(({ x, y }) => ({ x, y }));
+    console.log(`joystick with id: ${index} captured touch positions: ${JSON.stringify(joystickTouchPos)}`);
+    if (!isEqual(component.capturedTouchPositions, joystickTouchPos) || component.pressed !== pressed) {
+      updateCurrentConfig(index, {
+        ...component,
+        pressed: pressed,
+        capturedTouchPositions: joystickTouchPos
+      });
+    }
+  }, [touchPositions, pressed, component, index, updateCurrentConfig]);
 
   // useEffect(()=>{
   //   if(component.mapping[0] == 'Delete'){
@@ -276,7 +286,7 @@ export const Button: React.FC<Props> = ({
       if(component.w !== 1 || component.h !== 1){
         return
       }
-      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight})
+      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight, componentRepresentation: component });
       updateCurrentConfig(index, {
         ...component,
         x: closestEmptySpot.x,
@@ -372,7 +382,7 @@ export const Button: React.FC<Props> = ({
         classNames(
           'button',
           variant,
-          componentType,
+          component.type,
           component.styling.join(' '),
           {
             pressed,
@@ -428,10 +438,10 @@ export const Button: React.FC<Props> = ({
               open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+component.container+index)!= null && singleSelected}
             >
               <MenuItem dense={true} disableRipple sx={{pointerEvents: 'none', opacity: 1}}>
-                <ListItemText primary={componentType?.charAt(0).toUpperCase() + componentType?.slice(1)} />
+                <ListItemText primary={component.type?.charAt(0).toUpperCase() + component.type?.slice(1)} />
               </MenuItem>
             
-            {componentType == "button" && (
+            {component.type == "button" && (
               <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
                 <ListItemIcon><FaRegCircle /></ListItemIcon>
                 <ListItemText>Round</ListItemText>
@@ -441,7 +451,7 @@ export const Button: React.FC<Props> = ({
               </MenuItem>
             )}
 
-            {componentType == "button" && (
+            {component.type == "button" && (
               <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
                 <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
                 <ListItemText>Short</ListItemText>
@@ -451,7 +461,7 @@ export const Button: React.FC<Props> = ({
               </MenuItem>
             )}
 
-            {/* {componentType == "joystick" && (
+            {/* {component.type == "joystick" && (
               <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
                 <ListItemIcon><PiMouseBold /></ListItemIcon>
                 <ListItemText>Simulate Mouse</ListItemText>
@@ -489,7 +499,7 @@ export const Button: React.FC<Props> = ({
             </MenuItem>
           </Menu>
       </ThemeProvider>
-      {componentType == "button"?
+      {component.type == "button"?
         <Dropdown 
           id={0}
           editing={editing} 
@@ -498,7 +508,7 @@ export const Button: React.FC<Props> = ({
         />
       :''
       }
-      {componentType == "joystick"? 
+      {component.type == "joystick"? 
         <div
           className='joystickBase'
         >
