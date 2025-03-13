@@ -2,7 +2,7 @@ import { ComponentRepresentation } from "../components/ControllerContainer/Contr
 
 export function findClosestEmptySpot(
 {
-  actualX, actualY, unitWidth, index, containerWidth, containerHeight, componentRepresentations
+  actualX, actualY, unitWidth, index, containerWidth, containerHeight, componentRepresentation, componentRepresentations,
 } : {
   actualX: number, 
   actualY: number, 
@@ -10,6 +10,7 @@ export function findClosestEmptySpot(
   index: number, 
   containerWidth: number, 
   containerHeight: number,
+  componentRepresentation: ComponentRepresentation
   componentRepresentations: ComponentRepresentation[]
 } 
 ): { x: number, y: number } {
@@ -19,12 +20,13 @@ export function findClosestEmptySpot(
   console.log(x, y, actualX/unitWidth, actualY/unitWidth)
   let closestX = x;
   let closestY = y;
+  let isVacant = false;
 
   // Iterate through all the possible empty spots within the container
-  for (let xPos = 0; xPos < containerWidth; xPos++) {
-    for (let yPos = 0; yPos < containerHeight; yPos++) {
-      let isVacant = true;
-
+  for (let xPos = 0; xPos + componentRepresentation.w -1 < containerWidth; xPos++) {
+    for (let yPos = 0; yPos  + componentRepresentation.h -1  < containerHeight; yPos++) {
+      isVacant = true;
+      console.log("iterated through: " + xPos + " " + yPos)
       // Check if the current spot overlaps with any of the existing components
       for (let i = 0; i < componentRepresentations.length; i++) {
         if (i !== index) {
@@ -38,9 +40,9 @@ export function findClosestEmptySpot(
 
           // Check for overlap
           if (
-            xPos >= currentLeft &&
+            xPos + componentRepresentation.w -1 >= currentLeft &&
             xPos <= currentRight &&
-            yPos >= currentTop &&
+            yPos + componentRepresentation.h -1 >= currentTop &&
             yPos <= currentBottom
           ) {
             isVacant = false;
@@ -55,7 +57,7 @@ export function findClosestEmptySpot(
         const distance = Math.sqrt(
           Math.pow((actualX/unitWidth) - (xPos), 2) + Math.pow((actualY/unitWidth) - (yPos), 2)
         );
-
+        console.log("vacant spot with distance: " + distance)
         // Update the closest vacant spot if the current spot is closer
         if (distance < minDistance) {
           minDistance = distance;
@@ -65,7 +67,7 @@ export function findClosestEmptySpot(
       }
     }
   }
-
+  console.log("found closest spot: " + closestX + " " + closestY + " " + minDistance)
   // Return the closest vacant spot
   return { x: closestX, y: closestY };
 }
@@ -138,23 +140,44 @@ export function checkValidDropPos({
     }
   }
 
+  // Check if dropped component is out of bounds
+  if(droppedComponent.container === 'center'){
+    if(x < 0 || x + droppedComponent.w > 6 || y + droppedComponent.h > 3){
+      return false;
+    }
+  }else if(droppedComponent.container === 'left'){
+    if(x < 0 || y < 0 || y + droppedComponent.h > 6){
+      return false;
+    }
+  }else if(droppedComponent.container === 'right'){
+    if(y < 0 || x + droppedComponent.w > 3 || y + droppedComponent.h > 6){
+      return false;
+    }
+  }
+
   // No overlap detected, return true
   return true;
 }
 
 export function checkOutOfBounds({
-  x, y, containerWidth, containerHeight, 
+  x, y, droppedComponent 
 }: {
-  x: number, y: number, containerWidth: number, containerHeight: number
+  x: number, y: number, droppedComponent: ComponentRepresentation
 }): string{
-  if(x < containerWidth && x >= 0 && y < containerHeight && y >=0){
+  const containerWidth = droppedComponent.container === 'center' ? 6 : 3;
+  const containerHeight = droppedComponent.container === 'center' ? 3 : 6;
+  const left = x;
+  const right = x + droppedComponent.w - 1;
+  const top = y;
+  const bottom = y + droppedComponent.h - 1;
+  if(right < containerWidth && left >= 0 && bottom < containerHeight && top >=0){
     return 'inBounds'
   }else{
-    if(y < 0 && x < containerWidth && x >= 0){
+    if(top < 0 && right < containerWidth && left >= 0){
       return 'topOutOfBounds'
-    }else if(y < containerHeight && y >=0 && x<0){
+    }else if(bottom < containerHeight && top >=0 && left<0){
       return 'leftOutOfBounds'
-    }else if(y < containerHeight && y >=0 && x>=containerWidth){
+    }else if(bottom < containerHeight && top >=0 && right>=containerWidth){
       return 'rightOutOfBounds'
     }else{
       return 'invalidOutOfBounds'
@@ -167,9 +190,9 @@ export function getControllerContainerDimensions(type: ComponentRepresentation['
     case 'center':
       return { w: 6, h: 3 };
     case 'left':
-      return { w: 3, h: 7 };
+      return { w: 3, h: 6 };
     case 'right':
-      return { w: 3, h: 7 };
+      return { w: 3, h: 6 };
     default:
       throw new Error(`Invalid type: ${type}`);
   }

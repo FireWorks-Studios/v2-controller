@@ -15,6 +15,7 @@
     touch-action: none;
     user-select: none;
     overflow: hidden;
+    background-color: black;
 }
 
 *{
@@ -29,6 +30,14 @@
 .App.safetyMargin{
     margin-top: 18px;
 }
+
+.App {
+    background-color: white;
+  }
+  
+  .App.handheldModeBg {
+    background-color: black;
+  }
 
 .App.portrait{
     width: calc(var(--centerContainerWidth) + 12px);
@@ -59,3 +68,4 @@
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
+

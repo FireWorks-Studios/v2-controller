@@ -25,3 +25,44 @@
   .selectList.editing{
     display: block;
   }
+
+  .button.joystick .selectList{
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: calc(calc(var(--button-width)*3)/4);
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 10000px;
+  }
+
+  .button.joystick .selectList.id-0{ 
+    /* up */
+    top: 2px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .button.joystick .selectList.id-1{
+    /* down */
+    top: auto;
+    bottom: 2px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .button.joystick .selectList.id-2{
+    /* left */
+    top: 50%;
+    left: 2px;
+    transform: translate(0, -50%);
+  }
+
+  .button.joystick .selectList.id-3{
+    /* right */
+    top: 50%;
+    left: auto;
+    right: 2px;
+    transform: translate(0, -50%);
+  }

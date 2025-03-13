@@ -14,7 +14,7 @@ interface Props{
 export const DummyButton: React.FC<Props> = ({
     unitWidth,
     component,
-    validDropCancelTransition = false
+    validDropCancelTransition = false,
 }:Props)=>{
 
     return(
