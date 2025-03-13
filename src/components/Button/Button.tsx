@@ -512,6 +512,28 @@ export const Button: React.FC<Props> = ({
         <div
           className='joystickBase'
         >
+          <div className='joystickText'>
+            <div className={'button-text up'}>
+              <ParsedDropdownValue 
+                value={component.mapping[0]}
+              />
+            </div>
+            <div className={'button-text down'}>
+              <ParsedDropdownValue 
+                value={component.mapping[1]}
+              />
+            </div>
+            <div className={'button-text left'}>
+              <ParsedDropdownValue 
+                value={component.mapping[2]}
+              />
+            </div>
+            <div className={'button-text right'}>
+              <ParsedDropdownValue 
+                value={component.mapping[3]}
+              />
+            </div>
+          </div>
           <div 
             className='joystickKnob' 
             style={{
@@ -528,9 +550,6 @@ export const Button: React.FC<Props> = ({
                   transform: `translate(${touchPositions[0]?.x * 20}%, ${touchPositions[0]?.y * -20 - 10}%)`
               }}
             ></div>
-          </div>
-          <div className='joystickText'>
-              {/* joystick text on the play mode for users to see what the mapping is even without getting into the editor */}
           </div>
           <Dropdown 
             id={0}

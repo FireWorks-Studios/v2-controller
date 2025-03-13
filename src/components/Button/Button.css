@@ -98,10 +98,6 @@ button.pressed.short{
     display: none;
 }
 
-.button.joystick>.button-text{
-    display: none;
-}
-
 .arrow{
     transform: rotate(0deg); 
     display: inline-block;
@@ -359,4 +355,44 @@ button.pressed.short{
 
 .button.joystick>.button-bottom{
     border-radius: 50%;
+}
+
+.button.joystick>.button-text{
+    display: none;
+}
+
+.joystickText>.button-text{
+    display: block;
+}
+
+.joystickText>.button-text.up{
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.joystickText>.button-text.down{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.joystickText>.button-text.left{
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    transform: translateY(-50%);
+}
+
+.joystickText>.button-text.right{
+    position: absolute;
+    top: 50%;
+    right: 3px;
+    transform: translateY(-50%);
+}
+
+.editing .joystickText>.button-text{
+    display: none;
 }
