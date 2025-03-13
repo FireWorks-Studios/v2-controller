@@ -9,7 +9,7 @@ import {
   CustomWindow,
 } from "./components/CenterContainer/CenterContainer";
 import classNames from "classnames";
-import { checkValidAppend } from "./utils/position";
+import { checkValidAppend, findClosestEmptySpot } from "./utils/position";
 import {
   centerDefaultComponentRepresentations,
   keyDict,
@@ -17,11 +17,16 @@ import {
   rightDefaultComponentRepresentations,
 } from "./utils/keyMapping";
 import { useWindowSize } from "./utils/windowResize";
-import { useRenderCount } from "@uidotdev/usehooks";
+// import { useRenderCount } from "@uidotdev/usehooks";
+import { MdFullscreen } from "react-icons/md";
+import { MdFullscreenExit } from "react-icons/md";
+import { FaCaretUp } from "react-icons/fa6";
+import { FaCaretDown } from "react-icons/fa";
 
 function App() {
-  console.trace()
-  const renderCount = useRenderCount();
+  // console.trace();
+  const [fullscreen, setFullscreen] = useState(false);
+  // const renderCount = useRenderCount();
   const { width, height } = useWindowSize();
 
   const [editing, setEditing] = useState(false);
@@ -40,7 +45,10 @@ function App() {
     screenWidth - 12
   );
   const [overlay] = useState(false);
-  const [unitWidth, setUnitWidth] = useState<{portrait: number, landscape: number}>({portrait: 150, landscape: 150});
+  const [unitWidth, setUnitWidth] = useState<{
+    portrait: number;
+    landscape: number;
+  }>({ portrait: 150, landscape: 150 });
 
   const [draggingComponent, setDraggingComponent] =
     useState<ComponentRepresentation | null>(null);
@@ -66,7 +74,9 @@ function App() {
 
   const [controllerAdvancedConfig, setControllerAdvancedConfig] = useState<
     string[]
-  >(["mouseAndKeyboardMode"]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode'
+  >(["mouseAndKeyboardMode"]); //'turboMode', 'safetyMargin', 'mouseAndKeyboardMode', 'handheldMode'
+
+  const [menuBarShown, setMenuBarShown] = useState(true);
 
   useEffect(() => {
     const handleOrientationChange = (e: MediaQueryListEvent) => {
@@ -86,9 +96,63 @@ function App() {
     };
   }, []);
 
-    useEffect(()=>{
-      console.log("App render count:",renderCount)
-    },[renderCount])
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen((prevFullscreen) => !prevFullscreen);
+  }, []);
+
+  const toggleMenuBar = useCallback(() => {
+    setMenuBarShown((prevMenuBar) => !prevMenuBar);
+  }, []);
+
+  useEffect(() => {
+    if (fullscreen) {
+      // document.body.classList.add('fullscreen')
+      if (document.fullscreenEnabled) {
+        document.getElementById("App")?.requestFullscreen();
+      }
+    } else {
+      // document.body.classList.remove('fullscreen');
+      setControllerAdvancedConfig(
+        controllerAdvancedConfig.filter((e) => e !== "handheldMode")
+      );
+      if (document.fullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+  }, [fullscreen]);
+
+  useEffect(() => {
+    if (controllerAdvancedConfig.includes("handheldMode")) {
+      setFullscreen(true);
+    } else {
+      setFullscreen(false);
+    }
+  }, [controllerAdvancedConfig]);
+
+  const handleFullscreenChange = useCallback(() => {
+    if (document.fullscreenElement) {
+      console.log(
+        `Element: ${document.fullscreenElement.id} entered fullscreen mode.`
+      );
+    } else {
+      console.log("Leaving fullscreen mode.");
+      setFullscreen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, [handleFullscreenChange]);
+
+  // useEffect(() => {
+  //   console.log("App render count:", renderCount);
+  // }, [renderCount]);
 
   useEffect(() => {
     if (scaffolding === undefined) {
@@ -96,37 +160,85 @@ function App() {
     }
     var keysToFire: string[] = [];
     var keysToKill: string[] = [];
-    const readKeyDown = (
-      componentRepresentations: ComponentRepresentation[]
-    ) => {
+    const readKey = (componentRepresentations: ComponentRepresentation[]) => {
+      var index = 0;
       for (const componentRepresentation of componentRepresentations) {
-        if (componentRepresentation.pressed) {
-          if (!keysToFire.includes(componentRepresentation.mapping)) {
-            keysToFire.push(componentRepresentation.mapping);
+        if (componentRepresentation.type == "button") {
+          if (!keysToKill.includes(componentRepresentation.mapping[0])) {
+            keysToKill.push(componentRepresentation.mapping[0]);
           }
-        }
-      }
-    };
-    const readKeyUp = (componentRepresentations: ComponentRepresentation[]) => {
-      for (const componentRepresentation of componentRepresentations) {
-        if (!componentRepresentation.pressed) {
-          if (!keysToFire.includes(componentRepresentation.mapping)) {
-            if (!keysToKill.includes(componentRepresentation.mapping)) {
-              keysToKill.push(componentRepresentation.mapping);
+          if (componentRepresentation.pressed) {
+            if (!keysToFire.includes(componentRepresentation.mapping[0])) {
+              keysToFire.push(componentRepresentation.mapping[0]);
+            }
+          }
+        } else if (componentRepresentation.type === "joystick") {
+          const upKey = componentRepresentation.mapping[0];
+          const downKey = componentRepresentation.mapping[1];
+          const leftKey = componentRepresentation.mapping[2];
+          const rightKey = componentRepresentation.mapping[3];
+          const deadZone = 0.1;
+          const { x, y } = componentRepresentation.capturedTouchPositions[0];
+          console.log(
+            "app reading joystick " +
+              index +
+              " val pressed: " + componentRepresentation.pressed +
+              " x: " +
+              x +
+              " y: " +
+              y +
+              " up: " +
+              upKey +
+              " down: " +
+              downKey +
+              " left: " +
+              leftKey +
+              " right: " +
+              rightKey
+          );
+
+          if (!keysToKill.includes(upKey)) {
+            keysToKill.push(upKey);
+          }
+          if (!keysToKill.includes(downKey)) {
+            keysToKill.push(downKey);
+          }
+          if (!keysToKill.includes(leftKey)) {
+            keysToKill.push(leftKey);
+          }
+          if (!keysToKill.includes(rightKey)) {
+            keysToKill.push(rightKey);
+          }
+
+          if (componentRepresentation.pressed) {
+            if (y > deadZone && !keysToFire.includes(upKey)) {
+              keysToFire.push(upKey);
+            }
+            if (y < -deadZone && !keysToFire.includes(downKey)) {
+              keysToFire.push(downKey);
+            }
+            if (x > deadZone && !keysToFire.includes(rightKey)) {
+              keysToFire.push(rightKey);
+            }
+            if (x < -deadZone && !keysToFire.includes(leftKey)) {
+              keysToFire.push(leftKey);
             }
           }
         }
+        index++;
       }
     };
-    readKeyDown(centerComponentRepresentations);
-    readKeyDown(leftComponentRepresentations);
-    readKeyDown(rightComponentRepresentations);
-    readKeyUp(centerComponentRepresentations);
-    readKeyUp(leftComponentRepresentations);
-    readKeyUp(rightComponentRepresentations);
+
+    readKey(centerComponentRepresentations);
+    readKey(leftComponentRepresentations);
+    readKey(rightComponentRepresentations);
+
+    // Filter out keysToFire from keysToKill
+    keysToKill = keysToKill.filter((key) => !keysToFire.includes(key));
+
     console.log("keys to fire: " + keysToFire);
     console.log("keys to kill: " + keysToKill);
-    // scaffolding.vm.postIOData("keyboard",{key:'ArrowUp', keyCode:38, isDown: true});
+
     keysToKill.forEach((key) => {
       if (key === "Space") {
         key = " ";
@@ -168,30 +280,49 @@ function App() {
       setScreenWidth(width - 36);
       setScreenHeight(height - 36);
     }
-  },[controllerAdvancedConfig, width, height, screenOritentation])
+  }, [controllerAdvancedConfig, width, height, screenOritentation]);
 
   useEffect(() => {
     if (screenOritentation === "portrait") {
       setCenterContainerWidth(width - 12);
-      setUnitWidth({...unitWidth , portrait: (screenWidth - 8) / 6});
+      setUnitWidth({ ...unitWidth, portrait: (screenWidth - 8) / 6 });
     } else {
-      setCenterContainerWidth((height - 40) / 0.75 - 6);
-      if (overlay) {
-        setUnitWidth({...unitWidth, landscape: (screenHeight - 46) / 6});
+      if (menuBarShown) {
+        setCenterContainerWidth((height - 40) / 0.75 - 6);
       } else {
-        setUnitWidth(
-          {
-            ...unitWidth, 
-            landscape: 
-              Math.min(
+        setCenterContainerWidth(height / 0.75 - 6);
+      }
+      if (overlay) {
+        setUnitWidth({ ...unitWidth, landscape: (screenHeight - 46) / 6 });
+      } else {
+        if (menuBarShown) {
+          setUnitWidth({
+            ...unitWidth,
+            landscape: Math.min(
               (screenHeight - 46) / 6,
-              (screenWidth - (((screenHeight - 40) / 0.75) - 6)) / 6
-          )}
-          
-        );
+              (screenWidth - ((screenHeight - 40) / 0.75 - 6)) / 6
+            ),
+          });
+        } else {
+          setUnitWidth({
+            ...unitWidth,
+            landscape: Math.min(
+              (screenHeight - 46) / 6,
+              (screenWidth - (screenHeight / 0.75 - 6)) / 6
+            ),
+          });
+        }
       }
     }
-  }, [screenWidth, screenHeight, screenOritentation, width, height, overlay]);
+  }, [
+    screenWidth,
+    screenHeight,
+    screenOritentation,
+    width,
+    height,
+    overlay,
+    controllerAdvancedConfig,
+  ]);
 
   const toggleEditing = useCallback(() => {
     if (editing) {
@@ -209,7 +340,7 @@ function App() {
       setEditing(true);
       setSelectedTab("editor");
     }
-  },[editing, selectedTab, description])
+  }, [editing, selectedTab, description]);
 
   const toggleDescription = useCallback(() => {
     if (description) {
@@ -227,7 +358,7 @@ function App() {
       setDescription(true);
       setSelectedTab("description");
     }
-  },[description, selectedTab, editing])
+  }, [description, selectedTab, editing]);
 
   const appStyles = {
     "--screenWidth": screenWidth + "px",
@@ -235,7 +366,9 @@ function App() {
     "--centerContainerWidth":
       screenOritentation === "portrait"
         ? screenWidth - 12 + "px"
-        : (screenHeight - 40) / 0.75 - 6 + "px",
+        : menuBarShown
+        ? (screenHeight - 40) / 0.75 - 6 + "px"
+        : screenHeight / 0.75 + "px",
     // '--unitWidth': (screenOritentation === 'portrait'? ((screenWidth - 8) / 6)  + "px": (overlay? ((screenHeight - 46) / 6) : (Math.min(((screenHeight - 46) / 6), (screenWidth - ((screenHeight - 40)/0.75 - 6))/6))) + "px"),
     "--unitWidth": unitWidth[screenOritentation] + "px",
   } as React.CSSProperties;
@@ -343,17 +476,33 @@ function App() {
           console.log(target.closest(".draggable-dummy"));
           setValidDropCancelTransition(false);
           // dragging dummy component -> add componentRepresentation of dummy component to the useState (hardcoded as default button for now) TODO: pass setDraggingComponent into dummy components so they can define the componentRepresentation themselves
-          setDraggingComponent({
-            type: "button",
-            styling: [],
-            mapping: "ArrowUp",
-            container: "left",
-            x: 0,
-            y: 0,
-            w: 1,
-            h: 1,
-            color: "#006aff",
-          });
+          if(target.closest(".draggable-dummy")?.classList.contains("joystick")){
+            setDraggingComponent({
+              type: "joystick",
+              styling: [],
+              mapping: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+              container: "left",
+              x: 0,
+              y: 0,
+              w: 2,
+              h: 2,
+              color: "#006aff",
+              capturedTouchPositions: [{x: 0, y: 0}]
+            });
+          }else{
+            setDraggingComponent({
+              type: "button",
+              styling: [],
+              mapping: ["ArrowUp"],
+              container: "left",
+              x: 0,
+              y: 0,
+              w: 1,
+              h: 1,
+              color: "#006aff",
+              capturedTouchPositions: [{x: 0, y: 0}]
+            });
+          }
         }
       }
     },
@@ -375,7 +524,6 @@ function App() {
       } else {
         tempComponentRepresentations = rightComponentRepresentations;
       }
-
       //check for collisions
       let valid = checkValidAppend({
         x,
@@ -420,7 +568,16 @@ function App() {
         setPointerEvents(null);
       }
       if (draggingComponent !== null) {
-        const { clientX, clientY } = e;
+        // const { clientX, clientY } = e;
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        //use top left corner of the dragging component as the reference point instead of clientX and clientY
+        const draggingComponentElement = document.querySelector(".react-draggable-dragging");
+        if (draggingComponentElement) {
+          const { left: draggingLeft, top: draggingTop } = draggingComponentElement.getBoundingClientRect();
+          clientX = draggingLeft;
+          clientY = draggingTop;
+        }
         //check if the pointer up is inside a controller box
         if (screenOritentation === "portrait") {
           const centerControllerContainer = document.getElementsByClassName(
@@ -428,51 +585,88 @@ function App() {
           )[0];
           const { left, top, right, bottom } =
             centerControllerContainer.getBoundingClientRect();
-          if (
-            clientX >= left &&
-            clientX <= right &&
-            clientY >= top &&
-            clientY <= bottom
-          ) {
+            const componentWidth = draggingComponentElement?.clientWidth || 0;
+            const componentHeight = draggingComponentElement?.clientHeight || 0;
+            if (
+            clientX + componentWidth / 2 >= left &&
+            clientX + componentWidth / 2 <= right &&
+            clientY + componentHeight / 2 >= top &&
+            clientY + componentHeight / 2 <= bottom
+            ) {
             console.log(`Pointer is inside center controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - top) / unitWidth[screenOritentation]);
-            appendComponent("center", localX, localY);
+            let actualX = Math.max(left, Math.min(clientX, right));
+            let actualY = Math.max(top, Math.min(clientY, bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - left,
+              actualY: actualY - top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 6,
+              containerHeight: 3,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: centerComponentRepresentations
+            })
+
+            appendComponent("center", closest.x, closest.y);
           }
         } else if (screenOritentation === "landscape") {
           //landscape part
           const leftControllerContainer = document.getElementsByClassName(
             "controller-container left"
           )[0];
-          const l = leftControllerContainer.getBoundingClientRect();
+          const { left, top, right, bottom } = leftControllerContainer.getBoundingClientRect();
+          const componentWidth = draggingComponentElement?.clientWidth || 0;
+          const componentHeight = draggingComponentElement?.clientHeight || 0;
           if (
-            clientX >= l.left &&
-            clientX <= l.right &&
-            clientY >= l.top &&
-            clientY <= l.bottom
+            clientX + componentWidth / 2 >= left &&
+            clientX + componentWidth / 2 <= right &&
+            clientY + componentHeight / 2 >= top &&
+            clientY + componentHeight / 2 <= bottom
           ) {
             console.log(`Pointer is inside left controller`);
             //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - l.left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - l.top) / unitWidth[screenOritentation]);
-            appendComponent("left", localX, localY);
+            let actualX = Math.max(left, Math.min(clientX, right));
+            let actualY = Math.max(top, Math.min(clientY, bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - left,
+              actualY: actualY - top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 3,
+              containerHeight: 6,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: leftComponentRepresentations
+            })
+
+            appendComponent("left", closest.x, closest.y);
           }
           const rightControllerContainer = document.getElementsByClassName(
             "controller-container right"
           )[0];
-          const r = rightControllerContainer.getBoundingClientRect();
+          const r =
+            rightControllerContainer.getBoundingClientRect();
           if (
-            clientX >= r.left &&
-            clientX <= r.right &&
-            clientY >= r.top &&
-            clientY <= r.bottom
+            clientX + componentWidth / 2 >= r.left &&
+            clientX + componentWidth / 2 <= r.right &&
+            clientY + componentHeight / 2 >= r.top &&
+            clientY + componentHeight / 2 <= r.bottom
           ) {
             console.log(`Pointer is inside right controller`);
-            //determine localX and localY of where the drop occured
-            const localX = Math.floor((clientX - r.left) / unitWidth[screenOritentation]);
-            const localY = Math.floor((clientY - r.top) / unitWidth[screenOritentation]);
-            appendComponent("right", localX, localY);
+            let actualX = Math.max(r.left, Math.min(clientX, r.right));
+            let actualY = Math.max(r.top, Math.min(clientY, r.bottom));
+            let closest: {x: number, y:number} = findClosestEmptySpot({
+              actualX: actualX - r.left,
+              actualY: actualY - r.top,
+              unitWidth: unitWidth[screenOritentation],
+              index: -1,
+              containerWidth: 3,
+              containerHeight: 6,
+              componentRepresentation: draggingComponent,
+              componentRepresentations: rightComponentRepresentations
+            })
+
+            appendComponent("right", closest.x, closest.y);
           }
         }
       }
@@ -483,16 +677,54 @@ function App() {
   return (
     <div
       id="App"
-      className={classNames(
-        "App noscroll prevent-select",
-        screenOritentation,
-        controllerAdvancedConfig.includes("safetyMargin") ? "safetyMargin" : ""
-      )}
+      className={classNames("App noscroll prevent-select", screenOritentation, {
+        safetyMargin: controllerAdvancedConfig.includes("safetyMargin"),
+        handheldModeBg: controllerAdvancedConfig.includes("handheldMode"),
+      })}
       style={appStyles}
       onPointerDownCapture={handlePointerDownCapture}
       onPointerMoveCapture={handlePointerMoveCapture}
       onPointerUpCapture={handlePointerUpCapture}
     >
+      {controllerAdvancedConfig.includes("handheldMode") ? (
+        fullscreen ? (
+          <>
+            {menuBarShown ? (
+              <MdFullscreenExit
+                id="FullscreenBtn"
+                className="IconBtn FullscreenBtn"
+                onClick={toggleFullscreen}
+              />
+            ) : (
+              ""
+            )}
+
+            {menuBarShown ? (
+              <FaCaretUp
+                className={classNames("IconBtn", "MenuBarToggleBtn", {
+                  menuBarShown,
+                })}
+                onClick={toggleMenuBar}
+              />
+            ) : (
+              <FaCaretDown
+                className={classNames("IconBtn", "MenuBarToggleBtn", {
+                  menuBarShown,
+                })}
+                onClick={toggleMenuBar}
+              />
+            )}
+          </>
+        ) : (
+          <MdFullscreen
+            id="FullscreenBtn"
+            className="IconBtn FullscreenBtn"
+            onClick={toggleFullscreen}
+          />
+        )
+      ) : (
+        ""
+      )}
       <CenterContainer
         controllerAdvancedConfig={controllerAdvancedConfig}
         setControllerAdvancedConfig={setControllerAdvancedConfig}
@@ -508,7 +740,9 @@ function App() {
         screenHeight={screenHeight}
         centerContainerWidth={centerContainerWidth}
         setAppScaffolding={setScaffolding}
+        menuBarShown={menuBarShown}
       />
+
       <ControllerContainer
         screenOrientation={screenOritentation}
         position={"left"}
@@ -516,6 +750,7 @@ function App() {
         defaultComponentRepresentations={leftComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setLeftComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
       <ControllerContainer
         screenOrientation={screenOritentation}
@@ -524,6 +759,7 @@ function App() {
         defaultComponentRepresentations={centerComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setCenterComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
       <ControllerContainer
         screenOrientation={screenOritentation}
@@ -532,6 +768,7 @@ function App() {
         defaultComponentRepresentations={rightComponentRepresentations}
         editing={editing}
         updateComponentRepresentations={setRightComponentRepresentations}
+        handheldMode={controllerAdvancedConfig.includes("handheldMode")}
       />
     </div>
   );

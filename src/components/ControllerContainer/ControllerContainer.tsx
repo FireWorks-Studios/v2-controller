@@ -4,7 +4,7 @@ import '../../App.css'
 import {Button} from '../Button/Button';
 import { checkValidDropPos, findClosestEmptySpot } from '../../utils/position';
 import classNames from 'classnames';
-import { DropdownOption } from '../Button/Dropdown';
+import { DropdownOption } from '../Button/DropdownOptions';
 import { Selector } from './Selector';
 import { GetSelectedComponents, SelectionInteraction, checkOverlap } from '../../utils/selector';
 import { checkValidSelectionDropPos } from '../../utils/selector';
@@ -12,9 +12,9 @@ import DeleteSnackbar from '../Snackbar/DeleteSnackbar';
 import ClickAwayListener from 'react-click-away-listener';
 
 export interface ComponentRepresentation {
-  type: 'button' | 'joystick' | 'scroller' | 'wheel',
+  type: 'button' | 'joystick',
   styling: string[],
-  mapping: DropdownOption['value'],
+  mapping: DropdownOption['value'][],
   container: 'center' | 'left' | 'right',
   x: number,
   y: number,
@@ -22,6 +22,7 @@ export interface ComponentRepresentation {
   h: number,
   color: string,
   pressed?: boolean,
+  capturedTouchPositions: {x: number, y: number}[]
 }
 
 interface Props{
@@ -30,12 +31,13 @@ interface Props{
   unitWidth: number,
   defaultComponentRepresentations: ComponentRepresentation[],
   editing: boolean,
-  updateComponentRepresentations: React.Dispatch<React.SetStateAction<ComponentRepresentation[]>>
+  updateComponentRepresentations: React.Dispatch<React.SetStateAction<ComponentRepresentation[]>>,
+  handheldMode: boolean
 }
 
 type SelectionType = 'move' | 'add'
 
-export const ControllerContainer: React.FC<Props> = ({screenOrientation, position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations}:Props) => {
+export const ControllerContainer: React.FC<Props> = ({screenOrientation, position, unitWidth, defaultComponentRepresentations, editing, updateComponentRepresentations, handheldMode}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [touchEvents, setTouchEvents] = useState<React.TouchEvent<HTMLDivElement> | null>(null)
   const [componentRepresentations, setComponentRepresentations] = useState(defaultComponentRepresentations)
@@ -95,6 +97,10 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
   // },[selectorSelectedComponents])
 
   const updateCurrentConfig = useCallback((index: number, component: ComponentRepresentation) => {
+    if(component.type === 'joystick'){  
+      const { x, y } = component.capturedTouchPositions[0];
+      console.log(`Joystick ${index} update called with captured touch positions: x=${x}, y=${y}`);
+    }
     const newConfig = componentRepresentations.map((c, i)=>{
       if(i === index){
         return component
@@ -360,6 +366,17 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
               isValid = false
             }
         }
+
+        if(selectedComponent.type === 'joystick'){
+          //keep joystick component always square and no less that 2x2
+          if(testBox.w !== testBox.h){
+            isValid = false
+          }
+          if(testBox.w < 2 || testBox.h < 2){
+            isValid = false
+          }
+        }
+
         //compare distance to target pos according to which corner is dragged
         if(isValid){
           validPos.push(testBox)
@@ -550,8 +567,9 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
             [position]: true,
             editing,
             isSelectorDragging,
+            handheldMode,
           },
-          dragResizeCorner
+          dragResizeCorner,
         )
       } 
       ref={containerRef}
@@ -565,7 +583,7 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
       onPointerLeave={handlePointerUp}
     >  
       {componentRepresentations.map((component, index)=>(
-        (component.type === 'button') ?
+        (component.type === 'button' || component.type === 'joystick' ) ?
         <Button
         variant='component' 
         dragResizing={dragResizeCorner!==undefined && singleSelectedComponentId === index}

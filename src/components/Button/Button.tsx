@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import './Button.css'
+import isEqual from 'lodash/isEqual';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { ComponentRepresentation } from '../ControllerContainer/ControllerContainer';
-import Dropdown, { DropdownOption } from './Dropdown';
+import Dropdown from './Dropdown';
+import { DropdownOption } from './DropdownOptions';
 import {TbArrowsMove} from 'react-icons/tb'
 import classNames from 'classnames';
 import { ParsedDropdownValue } from './ParsedDropdownValue';
@@ -45,6 +47,7 @@ interface Props{
   noTransition?: boolean;
   selected?: boolean;
   selectorDeltaPosition?: {deltaX: number, deltaY: number};
+  capturedTouchPositions?: {x: number, y: number, knobX: number, knobY: number}[];
   // eslint-disable-next-line no-unused-vars
   updateCurrentConfig?(index: number, component: ComponentRepresentation): void;
   // eslint-disable-next-line no-unused-vars
@@ -87,6 +90,7 @@ export const Button: React.FC<Props> = ({
   noTransition = false,
   selected = false,
   selectorDeltaPosition = {deltaX: 0, deltaY: 0},
+  capturedTouchPositions = [{x: 0, y: 0, knobX: 0, knobY: 0}],
   updateCurrentConfig = ()=>{},
   deleteComponentRepresentation = ()=>{},
   checkValidDropPos = ()=>{return(false)},
@@ -94,19 +98,56 @@ export const Button: React.FC<Props> = ({
   setCustomizationMenuOpen = () => {},
 }: Props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [pressed, setPressed] = useState(false)
+  const [pressed, setPressed] = useState(false);
+  const [touchPositions, setTouchPositions] = useState(capturedTouchPositions);
+
+  useEffect(()=>{
+    setTouchPositions([{x: 0, y: 0, knobX: (unitWidth*component.w - 12)/2, knobY: (unitWidth*component.h - 12)/2}])
+  },[unitWidth])
 
   useEffect(()=>{
     if(component.pressed !== pressed){
       updateCurrentConfig(index, {...component, pressed})
     }
-  })
+  }, [pressed])
 
   useEffect(()=>{
     if(!singleSelected){
       setCustomizationMenuOpen(false)
     }
   },[singleSelected])
+
+  useEffect(() => {
+    if (!buttonRef.current) return;
+
+    const handlePointerUp = () => {
+      if (!buttonRef.current) return;
+      if(editing){
+        return
+      }
+      setPressed(false);
+      setTouchPositions([{ x: 0, y: 0, knobX: buttonRef.current!.clientWidth / 2, knobY: buttonRef.current!.clientHeight / 2 }]);
+    };
+
+    const handleTouchEnd = () => {
+      if (!buttonRef.current) return;
+      if(editing){
+        return
+      }
+      setPressed(false);
+      setTouchPositions([{ x: 0, y: 0, knobX: buttonRef.current!.clientWidth / 2, knobY: buttonRef.current!.clientHeight / 2 }]);
+    };
+
+    buttonRef.current.addEventListener('pointerup', handlePointerUp);
+    buttonRef.current.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      if (buttonRef.current) {
+        buttonRef.current.removeEventListener('pointerup', handlePointerUp);
+        buttonRef.current.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [buttonRef, setPressed, setTouchPositions]);
 
   useEffect(()=>{
     // never happens, just for ts type checking
@@ -116,18 +157,26 @@ export const Button: React.FC<Props> = ({
       return
     }
     if (touchEvents) {
-      const tempPressed = 
-        UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect())
-        if(!component.styling.includes('sticky')){
-          setPressed(tempPressed)
-        }else{
-          if(tempPressed){
-            setPressed(!pressed)
+      const [tempPressed, capturedTouches] = UserInteraction.identifyPressFromTouchEvents(touchEvents, buttonRef.current?.getBoundingClientRect());
+      if(tempPressed){
+        setTouchPositions(capturedTouches);
+        // if(component.type == "joystick"){
+        //   capturedTouches.forEach(({ x, y }) => {
+        //     console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
+        //   });
+        // }
+        // const updatedPositions = capturedTouches.map(({ x, y }) => ({ x, y }));
+      }else{
+        setTouchPositions([
+          {
+            x: 0,
+            y: 0,
+            knobX: buttonRef.current!.clientWidth / 2, 
+            knobY: buttonRef.current!.clientHeight / 2 
           }
-        }
-    } else if (pointerEvents) {
-      const tempPressed = 
-        UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect())
+        ]);
+      }
+
       if(!component.styling.includes('sticky')){
         setPressed(tempPressed)
       }else{
@@ -135,14 +184,58 @@ export const Button: React.FC<Props> = ({
           setPressed(!pressed)
         }
       }
+    } else if (pointerEvents) {
+      const [tempPressed, capturedPointer] = UserInteraction.identifyPressFromPointerEvents(pointerEvents, buttonRef.current?.getBoundingClientRect());
+      setTouchPositions(capturedPointer);
+      if(!component.styling.includes('sticky')){
+        setPressed(tempPressed)
+        if(tempPressed){
+          setTouchPositions(capturedPointer);
+          // if(component.type == "joystick"){
+          //   capturedPointer.forEach(({ x, y }) => {
+          //     console.log(`joystick with id: ${index} captured touch: x: ${x}, y: ${y}`);
+          //   });
+          // }
+        }else{
+          setTouchPositions([
+            {
+              x: 0,
+              y: 0,
+              knobX: buttonRef.current!.clientWidth / 2, 
+              knobY: buttonRef.current!.clientHeight / 2 
+            }
+          ]);
+        }
+      }else{
+        if(tempPressed){
+          setPressed(!pressed)
+        }
+      }
     }
-  },[touchEvents, pointerEvents, editing])
+
+    
+  },[touchEvents, pointerEvents, editing, index, component])
+
+  useEffect(() => {
+    if (component.type !== 'joystick') {
+      return;
+    }
+    const joystickTouchPos = touchPositions.map(({ x, y }) => ({ x, y }));
+    console.log(`joystick with id: ${index} captured touch positions: ${JSON.stringify(joystickTouchPos)}`);
+    if (!isEqual(component.capturedTouchPositions, joystickTouchPos) || component.pressed !== pressed) {
+      updateCurrentConfig(index, {
+        ...component,
+        pressed: pressed,
+        capturedTouchPositions: joystickTouchPos
+      });
+    }
+  }, [touchPositions, pressed, component, index, updateCurrentConfig]);
 
   // useEffect(()=>{
-  //   if(component.mapping == 'Delete'){
+  //   if(component.mapping[0] == 'Delete'){
   //     deleteComponentRepresentation(index)
   //   }
-  // }, [component.mapping])
+  // }, [component.mapping[0]])
 
   const handleStop: DraggableEventHandler = useCallback((_, data) =>{
     const actualX = data.x
@@ -154,8 +247,8 @@ export const Button: React.FC<Props> = ({
     const containerWidth = containerDimensions.w
     const containerHeight = containerDimensions.h
     if (checkValidDropPos({ x, y, index })) {
-      console.log(checkOutOfBounds({x, y, containerWidth, containerHeight}))
-      switch(checkOutOfBounds({x, y, containerWidth, containerHeight})){
+      console.log(checkOutOfBounds({x, y, droppedComponent: component}))
+      switch(checkOutOfBounds({x, y, droppedComponent: component})){
         case 'inBounds':
           updateCurrentConfig(index, {
             ...component,
@@ -193,7 +286,7 @@ export const Button: React.FC<Props> = ({
       if(component.w !== 1 || component.h !== 1){
         return
       }
-      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight})
+      let closestEmptySpot = findClosestEmptySpot({ actualX, actualY, unitWidth, index, containerWidth, containerHeight, componentRepresentation: component });
       updateCurrentConfig(index, {
         ...component,
         x: closestEmptySpot.x,
@@ -202,17 +295,14 @@ export const Button: React.FC<Props> = ({
     }
   }, [checkValidDropPos, component, findClosestEmptySpot, index, unitWidth, updateCurrentConfig])
 
-  const updateMapping = useCallback((mapping: DropdownOption['value']) => {
-    // if(['Green Flag', 'Pause', 'Stop', 'Remap'].includes(mapping)){
-    //   component.styling.push("short", "round")
-    // }else{
-    //   component.styling = []
-    // }
+  const updateMapping = useCallback((newVal: DropdownOption['value'], id: number) => {
+    const newMapping = [...component.mapping];
+    newMapping[id] = newVal;
     updateCurrentConfig(index, {
       ...component,
-      mapping
-    })
-  }, [component, index, updateCurrentConfig])
+      mapping: newMapping
+    });
+  }, [component, index, updateCurrentConfig]);
 
   const updateStyling = useCallback((styling: string[])=>{
     updateCurrentConfig(index, {
@@ -292,6 +382,7 @@ export const Button: React.FC<Props> = ({
         classNames(
           'button',
           variant,
+          component.type,
           component.styling.join(' '),
           {
             pressed,
@@ -306,7 +397,7 @@ export const Button: React.FC<Props> = ({
       ref={buttonRef}>
         <div className={'button-text'}>
           <ParsedDropdownValue 
-            value={component.mapping}
+            value={component.mapping[0]}
           />
         </div>
         <div className={
@@ -346,20 +437,40 @@ export const Button: React.FC<Props> = ({
               anchorEl={document.getElementById('customizationMenuBtn'+component.container+index)}
               open={customizationMenuOpen && document.getElementById('customizationMenuBtn'+component.container+index)!= null && singleSelected}
             >
-            <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
-              <ListItemIcon><FaRegCircle /></ListItemIcon>
-              <ListItemText>Round</ListItemText>
-              <IconButton edge="end" size='large' sx={{... component.styling.includes('round')? {color: component.color}: {}, padding: '0px', marginRight: '0px'}}>
-              {component.styling.includes('round')? <BsToggleOn/>: <BsToggleOff/>}
-              </IconButton>
-            </MenuItem>
-            <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
-              <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
-              <ListItemText>Short</ListItemText>
-              <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color, padding: '0px', marginRight: '3px'}: {padding: '0px', marginRight: '0px'}}>
-              {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
-              </IconButton>
-            </MenuItem>
+              <MenuItem dense={true} disableRipple sx={{pointerEvents: 'none', opacity: 1}}>
+                <ListItemText primary={component.type?.charAt(0).toUpperCase() + component.type?.slice(1)} />
+              </MenuItem>
+            
+            {component.type == "button" && (
+              <MenuItem dense={true} onClick={()=>{toggleStyling('round')}}>
+                <ListItemIcon><FaRegCircle /></ListItemIcon>
+                <ListItemText>Round</ListItemText>
+                <IconButton edge="end" size='large' sx={{... component.styling.includes('round')? {color: component.color}: {}, padding: '0px', marginRight: '0px'}}>
+                {component.styling.includes('round')? <BsToggleOn/>: <BsToggleOff/>}
+                </IconButton>
+              </MenuItem>
+            )}
+
+            {component.type == "button" && (
+              <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
+                <ListItemIcon><LuRectangleHorizontal /></ListItemIcon>
+                <ListItemText>Short</ListItemText>
+                <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color, padding: '0px', marginRight: '3px'}: {padding: '0px', marginRight: '0px'}}>
+                {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
+                </IconButton>
+              </MenuItem>
+            )}
+
+            {/* {component.type == "joystick" && (
+              <MenuItem dense={true} onClick={()=>{toggleStyling('short')}}>
+                <ListItemIcon><PiMouseBold /></ListItemIcon>
+                <ListItemText>Simulate Mouse</ListItemText>
+                <IconButton edge="end" size='large' sx={component.styling.includes('short')? {color: component.color, padding: '0px', marginRight: '3px'}: {padding: '0px', marginRight: '0px'}}>
+                {component.styling.includes('short')? <BsToggleOn/>: <BsToggleOff/>}
+                </IconButton>
+              </MenuItem>
+            )} */}
+
             <Divider/>
             <MenuItem dense={true} disableRipple sx={{"&:hover": {backgroundColor: "#ffffff" }}}>
               <ListItemIcon><LuBrush /></ListItemIcon>
@@ -388,11 +499,87 @@ export const Button: React.FC<Props> = ({
             </MenuItem>
           </Menu>
       </ThemeProvider>
+      {component.type == "button"?
         <Dropdown 
+          id={0}
           editing={editing} 
           updateMapping={updateMapping} 
-          value={component.mapping}
+          value={component.mapping[0]}
         />
+      :''
+      }
+      {component.type == "joystick"? 
+        <div
+          className='joystickBase'
+        >
+          <div className='joystickText'>
+            <div className={'button-text up'}>
+              <ParsedDropdownValue 
+                value={component.mapping[0]}
+              />
+            </div>
+            <div className={'button-text down'}>
+              <ParsedDropdownValue 
+                value={component.mapping[1]}
+              />
+            </div>
+            <div className={'button-text left'}>
+              <ParsedDropdownValue 
+                value={component.mapping[2]}
+              />
+            </div>
+            <div className={'button-text right'}>
+              <ParsedDropdownValue 
+                value={component.mapping[3]}
+              />
+            </div>
+          </div>
+          <div 
+            className='joystickKnob' 
+            style={{
+              position: 'absolute', 
+                left: `${touchPositions[0]?.knobX}px`, 
+                top: `${touchPositions[0]?.knobY}px`,
+                transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <div
+              className='joystickKnobTop'
+              style={{
+                position: 'absolute', 
+                  transform: `translate(${touchPositions[0]?.x * 20}%, ${touchPositions[0]?.y * -20 - 10}%)`
+              }}
+            ></div>
+          </div>
+          <Dropdown 
+            id={0}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[0]}
+          />
+          <Dropdown 
+            id={1}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[1]}
+          />
+          <Dropdown 
+            id={2}
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[2]}
+          />
+          <Dropdown
+            id={3} 
+            editing={editing} 
+            updateMapping={updateMapping} 
+            value={component.mapping[3]}
+          />
+        </div>
+      :''
+      }
+
+
       </button>
     </Draggable>
   )
