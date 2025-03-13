@@ -366,6 +366,17 @@ export const ControllerContainer: React.FC<Props> = ({screenOrientation, positio
               isValid = false
             }
         }
+
+        if(selectedComponent.type === 'joystick'){
+          //keep joystick component always square and no less that 2x2
+          if(testBox.w !== testBox.h){
+            isValid = false
+          }
+          if(testBox.w < 2 || testBox.h < 2){
+            isValid = false
+          }
+        }
+
         //compare distance to target pos according to which corner is dragged
         if(isValid){
           validPos.push(testBox)
